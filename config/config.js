@@ -11,6 +11,5 @@ const config = {
 };
 
 exports.get = function get(env) {
-  console.log('env', env);
   return config[env] || config.default;
 };

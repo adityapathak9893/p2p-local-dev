@@ -8,8 +8,6 @@ const db = require("./config/config").get(process.env.NODE_ENV);
 const { auth } = require("./middlewares/auth");
 const path = require("path");
 
-console.log('db', db);
-
 const app = express();
 const userProfile = Model.userProfile;
 const buyOffers = Model.buyOffers;
@@ -20,10 +18,13 @@ app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "./client/build")));
-app.get("*", function(_, res){
-  res.sendFile(path.join(__dirname, "./client/build/index.html"), function(err){
-    res.status(500).send(err);
-  });
+app.get("*", function (_, res) {
+  res.sendFile(
+    path.join(__dirname, "./client/build/index.html"),
+    function (err) {
+      res.status(500).send(err);
+    }
+  );
 });
 
 // database connection
