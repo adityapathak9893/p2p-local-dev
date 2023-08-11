@@ -7,11 +7,11 @@ export const App: React.FC = () => {
   return (
     <div>
       Welcome page is in progress
-      {/* <BrowserRouter>
+      <BrowserRouter>
         <Routes>
           <Route path="/userRegistration" Component={UserRegistrationForm} />
         </Routes>
-      </BrowserRouter> */}
+      </BrowserRouter>
     </div>
   );
 };

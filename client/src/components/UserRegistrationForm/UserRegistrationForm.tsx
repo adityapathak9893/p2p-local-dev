@@ -1,22 +1,22 @@
 import React, { useState } from "react";
 
 export const UserRegistrationForm: React.FC = () => {
-  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  
   async function registerUser(event: any) {
     event.preventDefault();
-    const response = await fetch("http://localhost:8000/api/register", {
+    const response = await fetch(`${process.env.REACT_APP_API_HOST}/api/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        phone: "+91-9876543210",
-        email: "adityapathak9893@gmail.com",
-        password: "12345",
-        userName: "smartUser",
+        phone,
+        email,
+        password,
+        userName: email.split("@")[0],
       }),
     });
 
@@ -28,10 +28,10 @@ export const UserRegistrationForm: React.FC = () => {
       <h1>Registration</h1>
       <form onSubmit={registerUser}>
         <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          type="text"
-          placeholder="Name"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          type="number"
+          placeholder="Phone-number"
         />
         <br />
         <input
