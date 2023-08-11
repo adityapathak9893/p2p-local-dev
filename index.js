@@ -8,7 +8,7 @@ const db = require("./config/config").get(process.env.NODE_ENV);
 const { auth } = require("./middlewares/auth");
 const path = require("path");
 
-console.log(process.env);
+console.log('db', db);
 
 const app = express();
 const userProfile = Model.userProfile;
