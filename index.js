@@ -13,19 +13,27 @@ const userProfile = Model.userProfile;
 const buyOffers = Model.buyOffers;
 const sellOffers = Model.sellOffers;
 
-app.use(cors());
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://gold-careful-drill.cyclic.app",
+];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "./client/build")));
-app.get("*", function (_, res) {
-  res.sendFile(
-    path.join(__dirname, "./client/build/index.html"),
-    function (err) {
-      res.status(500).send(err);
-    }
-  );
-});
 
 // database connection
 mongoose.Promise = global.Promise;
@@ -39,7 +47,7 @@ mongoose
   });
 
 // adding new user (sign-up route)
-app.post("/api/register", function (req, res) {
+app.post("/api/signup", function (req, res) {
   const newuser = new userProfile(req.body);
   userProfile.findOne({ email: newuser.email }).then((user) => {
     if (user)
@@ -48,7 +56,7 @@ app.post("/api/register", function (req, res) {
       .save()
       .then((doc) => {
         res.status(200).json({
-          succes: true,
+          success: true,
           user: doc,
         });
       })
@@ -60,8 +68,14 @@ app.post("/api/register", function (req, res) {
   });
 });
 
+app.options("/api/signin", (req, res) => {
+  res.header("Access-Control-Allow-Methods", "POST");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  res.send();
+});
+
 // login user
-app.post("/api/login", function (req, res) {
+app.post("/api/signin", function (req, res) {
   let token = req.cookies.auth;
   userProfile.findByToken(token, (err, user) => {
     if (err) return res(err);
@@ -87,11 +101,17 @@ app.post("/api/login", function (req, res) {
 
           user.generateToken((err, user) => {
             if (err) return res.status(400).send(err);
-            res.cookie("auth", user.token).json({
-              isAuth: true,
-              id: user._id,
-              email: user.email,
-            });
+            res
+              .cookie("auth", user.token, {
+                sameSite: "none",
+                secure: true,
+              })
+              .json({
+                isAuth: true,
+                token: user.token,
+                id: user._id,
+                email: user.email,
+              });
           });
         });
       });
@@ -100,7 +120,7 @@ app.post("/api/login", function (req, res) {
 });
 
 // get logged in user
-app.get("/api/profile", auth, (req, res) => {
+app.get("/api/getSignedInUserProfile", auth, (req, res) => {
   return res.json({
     isAuth: true,
     id: req.user._id,
@@ -111,7 +131,7 @@ app.get("/api/profile", auth, (req, res) => {
 });
 
 //logout user
-app.get("/api/logout", auth, function (req, res) {
+app.get("/api/signout", auth, function (req, res) {
   req.user.deleteToken(req.token, (err, user) => {
     if (err) return res.status(400).send(err);
     res.sendStatus(200);
@@ -119,7 +139,7 @@ app.get("/api/logout", auth, function (req, res) {
 });
 
 // place buy offer
-app.post("/api/placeBuyOffer", auth, (req, res) => {
+app.post("/api/placeMyBuyOffer", auth, (req, res) => {
   const newBuyOffer = new buyOffers({
     ...req.body,
     email: req.user.email,
@@ -129,7 +149,7 @@ app.post("/api/placeBuyOffer", auth, (req, res) => {
     .save()
     .then((doc) => {
       res.status(200).json({
-        succes: true,
+        success: true,
         buyOffer: doc,
       });
     })
@@ -146,7 +166,7 @@ app.get("/api/getMyBuyOffers", auth, (req, res) => {
     .find({ email: req.user.email })
     .then((docs) => {
       res.status(200).json({
-        succes: true,
+        success: true,
         buyOffers: docs,
       });
     })
@@ -158,12 +178,12 @@ app.get("/api/getMyBuyOffers", auth, (req, res) => {
 });
 
 //get all buy Offers (this can be seen without login)
-app.get("/api/allBuyOffers", (req, res) => {
+app.get("/api/getAllBuyOffers", (req, res) => {
   buyOffers
     .find()
     .then((docs) => {
       res.status(200).json({
-        succes: true,
+        success: true,
         buyOffers: docs,
       });
     })
@@ -175,7 +195,7 @@ app.get("/api/allBuyOffers", (req, res) => {
 });
 
 // place sell offer
-app.post("/api/placeSellOffer", auth, (req, res) => {
+app.post("/api/placeMySellOffer", auth, (req, res) => {
   const newSellOffer = new sellOffers({
     ...req.body,
     email: req.user.email,
@@ -185,7 +205,7 @@ app.post("/api/placeSellOffer", auth, (req, res) => {
     .save()
     .then((doc) => {
       res.status(200).json({
-        succes: true,
+        success: true,
         sellOffer: doc,
       });
     })
@@ -202,7 +222,7 @@ app.get("/api/getMysellOffers", auth, (req, res) => {
     .find({ email: req.user.email })
     .then((docs) => {
       res.status(200).json({
-        succes: true,
+        success: true,
         sellOffers: docs,
       });
     })
@@ -214,12 +234,12 @@ app.get("/api/getMysellOffers", auth, (req, res) => {
 });
 
 //get all sell Offers (this can be seen without login)
-app.get("/api/allSellOffers", (req, res) => {
+app.get("/api/getAllSellOffers", (req, res) => {
   buyOffers
     .find()
     .then((docs) => {
       res.status(200).json({
-        succes: true,
+        success: true,
         sellOffers: docs,
       });
     })
@@ -228,6 +248,15 @@ app.get("/api/allSellOffers", (req, res) => {
         return res.status(400).json({ success: false });
       }
     });
+});
+
+app.get("*", function (_, res) {
+  res.sendFile(
+    path.join(__dirname, "./client/build/index.html"),
+    function (err) {
+      res.status(500).send(err);
+    }
+  );
 });
 
 // listening port
