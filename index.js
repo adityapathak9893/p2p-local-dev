@@ -74,7 +74,7 @@ app.post("/api/signup", function (req, res) {
 app.post("/api/signin", function (req, res) {
   let token = req.cookies.auth;
   userProfile.findByToken(token, (err, user) => {
-    if (err) return res(err);
+    if (err) return res.send(err);
     if (!!user) {
       return res.status(400).json({
         error: true,
