@@ -13,15 +13,13 @@ const userProfile = Model.userProfile;
 const buyOffers = Model.buyOffers;
 const sellOffers = Model.sellOffers;
 
-/* const allowedOrigins = [
+const allowedOrigins = [
   "https://gold-careful-drill.cyclic.app",
   "http://localhost:3000",
 ];
 const corsOptions = {
   origin: function (origin, callback) {
-    console.log("origin", origin);
-    console.log("process", process.env);
-    if (allowedOrigins.includes(origin)) {
+    if (allowedOrigins.includes(origin) || origin === undefined) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
@@ -32,9 +30,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options("*", cors()); */
-
-app.use(cors());
+app.options("*", cors());
 
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
