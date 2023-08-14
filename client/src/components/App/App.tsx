@@ -12,6 +12,7 @@ import { SignUpPage } from "../../pages/SignUpPage";
 import { SignInPage } from "../../pages/SignInPage";
 import { UserDashBoard } from "../UserDashBoard";
 import { useActionDispatch, useStateSelector } from "../../hooks";
+import { LoadingIndicator } from "../LoadingIndicator/LoadingIndicator";
 
 export const App: React.FC = () => {
   const { isUserLoggedIn, userProfileDetails, isRequestPending } =
@@ -24,7 +25,9 @@ export const App: React.FC = () => {
   return (
     <div>
       {isRequestPending ? (
-        <div>Page is loading</div>
+        <div className="loadingIndicatorContainer">
+          <LoadingIndicator />
+        </div>
       ) : (
         <Router>
           <Routes>
