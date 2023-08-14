@@ -25,10 +25,12 @@ const corsOptions = {
       callback(new Error("Not allowed by CORS"));
     }
   },
+  headers: ["Content-Type"],
   credentials: true,
 };
 
 app.use(cors(corsOptions));
+app.options("*", cors());
 
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
