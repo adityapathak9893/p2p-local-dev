@@ -13,7 +13,7 @@ const userProfile = Model.userProfile;
 const buyOffers = Model.buyOffers;
 const sellOffers = Model.sellOffers;
 
-const allowedOrigins = [
+/* const allowedOrigins = [
   "https://gold-careful-drill.cyclic.app",
   "http://localhost:3000",
 ];
@@ -32,7 +32,9 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options("*", cors());
+app.options("*", cors()); */
+
+app.use(cors());
 
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
