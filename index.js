@@ -13,7 +13,10 @@ const userProfile = Model.userProfile;
 const buyOffers = Model.buyOffers;
 const sellOffers = Model.sellOffers;
 
-const allowedOrigins = ["http://localhost:3000", "https://app.cyclic.sh"];
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://gold-careful-drill.cyclic.app",
+];
 const corsOptions = {
   origin: function (origin, callback) {
     if (allowedOrigins.includes(origin)) {
@@ -258,7 +261,6 @@ app.get("*", function (_, res) {
 
 // listening port
 const PORT = process.env.PORT || 8000;
-console.log('process.env', process.env);
 app.listen(PORT, () => {
   console.log(`server is running at ${PORT}`);
 });
