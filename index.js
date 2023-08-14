@@ -74,6 +74,12 @@ app.options("/api/signin", (req, res) => {
   res.send();
 });
 
+app.options("/api/getSignedInUserProfile", (req, res) => {
+  res.header("Access-Control-Allow-Methods", "GET");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  res.send();
+});
+
 // login user
 app.post("/api/signin", function (req, res) {
   let token = req.cookies.auth;
