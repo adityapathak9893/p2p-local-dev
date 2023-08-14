@@ -14,8 +14,8 @@ const buyOffers = Model.buyOffers;
 const sellOffers = Model.sellOffers;
 
 const allowedOrigins = [
-  "http://localhost:3000",
   "https://gold-careful-drill.cyclic.app",
+  "http://localhost:3000",
 ];
 const corsOptions = {
   origin: function (origin, callback) {
