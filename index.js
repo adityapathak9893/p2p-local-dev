@@ -14,8 +14,8 @@ const buyOffers = Model.buyOffers;
 const sellOffers = Model.sellOffers;
 
 const allowedOrigins = [
-  "https://gold-careful-drill.cyclic.app/",
   "http://localhost:3000",
+  "https://gold-careful-drill.cyclic.app",
 ];
 const corsOptions = {
   origin: function (origin, callback) {
@@ -66,20 +66,6 @@ app.post("/api/signup", function (req, res) {
         }
       });
   });
-});
-
-app.options("/api/signin", (req, res) => {
-  res.header("Access-Control-Allow-Methods", "POST");
-  res.header("Access-Control-Allow-Headers", "Content-Type");
-  res.header("Access-Control-Allow-Origin", "https://gold-careful-drill.cyclic.app/");
-  res.send();
-});
-
-app.options("/api/getSignedInUserProfile", (req, res) => {
-  res.header("Access-Control-Allow-Methods", "GET");
-  res.header("Access-Control-Allow-Headers", "Content-Type");
-  res.header("Access-Control-Allow-Origin", "https://gold-careful-drill.cyclic.app/");
-  res.send();
 });
 
 // login user
