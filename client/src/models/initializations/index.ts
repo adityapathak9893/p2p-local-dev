@@ -41,5 +41,5 @@ export const initializedAppState: AppState = {
   allSellOfferDetails: [],
   userSignUpInfo: "",
   isRequestPending: false,
-  errorMessage: "",
+  messageFromBackend: "",
 };

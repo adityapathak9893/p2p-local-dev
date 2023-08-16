@@ -7,7 +7,7 @@ export interface AppState {
   allSellOfferDetails: SellOfferDetails[];
   userSignUpInfo: string;
   isRequestPending: boolean;
-  errorMessage: string;
+  messageFromBackend: string;
 }
 
 export interface UserProfileDetails {
@@ -35,4 +35,9 @@ export interface SellOfferDetails {
   offerLocation: string;
   offerOwnerLocation: string;
   paymentMethod: string;
+}
+
+export interface LinkWithLabels {
+  label: string;
+  linkToPage: string;
 }

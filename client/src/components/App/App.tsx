@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import "./App.css";
+import "./App.scss";
 import {
   BrowserRouter as Router,
   Routes,
@@ -13,23 +13,35 @@ import { SignInPage } from "../../pages/SignInPage";
 import { UserDashBoard } from "../UserDashBoard";
 import { useActionDispatch, useStateSelector } from "../../hooks";
 import { LoadingIndicator } from "../LoadingIndicator/LoadingIndicator";
+import { NavigationBar } from "../NavigationBar";
+import { NotificationPopper } from "../NotificationPopper";
 
 export const App: React.FC = () => {
-  const { isUserLoggedIn, userProfileDetails, isRequestPending } =
+  const { isUserLoggedIn, messageFromBackend, isRequestPending } =
     useStateSelector();
   const { getSignedInUser } = useActionDispatch();
 
   useEffect(() => {
     getSignedInUser();
   }, [isUserLoggedIn]);
+
   return (
-    <div>
+    <div id="AppContainer">
       {isRequestPending ? (
-        <div className="loadingIndicatorContainer">
+        <div id="LoadingIndicatorContainer">
           <LoadingIndicator />
         </div>
       ) : (
         <Router>
+          <div id="NavigationBarWrapper">
+            <NavigationBar
+              isUserLoggedIn={isUserLoggedIn}
+              pages={["Create an offer", "signin", "signup"]}
+            />
+          </div>
+          {!!messageFromBackend && (
+            <NotificationPopper message={messageFromBackend} />
+          )}
           <Routes>
             <Route
               path="/"

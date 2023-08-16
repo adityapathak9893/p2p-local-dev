@@ -1,6 +1,6 @@
 import React from "react";
 import { SignInForm } from "../../components/SignInForm";
-import './SignInPage.css';
+import './SignInPage.scss';
 
 export const SignInPage: React.FC = () => {
   return (

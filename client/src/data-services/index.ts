@@ -20,22 +20,25 @@ export const doUserSignUpApiCall = async (
   email: string,
   password: string
 ): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    fetch(SIGN_UP_API, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        phone,
-        email,
-        password,
-        userName: email.split("@")[0],
-      }),
-    })
-      .then((responseData) => resolve(USER_SIGN_UP_SUCCESSFUL))
-      .catch((err) => reject(USER_SIGN_UP_UNSUCCESSFUL));
+  const responseData = await fetch(SIGN_UP_API, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      phone,
+      email,
+      password,
+      userName: email.split("@")[0],
+    }),
   });
+
+  const data = await responseData.json();
+  if (data.auth === false || data.success === false) {
+    return data.message;
+  } else {
+    return `${data.user.userName} signed-up successfully`;
+  }
 };
 
 export const doUserSignInApiCall = async (

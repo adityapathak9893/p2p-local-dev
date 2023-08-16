@@ -1,4 +1,4 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   doUserSignInApiCall,
   doUserSignOutApiCall,
@@ -7,6 +7,7 @@ import {
 } from "../data-services";
 import {
   GET_USER_PROFILE,
+  RESET_BACKEND_MESSAGE,
   USER_SIGN_IN,
   USER_SIGN_OUT,
   USER_SIGN_UP,
@@ -17,6 +18,10 @@ import {
   UserProfileDetails,
 } from "../models/interfaces";
 import { initializedUserProfileDetails } from "../models/initializations";
+
+export const resetBackendMessage = createAction(RESET_BACKEND_MESSAGE, () => ({
+  payload: "",
+}));
 
 export const doUserSignUp = createAsyncThunk<
   {

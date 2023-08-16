@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useActionDispatch, useStateSelector } from "../../hooks";
-import { useNavigate } from "react-router-dom";
-import "./SignUpForm.css";
-import { USER_SIGN_UP_SUCCESSFUL } from "../../models/constants";
+import "./SignUpForm.scss";
 
 export const SignUpForm: React.FC = () => {
   const [countryCode, setCountryCode] = useState("");
@@ -11,7 +9,6 @@ export const SignUpForm: React.FC = () => {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isFormValid, setIsFormValid] = useState(false);
-  const [signUpMessage, setSignUpMessage] = useState("");
 
   const { doUserSignUp } = useActionDispatch();
   const { userSignUpInfo } = useStateSelector();
@@ -109,19 +106,8 @@ export const SignUpForm: React.FC = () => {
     setIsFormValid(validity === "" ? false : validity);
   }, [phone, email, password, countryCode, errors]);
 
-  useEffect(() => {
-    if (userSignUpInfo === USER_SIGN_UP_SUCCESSFUL) {
-      const timeOutRef = setTimeout(function () {
-        setSignUpMessage(
-          "Signed-up successfully, now please go to sign-in page to sign-in"
-        );
-      }, 3000);
-    }
-  }, [userSignUpInfo]);
-
   return (
     <div className="signup-container">
-      {signUpMessage !== "" && <h5>{signUpMessage}</h5>}
       <h2>Sign Up</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">

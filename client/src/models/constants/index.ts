@@ -1,3 +1,4 @@
+export const RESET_BACKEND_MESSAGE = "RESET_BACKEND_MESSAGE";
 export const USER_SIGN_UP = "USER_SIGN_UP";
 export const USER_SIGN_IN = "USER_SIGN_IN";
 export const USER_SIGN_OUT = "USER_SIGN_OUT";

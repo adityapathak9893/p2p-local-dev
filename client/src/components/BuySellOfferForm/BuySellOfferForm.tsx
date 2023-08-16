@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useActionDispatch, useStateSelector } from "../../hooks";
-import { useNavigate } from "react-router-dom";
-import "../../pages/HomePage/HomePage.css";
-import { USER_SIGN_UP_SUCCESSFUL } from "../../models/constants";
+import "./BuySellOfferForm.scss";
 
 export const BuySellOfferForm: React.FC = () => {
   const [cryptoCurrency, setCryptoCurrency] = useState("");

@@ -4,6 +4,7 @@ import {
   doUserSignIn,
   getSignedInUser,
   doUserSignOut,
+  resetBackendMessage,
 } from "../actions";
 import { AppDispatch, RootState } from "../reducers/store";
 
@@ -26,7 +27,9 @@ export const useStateSelector = () => ({
   allSellOfferDetails: useSelector(
     (state: RootState) => state.allSellOfferDetails
   ),
-  errorMessage: useSelector((state: RootState) => state.errorMessage),
+  messageFromBackend: useSelector(
+    (state: RootState) => state.messageFromBackend
+  ),
 });
 
 export const useActionDispatch = () => {
@@ -38,5 +41,6 @@ export const useActionDispatch = () => {
       dispatch(doUserSignIn({ email, password })),
     getSignedInUser: () => dispatch(getSignedInUser()),
     doUserSignOut: () => dispatch(doUserSignOut()),
+    resetBackendMessage: () => dispatch(resetBackendMessage()),
   };
 };

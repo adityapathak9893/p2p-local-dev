@@ -53,7 +53,12 @@ app.post("/api/signup", function (req, res) {
   const newuser = new userProfile(req.body);
   userProfile.findOne({ email: newuser.email }).then((user) => {
     if (user)
-      return res.status(400).json({ auth: false, message: "email exits" });
+      return res
+        .status(400)
+        .json({
+          auth: false,
+          message: "User's email already exits, Please sign-in",
+        });
     newuser
       .save()
       .then((doc) => {
@@ -64,7 +69,13 @@ app.post("/api/signup", function (req, res) {
       })
       .catch((err) => {
         if (err) {
-          return res.status(400).json({ success: false });
+          return res
+            .status(400)
+            .json({
+              success: false,
+              message:
+                "Problem encountered while registering, Please try again",
+            });
         }
       });
   });

@@ -4,6 +4,7 @@ import {
   doUserSignOut,
   doUserSignUp,
   getSignedInUser,
+  resetBackendMessage,
 } from "../actions";
 import { initializedAppState } from "../models/initializations";
 import {
@@ -12,10 +13,12 @@ import {
   SellOfferDetails,
   UserProfileDetails,
 } from "../models/interfaces";
-import { USER_SIGN_UP_UNSUCCESSFUL } from "../models/constants";
 
 const AppReducer = createReducer(initializedAppState, (app) => {
   app
+    .addCase(resetBackendMessage, (state, action) => {
+      state.messageFromBackend = action.payload;
+    })
     .addCase(
       doUserSignUp.pending,
       (state: AppState): AppState => ({
@@ -28,7 +31,6 @@ const AppReducer = createReducer(initializedAppState, (app) => {
       (state: AppState): AppState => ({
         ...state,
         isRequestPending: false,
-        userSignUpInfo: USER_SIGN_UP_UNSUCCESSFUL,
       })
     )
     .addCase(
@@ -43,7 +45,7 @@ const AppReducer = createReducer(initializedAppState, (app) => {
       ): AppState => ({
         ...state,
         isRequestPending: false,
-        userSignUpInfo: payload.message,
+        messageFromBackend: payload.message,
       })
     )
     .addCase(
@@ -75,7 +77,7 @@ const AppReducer = createReducer(initializedAppState, (app) => {
         isRequestPending: false,
         userSignUpInfo: "",
         isUserLoggedIn: payload.isUserLoggedIn,
-        errorMessage: payload.errorMessage,
+        messageFromBackend: payload.errorMessage,
       })
     )
     .addCase(

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./SignInForm.css"; // Import your CSS file for styling
+import "./SignInForm.scss"; // Import your CSS file for styling
 import { useActionDispatch, useStateSelector } from "../../hooks";
 
 export const SignInForm: React.FC = () => {
@@ -69,7 +69,7 @@ export const SignInForm: React.FC = () => {
   }, [email, password, errors]);
 
   return (
-    <div className="signup-container">
+    <div className="signin-container">
       <h2>Sign In</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
