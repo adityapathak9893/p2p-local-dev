@@ -1,7 +1,4 @@
-import {
-  USER_SIGN_UP_SUCCESSFUL,
-  USER_SIGN_UP_UNSUCCESSFUL,
-} from "../models/constants";
+import { initializedUserProfileDetails } from "../models/initializations";
 import { UserProfileDetails } from "../models/interfaces";
 
 const SIGN_UP_API = `${process.env.REACT_APP_API_HOST}/api/signup`;
@@ -19,7 +16,10 @@ export const doUserSignUpApiCall = async (
   phone: string,
   email: string,
   password: string
-): Promise<string> => {
+): Promise<{
+  message: string;
+  doesErrorOccur: boolean;
+}> => {
   const responseData = await fetch(SIGN_UP_API, {
     method: "POST",
     headers: {
@@ -35,9 +35,15 @@ export const doUserSignUpApiCall = async (
 
   const data = await responseData.json();
   if (data.auth === false || data.success === false) {
-    return data.message;
+    return {
+      message: data.message,
+      doesErrorOccur: true,
+    };
   } else {
-    return `${data.user.userName} signed-up successfully`;
+    return {
+      message: `${data.user.userName} signed-up successfully`,
+      doesErrorOccur: false,
+    };
   }
 };
 
@@ -46,8 +52,8 @@ export const doUserSignInApiCall = async (
   password: string
 ): Promise<{
   isSuccessfullySignedIn: boolean;
-  token: string;
-  errorMessage: string;
+  doesErrorOccur: boolean;
+  message: string;
 }> => {
   const responseData = await fetch(SIGN_IN_API, {
     method: "POST",
@@ -67,28 +73,33 @@ export const doUserSignInApiCall = async (
     if (data.isAuth) {
       return {
         isSuccessfullySignedIn: true,
-        token: data.token,
-        errorMessage: "",
+        doesErrorOccur: false,
+        message: "",
       };
     } else {
       return {
         isSuccessfullySignedIn: false,
-        token: "",
-        errorMessage: data.message,
+        doesErrorOccur: true,
+        message: data.message,
       };
     }
   } catch (error: any) {
     return {
       isSuccessfullySignedIn: false,
-      token: "",
-      errorMessage: error.json().message,
+      doesErrorOccur: false,
+      message: error.json().message,
     };
   }
 };
 
-export const getSignedInUserApiCall = async (): Promise<{
-  error: boolean;
-  userProfileDetails?: UserProfileDetails;
+export const getSignedInUserApiCall = async (
+  message: string,
+  doesErrorOccur: boolean
+): Promise<{
+  message: string;
+  doesErrorOccur: boolean;
+  userProfileDetails: UserProfileDetails;
+  isUserLoggedIn: boolean;
 }> => {
   const responseData = await fetch(GET_SIGNED_IN_USER_PROFILE_API, {
     method: "GET",
@@ -98,35 +109,66 @@ export const getSignedInUserApiCall = async (): Promise<{
     credentials: "include",
   });
   const data = await responseData.json();
-  if (data.error) {
+  if (data.isAuth) {
     return {
-      error: true,
-    };
-  } else {
-    return {
-      error: false,
+      message: `${data.userName}'s profile fetched successfully`,
+      doesErrorOccur: false,
       userProfileDetails: {
         id: data.id,
         phone: data.phone,
         email: data.email,
         userName: data.userName,
       },
+      isUserLoggedIn: true,
+    };
+  } else if (data.isAuth === false) {
+    return {
+      message,
+      doesErrorOccur,
+      userProfileDetails: initializedUserProfileDetails,
+      isUserLoggedIn: false,
+    };
+  } else {
+    return {
+      message: data.message,
+      doesErrorOccur: true,
+      userProfileDetails: initializedUserProfileDetails,
+      isUserLoggedIn: false,
     };
   }
 };
 
-export const doUserSignOutApiCall = async (): Promise<boolean> => {
-  return fetch(SIGN_OUT_API, {
+export const doUserSignOutApiCall = async (): Promise<{
+  isUserLoggedIn: boolean;
+  message: string;
+  doesErrorOccur: boolean;
+}> => {
+  const reponse = await fetch(SIGN_OUT_API, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
     credentials: "include",
-  })
-    .then(() => {
-      return true;
-    })
-    .catch(() => {
-      return false;
-    });
+  });
+
+  const data = await reponse.json();
+
+  if (data.isAuth === false) {
+    return {
+      isUserLoggedIn: false,
+      message: data.message,
+      doesErrorOccur: true,
+    };
+  } else if (data.error) {
+    return {
+      isUserLoggedIn: true,
+      message: data.message,
+      doesErrorOccur: true,
+    };
+  }
+  return {
+    isUserLoggedIn: false,
+    message: data.message,
+    doesErrorOccur: false,
+  };
 };

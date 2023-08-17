@@ -53,12 +53,10 @@ app.post("/api/signup", function (req, res) {
   const newuser = new userProfile(req.body);
   userProfile.findOne({ email: newuser.email }).then((user) => {
     if (user)
-      return res
-        .status(400)
-        .json({
-          auth: false,
-          message: "User's email already exits, Please sign-in",
-        });
+      return res.status(400).json({
+        auth: false,
+        message: "User's email already exits, Please sign-in",
+      });
     newuser
       .save()
       .then((doc) => {
@@ -69,13 +67,10 @@ app.post("/api/signup", function (req, res) {
       })
       .catch((err) => {
         if (err) {
-          return res
-            .status(400)
-            .json({
-              success: false,
-              message:
-                "Problem encountered while registering, Please try again",
-            });
+          return res.status(400).json({
+            success: false,
+            message: "Problem encountered while registering, Please try again",
+          });
         }
       });
   });
@@ -96,7 +91,7 @@ app.post("/api/signin", function (req, res) {
         if (!user)
           return res.json({
             isAuth: false,
-            message: " Auth failed ,email not found",
+            message: "Auth failed ,email not found",
           });
 
         user.comparepassword(req.body.password, (err, isMatch) => {
@@ -141,7 +136,10 @@ app.get("/api/getSignedInUserProfile", auth, (req, res) => {
 app.get("/api/signout", auth, function (req, res) {
   req.user.deleteToken(req.token, (err, user) => {
     if (err) return res.status(400).send(err);
-    res.sendStatus(200);
+    res.status(200).json({
+      success: true,
+      message: "signed-out successfully",
+    });
   });
 });
 

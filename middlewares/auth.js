@@ -7,7 +7,9 @@ let auth = (req, res, next) => {
     if (!user)
       return res.json({
         error: true,
-        message: "you are not logged in"
+        message:
+          "You can't access this page because you have already logged out. Please login again",
+        isAuth: false,
       });
 
     req.token = token;

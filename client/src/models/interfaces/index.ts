@@ -5,7 +5,7 @@ export interface AppState {
   allBuyOfferDetails: BuyOfferDetails[];
   userSellOfferDetails: SellOfferDetails[];
   allSellOfferDetails: SellOfferDetails[];
-  userSignUpInfo: string;
+  doesErrorOccur: boolean;
   isRequestPending: boolean;
   messageFromBackend: string;
 }

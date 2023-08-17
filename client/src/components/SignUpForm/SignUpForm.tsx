@@ -11,7 +11,6 @@ export const SignUpForm: React.FC = () => {
   const [isFormValid, setIsFormValid] = useState(false);
 
   const { doUserSignUp } = useActionDispatch();
-  const { userSignUpInfo } = useStateSelector();
   const resetForm = () => {
     setPhone("");
     setEmail("");

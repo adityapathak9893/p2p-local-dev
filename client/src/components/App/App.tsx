@@ -17,8 +17,12 @@ import { NavigationBar } from "../NavigationBar";
 import { NotificationPopper } from "../NotificationPopper";
 
 export const App: React.FC = () => {
-  const { isUserLoggedIn, messageFromBackend, isRequestPending } =
-    useStateSelector();
+  const {
+    isUserLoggedIn,
+    messageFromBackend,
+    isRequestPending,
+    doesErrorOccur,
+  } = useStateSelector();
   const { getSignedInUser } = useActionDispatch();
 
   useEffect(() => {
@@ -40,7 +44,10 @@ export const App: React.FC = () => {
             />
           </div>
           {!!messageFromBackend && (
-            <NotificationPopper message={messageFromBackend} />
+            <NotificationPopper
+              message={messageFromBackend}
+              doesErrorOccur={doesErrorOccur}
+            />
           )}
           <Routes>
             <Route

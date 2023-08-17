@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./SignInForm.scss"; // Import your CSS file for styling
+import "./SignInForm.scss";
 import { useActionDispatch, useStateSelector } from "../../hooks";
 
 export const SignInForm: React.FC = () => {
@@ -8,7 +8,7 @@ export const SignInForm: React.FC = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isFormValid, setIsFormValid] = useState(false);
 
-  const { doUserSignIn, getSignedInUser } = useActionDispatch();
+  const { doUserSignIn } = useActionDispatch();
 
   const resetForm = () => {
     setEmail("");
@@ -36,22 +36,17 @@ export const SignInForm: React.FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isFormValid) {
-      // Perform signIn logic here
       doUserSignIn(email, password).then(() => {
-        getSignedInUser().then(() => {
-          resetForm();
-        });
+        resetForm();
       });
     }
   };
 
   const validateEmail = (email: string) => {
-    // Implement email validation logic here
     return email ? "" : "Email is required";
   };
 
   const validatePassword = (password: string) => {
-    // Implement password validation logic here
     return password ? "" : "Password is required";
   };
 

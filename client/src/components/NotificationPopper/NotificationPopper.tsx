@@ -10,19 +10,22 @@ function Alert(props: AlertProps) {
 
 interface NotificationPopperProps {
   message: string;
+  doesErrorOccur: boolean;
 }
 
 export const NotificationPopper: React.FC<NotificationPopperProps> = ({
   message,
+  doesErrorOccur,
 }) => {
   const [open, setOpen] = useState(true);
-  const { resetBackendMessage } = useActionDispatch();
+  const { resetBackendMessage, resetErrorState } = useActionDispatch();
 
   const handleClose: SnackbarProps["onClose"] = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
     resetBackendMessage();
+    resetErrorState();
     setOpen(false);
   };
 
@@ -31,7 +34,7 @@ export const NotificationPopper: React.FC<NotificationPopperProps> = ({
       <div>
         <Alert
           onClose={(event) => handleClose(event, "timeout")}
-          severity="success"
+          severity={doesErrorOccur ? "error" : "success"}
           sx={{ width: "100%" }}
         >
           {message}

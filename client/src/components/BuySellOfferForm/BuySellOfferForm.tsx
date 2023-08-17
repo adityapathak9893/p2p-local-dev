@@ -13,7 +13,6 @@ export const BuySellOfferForm: React.FC = () => {
   const [isFormValid, setIsFormValid] = useState(false);
 
   const { doUserSignUp } = useActionDispatch();
-  const { userSignUpInfo } = useStateSelector();
 
   const handleCryptoCurrencyChange = (
     e: React.ChangeEvent<HTMLSelectElement>

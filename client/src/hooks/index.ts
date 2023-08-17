@@ -5,11 +5,11 @@ import {
   getSignedInUser,
   doUserSignOut,
   resetBackendMessage,
+  resetErrorState,
 } from "../actions";
 import { AppDispatch, RootState } from "../reducers/store";
 
 export const useStateSelector = () => ({
-  userSignUpInfo: useSelector((state: RootState) => state.userSignUpInfo),
   isRequestPending: useSelector((state: RootState) => state.isRequestPending),
   isUserLoggedIn: useSelector((state: RootState) => state.isUserLoggedIn),
   userProfileDetails: useSelector(
@@ -30,6 +30,7 @@ export const useStateSelector = () => ({
   messageFromBackend: useSelector(
     (state: RootState) => state.messageFromBackend
   ),
+  doesErrorOccur: useSelector((state: RootState) => state.doesErrorOccur),
 });
 
 export const useActionDispatch = () => {
@@ -42,5 +43,6 @@ export const useActionDispatch = () => {
     getSignedInUser: () => dispatch(getSignedInUser()),
     doUserSignOut: () => dispatch(doUserSignOut()),
     resetBackendMessage: () => dispatch(resetBackendMessage()),
+    resetErrorState: () => dispatch(resetErrorState()),
   };
 };

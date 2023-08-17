@@ -5,6 +5,7 @@ import {
   doUserSignUp,
   getSignedInUser,
   resetBackendMessage,
+  resetErrorState,
 } from "../actions";
 import { initializedAppState } from "../models/initializations";
 import {
@@ -16,6 +17,9 @@ import {
 
 const AppReducer = createReducer(initializedAppState, (app) => {
   app
+    .addCase(resetErrorState, (state, action) => {
+      state.doesErrorOccur = action.payload;
+    })
     .addCase(resetBackendMessage, (state, action) => {
       state.messageFromBackend = action.payload;
     })
@@ -70,14 +74,15 @@ const AppReducer = createReducer(initializedAppState, (app) => {
           payload,
         }: PayloadAction<{
           isUserLoggedIn: boolean;
-          errorMessage: string;
+          doesErrorOccur: boolean;
+          message: string;
         }>
       ): AppState => ({
         ...state,
         isRequestPending: false,
-        userSignUpInfo: "",
+        doesErrorOccur: payload.doesErrorOccur,
         isUserLoggedIn: payload.isUserLoggedIn,
-        messageFromBackend: payload.errorMessage,
+        messageFromBackend: payload.message,
       })
     )
     .addCase(
@@ -101,13 +106,16 @@ const AppReducer = createReducer(initializedAppState, (app) => {
         {
           payload,
         }: PayloadAction<{
+          message: string;
+          doesErrorOccur: boolean;
           userProfileDetails: UserProfileDetails;
           isUserLoggedIn: boolean;
         }>
       ): AppState => ({
         ...state,
         isRequestPending: false,
-        userSignUpInfo: "",
+        messageFromBackend: payload.message,
+        doesErrorOccur: payload.doesErrorOccur,
         userProfileDetails: payload.userProfileDetails,
         isUserLoggedIn: payload.isUserLoggedIn,
       })
@@ -137,15 +145,18 @@ const AppReducer = createReducer(initializedAppState, (app) => {
           userBuyOfferDetails: BuyOfferDetails[];
           userSellOfferDetails: SellOfferDetails[];
           isUserLoggedIn: boolean;
+          message: string;
+          doesErrorOccur: boolean;
         }>
       ): AppState => ({
         ...state,
         isRequestPending: false,
-        userSignUpInfo: "",
         userProfileDetails: payload.userProfileDetails,
         userBuyOfferDetails: payload.userBuyOfferDetails,
         userSellOfferDetails: payload.userSellOfferDetails,
         isUserLoggedIn: payload.isUserLoggedIn,
+        messageFromBackend: payload.message,
+        doesErrorOccur: payload.doesErrorOccur,
       })
     );
 });
