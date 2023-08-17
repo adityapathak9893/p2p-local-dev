@@ -45,11 +45,13 @@ const AppReducer = createReducer(initializedAppState, (app) => {
           payload,
         }: PayloadAction<{
           message: string;
+          doesErrorOccur: boolean;
         }>
       ): AppState => ({
         ...state,
         isRequestPending: false,
         messageFromBackend: payload.message,
+        doesErrorOccur: payload.doesErrorOccur,
       })
     )
     .addCase(
