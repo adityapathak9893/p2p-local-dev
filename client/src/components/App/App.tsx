@@ -4,17 +4,18 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  useNavigate,
   Navigate,
+  useLocation,
 } from "react-router-dom";
 import { HomePage } from "../../pages/HomePage";
 import { SignUpPage } from "../../pages/SignUpPage";
 import { SignInPage } from "../../pages/SignInPage";
-import { UserDashBoard } from "../UserDashBoard";
 import { useActionDispatch, useStateSelector } from "../../hooks";
 import { LoadingIndicator } from "../LoadingIndicator/LoadingIndicator";
 import { NavigationBar } from "../NavigationBar";
 import { NotificationPopper } from "../NotificationPopper";
+import { CreateOffersPage } from "../../pages/CreateOffersPage";
+import { UserDashBoardPage } from "../../pages/UserDashBoardPage";
 
 export const App: React.FC = () => {
   const {
@@ -22,8 +23,17 @@ export const App: React.FC = () => {
     messageFromBackend,
     isRequestPending,
     doesErrorOccur,
+    userProfileDetails,
   } = useStateSelector();
   const { getSignedInUser } = useActionDispatch();
+  const logoutChannel = new BroadcastChannel("user-logout");
+
+  logoutChannel.onmessage = (event) => {
+    if (event.data === "logout") {
+      // Perform logout actions (e.g., clear tokens, redirect)
+      getSignedInUser();
+    }
+  };
 
   useEffect(() => {
     getSignedInUser();
@@ -40,7 +50,24 @@ export const App: React.FC = () => {
           <div id="NavigationBarWrapper">
             <NavigationBar
               isUserLoggedIn={isUserLoggedIn}
-              pages={["Create an offer", "signin", "signup"]}
+              otherPages={
+                isUserLoggedIn
+                  ? [
+                      { label: "Buy", link: "/buyOffers" },
+                      { label: "Sell", link: "/sellOffers" },
+                      { label: "Create an offer", link: "/createOffers" },
+                      { label: "DashBoard", link: "/user-dashboard" },
+                    ]
+                  : [
+                      { label: "Buy", link: "/buyOffers" },
+                      { label: "Sell", link: "/sellOffers" },
+                    ]
+              }
+              signInSignUpPages={[
+                { label: "Sign-in", link: "/signin" },
+                { label: "Sign-up", link: "/signup" },
+              ]}
+              loggedInUserName={userProfileDetails.userName}
             />
           </div>
           {!!messageFromBackend && (
@@ -54,7 +81,7 @@ export const App: React.FC = () => {
               path="/"
               element={
                 isUserLoggedIn ? (
-                  <Navigate replace to={"/userdashboard"} />
+                  <Navigate replace to={"/user-dashboard"} />
                 ) : (
                   <HomePage />
                 )
@@ -64,7 +91,7 @@ export const App: React.FC = () => {
               path="/signup"
               element={
                 isUserLoggedIn ? (
-                  <Navigate replace to={"/userdashboard"} />
+                  <Navigate replace to={"/user-dashboard"} />
                 ) : (
                   <SignUpPage />
                 )
@@ -74,19 +101,29 @@ export const App: React.FC = () => {
               path="/signin"
               element={
                 isUserLoggedIn ? (
-                  <Navigate replace to={"/userdashboard"} />
+                  <Navigate replace to={"/user-dashboard"} />
                 ) : (
                   <SignInPage />
                 )
               }
             />
             <Route
-              path="/userdashboard"
+              path="/user-dashboard"
               element={
                 !isUserLoggedIn ? (
                   <Navigate replace to={"/"} />
                 ) : (
-                  <UserDashBoard />
+                  <UserDashBoardPage />
+                )
+              }
+            />
+            <Route
+              path="/createOffers"
+              element={
+                !isUserLoggedIn ? (
+                  <Navigate replace to={"/signin"} />
+                ) : (
+                  <CreateOffersPage />
                 )
               }
             />

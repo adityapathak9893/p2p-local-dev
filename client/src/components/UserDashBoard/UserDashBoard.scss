@@ -1,17 +1,13 @@
   /* Container for the dashboard */
   .container {
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      width: 80%;
-      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
   }
 
   /* Header styling */
   header {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
   }
 
   /* Dashboard content section */

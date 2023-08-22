@@ -6,6 +6,8 @@ import {
   doUserSignOut,
   resetBackendMessage,
   resetErrorState,
+  placeMyBuyOffer,
+  placeMySellOffer,
 } from "../actions";
 import { AppDispatch, RootState } from "../reducers/store";
 
@@ -15,14 +17,14 @@ export const useStateSelector = () => ({
   userProfileDetails: useSelector(
     (state: RootState) => state.userProfileDetails
   ),
-  userBuyOfferDetails: useSelector(
-    (state: RootState) => state.userBuyOfferDetails
+  myAllBuyOffersDetails: useSelector(
+    (state: RootState) => state.myAllBuyOffersDetails
   ),
   allBuyOfferDetails: useSelector(
     (state: RootState) => state.allBuyOfferDetails
   ),
-  userSellOfferDetails: useSelector(
-    (state: RootState) => state.userSellOfferDetails
+  myAllSellOffersDetails: useSelector(
+    (state: RootState) => state.myAllSellOffersDetails
   ),
   allSellOfferDetails: useSelector(
     (state: RootState) => state.allSellOfferDetails
@@ -44,5 +46,57 @@ export const useActionDispatch = () => {
     doUserSignOut: () => dispatch(doUserSignOut()),
     resetBackendMessage: () => dispatch(resetBackendMessage()),
     resetErrorState: () => dispatch(resetErrorState()),
+    placeMyBuyOffer: (
+      cryptoCurrency: string,
+      paymentMethod: string,
+      preferredCurrency: string,
+      cryptoCurrencyRate: string,
+      minAmount: number,
+      maxAmount: number,
+      offerMargin: number,
+      offersTags: string[],
+      offerLocation: string,
+      offerOwnerLocation: string
+    ) =>
+      dispatch(
+        placeMyBuyOffer({
+          cryptoCurrency,
+          paymentMethod,
+          preferredCurrency,
+          cryptoCurrencyRate,
+          minAmount,
+          maxAmount,
+          offerMargin,
+          offersTags,
+          offerLocation,
+          offerOwnerLocation,
+        })
+      ),
+    placeMySellOffer: (
+      cryptoCurrency: string,
+      paymentMethod: string,
+      preferredCurrency: string,
+      cryptoCurrencyRate: string,
+      minAmount: number,
+      maxAmount: number,
+      offerMargin: number,
+      offersTags: string[],
+      offerLocation: string,
+      offerOwnerLocation: string
+    ) =>
+      dispatch(
+        placeMySellOffer({
+          cryptoCurrency,
+          paymentMethod,
+          preferredCurrency,
+          cryptoCurrencyRate,
+          minAmount,
+          maxAmount,
+          offerMargin,
+          offersTags,
+          offerLocation,
+          offerOwnerLocation,
+        })
+      ),
   };
 };

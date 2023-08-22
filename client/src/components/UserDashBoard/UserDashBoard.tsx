@@ -1,7 +1,7 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom"; // Assuming you're using React Router for navigation
-import "./UserDashBoard.css";
+import { Link, useNavigate } from "react-router-dom";
 import { useActionDispatch, useStateSelector } from "../../hooks";
+import "./UserDashBoard.scss";
 
 export const UserDashBoard: React.FC = () => {
   const { isUserLoggedIn, userProfileDetails, isRequestPending } =
@@ -16,7 +16,7 @@ export const UserDashBoard: React.FC = () => {
     });
   };
   return (
-    <div>
+    <div className="container">
       <header>
         <h1>{`Welcome ${userProfileDetails.userName} to Your Bitcoin Exchange Dashboard`}</h1>
         <p>Manage your offers, trades, and account settings.</p>

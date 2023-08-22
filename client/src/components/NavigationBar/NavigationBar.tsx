@@ -5,18 +5,26 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
-import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
+import "./NavigationBar.scss";
 
 const settings = ["Logout"];
 
 interface INavigationBarProps {
-  pages: Array<string>;
-  isUserLoggedIn: boolean;
+  otherPages?: {
+    label: string;
+    link: string;
+  }[];
+  signInSignUpPages?: {
+    label: string;
+    link: string;
+  }[];
+  isUserLoggedIn?: boolean;
+  loggedInUserName?: string;
 }
 
 export const NavigationBar: React.FC<INavigationBarProps> = (
@@ -36,75 +44,79 @@ export const NavigationBar: React.FC<INavigationBarProps> = (
 
   return (
     <AppBar position="static">
-      <Container>
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+      <Toolbar sx={{ display: "flex" }}>
+        <Box sx={{ display: "flex", alignItems: "center", flex: 1 }}>
           <Link to="/">
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography
-                variant="h6"
-                sx={{
-                  mr: 2,
-                  display: { xs: "none", md: "flex" },
-                  fontFamily: "monospace",
-                  fontWeight: 700,
-                  letterSpacing: ".4rem",
-                  color: "white",
-                  textDecoration: "none",
-                }}
-              >
-                p2p_local
-              </Typography>
-            </Box>
+            <Typography
+              variant="h6"
+              sx={{
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".4rem",
+                color: "white",
+                textDecoration: "none",
+              }}
+            >
+              p2p_local
+            </Typography>
           </Link>
-
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            {props.isUserLoggedIn && (
-              <Box sx={{ flexGrow: 0 }}>
-                <Tooltip title="Open settings">
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar
-                      alt="Remy Sharp"
-                      src="/static/images/avatar/2.jpg"
-                    />
-                  </IconButton>
-                </Tooltip>
-                <Menu
-                  sx={{ mt: "45px" }}
-                  id="menu-appbar"
-                  anchorEl={anchorElUser}
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  open={Boolean(anchorElUser)}
-                  onClose={handleCloseUserMenu}
-                >
-                  {settings.map((setting) => (
-                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                      <Typography textAlign="center">{setting}</Typography>
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </Box>
-            )}
-
-            <Box sx={{ display: { xs: "flex", md: "flex" } }}>
-              {props.pages.map((page) => (
-                <Link to={`/${page}`} key={`/${page}`}>
-                  <Button key={page} sx={{ ml: 1, color: "white" }}>
-                    {page}
-                  </Button>
-                </Link>
-              ))}
-            </Box>
-          </Box>
-        </Toolbar>
-      </Container>
+        </Box>
+        <Box sx={{ display: "flex", flex: 4 }}>
+          {props.otherPages?.map((page, key) => (
+            <Link to={page.link} key={page.link}>
+              <Button key={key} sx={{ ml: 1, color: "white" }}>
+                {page.label}
+              </Button>
+            </Link>
+          ))}
+        </Box>
+        <Box sx={{ display: "flex", flex: 1, justifyContent: "flex-end" }}>
+          {!props.isUserLoggedIn ? (
+            props.signInSignUpPages?.map((page, key) => (
+              <Link to={page.link} key={page.link}>
+                <Button key={key} sx={{ ml: 1, color: "white" }}>
+                  {page.label}
+                </Button>
+              </Link>
+            ))
+          ) : (
+            <>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar
+                    alt={props.loggedInUserName ?? ""}
+                    src="/static/images/avatar/2.jpg"
+                  />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center">{setting}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </>
+          )}
+        </Box>
+      </Toolbar>
     </AppBar>
   );
 };

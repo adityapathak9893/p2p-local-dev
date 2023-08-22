@@ -13,23 +13,33 @@ const UserProfile = new mongoose.Schema({
 });
 
 const BuyOffers = new mongoose.Schema({
-  email: { type: String, required: true},
+  email: { type: String, required: true },
   userName: { type: String, required: true },
   cryptoCurrency: { type: String, required: true },
-  spendMoney: { type: Number, required: true },
+  paymentMethod: { type: String, required: true },
+  preferredCurrency: { type: String, required: true },
+  cryptoCurrencyRate: { type: String, required: true },
+  minAmount: { type: Number, required: true },
+  maxAmount: { type: Number, required: true },
+  offerMargin: { type: Number, required: true },
+  offersTags: { type: [String], required: true },
   offerLocation: { type: String, required: true },
   offerOwnerLocation: { type: String, required: true },
-  paymentMethod: { type: String, required: true },
 });
 
 const SellOffers = new mongoose.Schema({
   email: { type: String, required: true },
   userName: { type: String, required: true },
   cryptoCurrency: { type: String, required: true },
-  getMoney: { type: Number, required: true },
+  paymentMethod: { type: String, required: true },
+  preferredCurrency: { type: String, required: true },
+  cryptoCurrencyRate: { type: String, required: true },
+  minAmount: { type: Number, required: true },
+  maxAmount: { type: Number, required: true },
+  offerMargin: { type: Number, required: true },
+  offersTags: { type: [String] },
   offerLocation: { type: String, required: true },
   offerOwnerLocation: { type: String, required: true },
-  paymentMethod: { type: String, required: true },
 });
 
 //hashing the user password
@@ -92,9 +102,14 @@ UserProfile.statics.findByToken = function (token, cb) {
 //delete token when logout
 UserProfile.methods.deleteToken = function (token, cb) {
   var user = this;
-  user.updateOne({ $unset: { token: 1 } }).then(function (user) {
-    cb(null, user);
-  }).catch((err) => {return cb(err);});
+  user
+    .updateOne({ $unset: { token: 1 } })
+    .then(function (user) {
+      cb(null, user);
+    })
+    .catch((err) => {
+      return cb(err);
+    });
 };
 
 const userProfile = mongoose.model("UserProfile", UserProfile);

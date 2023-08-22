@@ -4,20 +4,20 @@ import {
   doUserSignOutApiCall,
   doUserSignUpApiCall,
   getSignedInUserApiCall,
+  placeMyBuyOfferApiCall,
+  placeMySellOfferApiCall,
 } from "../data-services";
 import {
   GET_USER_PROFILE,
+  PLACE_USER_BUY_OFFER,
+  PLACE_USER_SELL_OFFER,
   RESET_BACKEND_MESSAGE,
   RESET_ERROR_STATE,
   USER_SIGN_IN,
   USER_SIGN_OUT,
   USER_SIGN_UP,
 } from "../models/constants";
-import {
-  BuyOfferDetails,
-  SellOfferDetails,
-  UserProfileDetails,
-} from "../models/interfaces";
+import { OfferDetails, UserProfileDetails } from "../models/interfaces";
 import { initializedUserProfileDetails } from "../models/initializations";
 import { RootState } from "../reducers/store";
 
@@ -93,8 +93,8 @@ export const getSignedInUser = createAsyncThunk<{
 
 export const doUserSignOut = createAsyncThunk<{
   userProfileDetails: UserProfileDetails;
-  userBuyOfferDetails: BuyOfferDetails[];
-  userSellOfferDetails: SellOfferDetails[];
+  myAllBuyOffersDetails: OfferDetails[];
+  myAllSellOffersDetails: OfferDetails[];
   isUserLoggedIn: boolean;
   message: string;
   doesErrorOccur: boolean;
@@ -107,17 +107,141 @@ export const doUserSignOut = createAsyncThunk<{
       isUserLoggedIn: signOutInfo.isUserLoggedIn,
       message: signOutInfo.message,
       doesErrorOccur: signOutInfo.doesErrorOccur,
-      userBuyOfferDetails: state.userBuyOfferDetails,
-      userSellOfferDetails: state.userSellOfferDetails,
+      myAllBuyOffersDetails: state.myAllBuyOffersDetails,
+      myAllSellOffersDetails: state.myAllSellOffersDetails,
     };
   } else {
+    // Notify other tabs about the logout
+    const logoutChannel = new BroadcastChannel("user-logout");
+    logoutChannel.postMessage("logout");
+    logoutChannel.close();
     return {
       userProfileDetails: initializedUserProfileDetails,
       isUserLoggedIn: signOutInfo.isUserLoggedIn,
       message: signOutInfo.message,
       doesErrorOccur: signOutInfo.doesErrorOccur,
-      userBuyOfferDetails: [],
-      userSellOfferDetails: [],
+      myAllBuyOffersDetails: [],
+      myAllSellOffersDetails: [],
     };
   }
 });
+
+export const placeMyBuyOffer = createAsyncThunk<
+  {
+    isUserLoggedIn: boolean;
+    message: string;
+    doesErrorOccur: boolean;
+  },
+  {
+    cryptoCurrency: string;
+    paymentMethod: string;
+    preferredCurrency: string;
+    cryptoCurrencyRate: string;
+    minAmount: number;
+    maxAmount: number;
+    offerMargin: number;
+    offersTags: string[];
+    offerLocation: string;
+    offerOwnerLocation: string;
+  }
+>(
+  PLACE_USER_BUY_OFFER,
+  async (buyOffer: {
+    cryptoCurrency: string;
+    paymentMethod: string;
+    preferredCurrency: string;
+    cryptoCurrencyRate: string;
+    minAmount: number;
+    maxAmount: number;
+    offerMargin: number;
+    offersTags: string[];
+    offerLocation: string;
+    offerOwnerLocation: string;
+  }) => {
+    const {
+      cryptoCurrency,
+      paymentMethod,
+      preferredCurrency,
+      cryptoCurrencyRate,
+      minAmount,
+      maxAmount,
+      offerMargin,
+      offersTags,
+      offerLocation,
+      offerOwnerLocation,
+    } = buyOffer;
+    const myBuyOfferInfo = await placeMyBuyOfferApiCall(
+      cryptoCurrency,
+      paymentMethod,
+      preferredCurrency,
+      cryptoCurrencyRate,
+      minAmount,
+      maxAmount,
+      offerMargin,
+      offersTags,
+      offerLocation,
+      offerOwnerLocation
+    );
+    return myBuyOfferInfo;
+  }
+);
+
+export const placeMySellOffer = createAsyncThunk<
+  {
+    isUserLoggedIn: boolean;
+    message: string;
+    doesErrorOccur: boolean;
+  },
+  {
+    cryptoCurrency: string;
+    paymentMethod: string;
+    preferredCurrency: string;
+    cryptoCurrencyRate: string;
+    minAmount: number;
+    maxAmount: number;
+    offerMargin: number;
+    offersTags: string[];
+    offerLocation: string;
+    offerOwnerLocation: string;
+  }
+>(
+  PLACE_USER_SELL_OFFER,
+  async (sellOffer: {
+    cryptoCurrency: string;
+    paymentMethod: string;
+    preferredCurrency: string;
+    cryptoCurrencyRate: string;
+    minAmount: number;
+    maxAmount: number;
+    offerMargin: number;
+    offersTags: string[];
+    offerLocation: string;
+    offerOwnerLocation: string;
+  }) => {
+    const {
+      cryptoCurrency,
+      paymentMethod,
+      preferredCurrency,
+      cryptoCurrencyRate,
+      minAmount,
+      maxAmount,
+      offerMargin,
+      offersTags,
+      offerLocation,
+      offerOwnerLocation,
+    } = sellOffer;
+    const mySellOfferInfo = await placeMySellOfferApiCall(
+      cryptoCurrency,
+      paymentMethod,
+      preferredCurrency,
+      cryptoCurrencyRate,
+      minAmount,
+      maxAmount,
+      offerMargin,
+      offersTags,
+      offerLocation,
+      offerOwnerLocation
+    );
+    return mySellOfferInfo;
+  }
+);

@@ -1,10 +1,10 @@
 export interface AppState {
   isUserLoggedIn: boolean;
   userProfileDetails: UserProfileDetails;
-  userBuyOfferDetails: BuyOfferDetails[];
-  allBuyOfferDetails: BuyOfferDetails[];
-  userSellOfferDetails: SellOfferDetails[];
-  allSellOfferDetails: SellOfferDetails[];
+  myAllBuyOffersDetails: OfferDetails[];
+  allBuyOfferDetails: OfferDetails[];
+  myAllSellOffersDetails: OfferDetails[];
+  allSellOfferDetails: OfferDetails[];
   doesErrorOccur: boolean;
   isRequestPending: boolean;
   messageFromBackend: string;
@@ -17,27 +17,28 @@ export interface UserProfileDetails {
   userName: string;
 }
 
-export interface BuyOfferDetails {
+export interface OfferDetails {
   email: string;
   userName: string;
   cryptoCurrency: string;
-  spendMoney: number | null;
+  paymentMethod: string;
+  preferredCurrency: string;
+  cryptoCurrencyRate: string;
+  minAmount: number | null;
+  maxAmount: number | null;
+  offerMargin: number | null;
+  offersTags: string[];
   offerLocation: string;
   offerOwnerLocation: string;
-  paymentMethod: string;
-}
-
-export interface SellOfferDetails {
-  email: string;
-  userName: string;
-  cryptoCurrency: string;
-  getMoney: number | null;
-  offerLocation: string;
-  offerOwnerLocation: string;
-  paymentMethod: string;
 }
 
 export interface LinkWithLabels {
   label: string;
   linkToPage: string;
+}
+
+export interface StepsContent {
+  PaymentMethod: JSX.Element[];
+  Pricing: JSX.Element[];
+  OtherSettings: JSX.Element[];
 }

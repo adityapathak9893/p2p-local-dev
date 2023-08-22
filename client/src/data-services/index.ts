@@ -1,5 +1,8 @@
-import { initializedUserProfileDetails } from "../models/initializations";
-import { UserProfileDetails } from "../models/interfaces";
+import {
+  initializedOfferDetails,
+  initializedUserProfileDetails,
+} from "../models/initializations";
+import { OfferDetails, UserProfileDetails } from "../models/interfaces";
 
 const SIGN_UP_API = `${process.env.REACT_APP_API_HOST}/api/signup`;
 const SIGN_IN_API = `${process.env.REACT_APP_API_HOST}/api/signin`;
@@ -171,4 +174,112 @@ export const doUserSignOutApiCall = async (): Promise<{
     message: data.message,
     doesErrorOccur: false,
   };
+};
+
+export const placeMyBuyOfferApiCall = async (
+  cryptoCurrency: string,
+  paymentMethod: string,
+  preferredCurrency: string,
+  cryptoCurrencyRate: string,
+  minAmount: number,
+  maxAmount: number,
+  offerMargin: number,
+  offersTags: string[],
+  offerLocation: string,
+  offerOwnerLocation: string
+): Promise<{
+  isUserLoggedIn: boolean;
+  message: string;
+  doesErrorOccur: boolean;
+}> => {
+  const reponse = await fetch(PLACE_MY_BUY_OFFER_API, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({
+      cryptoCurrency,
+      paymentMethod,
+      preferredCurrency,
+      cryptoCurrencyRate,
+      minAmount,
+      maxAmount,
+      offerMargin,
+      offersTags,
+      offerLocation,
+      offerOwnerLocation,
+    }),
+  });
+
+  const data = await reponse.json();
+
+  if (data.success) {
+    return {
+      message:
+        "You have successfully palced your buy offer. You can see it on my offers tab under user dashboard",
+      doesErrorOccur: false,
+      isUserLoggedIn: true,
+    };
+  } else {
+    return {
+      message: data.message,
+      doesErrorOccur: true,
+      isUserLoggedIn: false,
+    };
+  }
+};
+
+export const placeMySellOfferApiCall = async (
+  cryptoCurrency: string,
+  paymentMethod: string,
+  preferredCurrency: string,
+  cryptoCurrencyRate: string,
+  minAmount: number,
+  maxAmount: number,
+  offerMargin: number,
+  offersTags: string[],
+  offerLocation: string,
+  offerOwnerLocation: string
+): Promise<{
+  isUserLoggedIn: boolean;
+  message: string;
+  doesErrorOccur: boolean;
+}> => {
+  const reponse = await fetch(PLACE_MY_SELL_OFFER_API, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({
+      cryptoCurrency,
+      paymentMethod,
+      preferredCurrency,
+      cryptoCurrencyRate,
+      minAmount,
+      maxAmount,
+      offerMargin,
+      offersTags,
+      offerLocation,
+      offerOwnerLocation,
+    }),
+  });
+
+  const data = await reponse.json();
+
+  if (data.success) {
+    return {
+      message:
+        "You have successfully palced your sell offer. You can see it on my offers tab under user dashboard",
+      doesErrorOccur: false,
+      isUserLoggedIn: true,
+    };
+  } else {
+    return {
+      message: data.message,
+      doesErrorOccur: true,
+      isUserLoggedIn: false,
+    };
+  }
 };

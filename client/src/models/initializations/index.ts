@@ -1,9 +1,4 @@
-import {
-  AppState,
-  UserProfileDetails,
-  BuyOfferDetails,
-  SellOfferDetails,
-} from "../interfaces";
+import { AppState, UserProfileDetails, OfferDetails } from "../interfaces";
 
 export const initializedUserProfileDetails: UserProfileDetails = {
   id: "",
@@ -12,32 +7,27 @@ export const initializedUserProfileDetails: UserProfileDetails = {
   userName: "",
 };
 
-export const initializedBuyOfferDetails: BuyOfferDetails = {
+export const initializedOfferDetails: OfferDetails = {
   email: "",
   userName: "",
   cryptoCurrency: "",
-  spendMoney: null,
+  paymentMethod: "",
+  preferredCurrency: "",
+  cryptoCurrencyRate: "",
+  minAmount: null,
+  maxAmount: null,
+  offerMargin: null,
+  offersTags: [],
   offerLocation: "",
   offerOwnerLocation: "",
-  paymentMethod: "",
-};
-
-export const initializedSellOfferDetails: SellOfferDetails = {
-  email: "",
-  userName: "",
-  cryptoCurrency: "",
-  getMoney: null,
-  offerLocation: "",
-  offerOwnerLocation: "",
-  paymentMethod: "",
 };
 
 export const initializedAppState: AppState = {
   isUserLoggedIn: false,
   userProfileDetails: initializedUserProfileDetails,
-  userBuyOfferDetails: [],
+  myAllBuyOffersDetails: [],
   allBuyOfferDetails: [],
-  userSellOfferDetails: [],
+  myAllSellOffersDetails: [],
   allSellOfferDetails: [],
   doesErrorOccur: false,
   isRequestPending: false,

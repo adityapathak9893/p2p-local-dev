@@ -1,0 +1,66 @@
+.createOffersPageContainer {
+    display: flex;
+    height: 100%;
+}
+
+.offerProcessSection {
+    display: flex;
+    flex-direction: column;
+    flex: 2;
+}
+
+.offerProcessFormContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 3;
+}
+
+.stepsSummaryWithPointsWrapper {
+    padding: 0px 0px 20px 20px;
+}
+
+.stepsSummarybuttonContainer {
+    padding: 0px 0px 0px 20px;
+    display: flex;
+}
+
+.stepsSummarySection {
+    flex: 1;
+}
+
+.stepperContainer {
+    padding: 20px 10px;
+    flex: 1;
+}
+
+.stepsSummaryButtons {
+    margin-right: 15px;
+}
+
+.summaryPoints {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: black;
+    margin-right: 10px;
+}
+
+.stepsSummaryWrapper {
+    padding: 0px 0px 20px 0px;
+    font-style: oblique;
+}
+
+.eachPoint {
+    display: flex;
+}
+
+.stepsPointWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+h2.stepsSummarySectionTitle {
+    padding: 0px 0px 0px 20px;
+}

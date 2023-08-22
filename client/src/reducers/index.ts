@@ -4,14 +4,15 @@ import {
   doUserSignOut,
   doUserSignUp,
   getSignedInUser,
+  placeMyBuyOffer,
+  placeMySellOffer,
   resetBackendMessage,
   resetErrorState,
 } from "../actions";
 import { initializedAppState } from "../models/initializations";
 import {
   AppState,
-  BuyOfferDetails,
-  SellOfferDetails,
+  OfferDetails,
   UserProfileDetails,
 } from "../models/interfaces";
 
@@ -144,8 +145,8 @@ const AppReducer = createReducer(initializedAppState, (app) => {
           payload,
         }: PayloadAction<{
           userProfileDetails: UserProfileDetails;
-          userBuyOfferDetails: BuyOfferDetails[];
-          userSellOfferDetails: SellOfferDetails[];
+          myAllBuyOffersDetails: OfferDetails[];
+          myAllSellOffersDetails: OfferDetails[];
           isUserLoggedIn: boolean;
           message: string;
           doesErrorOccur: boolean;
@@ -154,8 +155,74 @@ const AppReducer = createReducer(initializedAppState, (app) => {
         ...state,
         isRequestPending: false,
         userProfileDetails: payload.userProfileDetails,
-        userBuyOfferDetails: payload.userBuyOfferDetails,
-        userSellOfferDetails: payload.userSellOfferDetails,
+        myAllBuyOffersDetails: payload.myAllBuyOffersDetails,
+        myAllSellOffersDetails: payload.myAllSellOffersDetails,
+        isUserLoggedIn: payload.isUserLoggedIn,
+        messageFromBackend: payload.message,
+        doesErrorOccur: payload.doesErrorOccur,
+      })
+    )
+    .addCase(
+      placeMyBuyOffer.pending,
+      (state: AppState): AppState => ({
+        ...state,
+        isRequestPending: true,
+      })
+    )
+    .addCase(
+      placeMyBuyOffer.rejected,
+      (state: AppState): AppState => ({
+        ...state,
+        isRequestPending: false,
+      })
+    )
+    .addCase(
+      placeMyBuyOffer.fulfilled,
+      (
+        state: AppState,
+        {
+          payload,
+        }: PayloadAction<{
+          isUserLoggedIn: boolean;
+          message: string;
+          doesErrorOccur: boolean;
+        }>
+      ): AppState => ({
+        ...state,
+        isRequestPending: false,
+        isUserLoggedIn: payload.isUserLoggedIn,
+        messageFromBackend: payload.message,
+        doesErrorOccur: payload.doesErrorOccur,
+      })
+    )
+    .addCase(
+      placeMySellOffer.pending,
+      (state: AppState): AppState => ({
+        ...state,
+        isRequestPending: true,
+      })
+    )
+    .addCase(
+      placeMySellOffer.rejected,
+      (state: AppState): AppState => ({
+        ...state,
+        isRequestPending: false,
+      })
+    )
+    .addCase(
+      placeMySellOffer.fulfilled,
+      (
+        state: AppState,
+        {
+          payload,
+        }: PayloadAction<{
+          isUserLoggedIn: boolean;
+          message: string;
+          doesErrorOccur: boolean;
+        }>
+      ): AppState => ({
+        ...state,
+        isRequestPending: false,
         isUserLoggedIn: payload.isUserLoggedIn,
         messageFromBackend: payload.message,
         doesErrorOccur: payload.doesErrorOccur,

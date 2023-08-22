@@ -1,0 +1,1 @@
+export { SelectMultipleChips } from "./SelectMultipleChips";
