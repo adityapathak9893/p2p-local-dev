@@ -1,21 +1,21 @@
 import React, { useEffect } from "react";
-import "./App.scss";
 import {
+  Navigate,
+  Route,
   BrowserRouter as Router,
   Routes,
-  Route,
-  Navigate,
-  useLocation,
 } from "react-router-dom";
-import { HomePage } from "../../pages/HomePage";
-import { SignUpPage } from "../../pages/SignUpPage";
-import { SignInPage } from "../../pages/SignInPage";
 import { useActionDispatch, useStateSelector } from "../../hooks";
+import { CreateOffersPage } from "../../pages/CreateOffersPage";
+import { HomePage } from "../../pages/HomePage";
+import { OtherUserProfilePage } from "../../pages/OtherUserProfilePage";
+import { SignInPage } from "../../pages/SignInPage";
+import { SignUpPage } from "../../pages/SignUpPage";
+import { UserDashBoardPage } from "../../pages/UserDashBoardPage";
 import { LoadingIndicator } from "../LoadingIndicator/LoadingIndicator";
 import { NavigationBar } from "../NavigationBar";
 import { NotificationPopper } from "../NotificationPopper";
-import { CreateOffersPage } from "../../pages/CreateOffersPage";
-import { UserDashBoardPage } from "../../pages/UserDashBoardPage";
+import "./App.scss";
 
 export const App: React.FC = () => {
   const {
@@ -108,7 +108,7 @@ export const App: React.FC = () => {
               }
             />
             <Route
-              path="/user-dashboard"
+              path="/user-dashboard/*"
               element={
                 !isUserLoggedIn ? (
                   <Navigate replace to={"/"} />
@@ -127,6 +127,7 @@ export const App: React.FC = () => {
                 )
               }
             />
+            <Route path="/user/:username" element={<OtherUserProfilePage />} />
           </Routes>
         </Router>
       )}

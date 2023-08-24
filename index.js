@@ -177,7 +177,7 @@ app.get("/api/getMyBuyOffers", auth, (req, res) => {
     })
     .catch((err) => {
       if (err) {
-        return res.status(400).json({ success: false });
+        return res.status(400).json({ success: false, message: err });
       }
     });
 });
@@ -233,7 +233,7 @@ app.get("/api/getMysellOffers", auth, (req, res) => {
     })
     .catch((err) => {
       if (err) {
-        return res.status(400).json({ success: false });
+        return res.status(400).json({ success: false, message: err });
       }
     });
 });

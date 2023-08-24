@@ -8,6 +8,9 @@ import {
   resetErrorState,
   placeMyBuyOffer,
   placeMySellOffer,
+  getMyBuyOffers,
+  getMySellOffers,
+  setDashBoardTab,
 } from "../actions";
 import { AppDispatch, RootState } from "../reducers/store";
 
@@ -33,6 +36,9 @@ export const useStateSelector = () => ({
     (state: RootState) => state.messageFromBackend
   ),
   doesErrorOccur: useSelector((state: RootState) => state.doesErrorOccur),
+  activeDashBoardTab: useSelector(
+    (state: RootState) => state.activeDashBoardTab
+  ),
 });
 
 export const useActionDispatch = () => {
@@ -46,6 +52,9 @@ export const useActionDispatch = () => {
     doUserSignOut: () => dispatch(doUserSignOut()),
     resetBackendMessage: () => dispatch(resetBackendMessage()),
     resetErrorState: () => dispatch(resetErrorState()),
+    getMyBuyOffers: () => dispatch(getMyBuyOffers()),
+    getMySellOffers: () => dispatch(getMySellOffers()),
+    setDashBoardTab: (tabValue: string) => dispatch(setDashBoardTab(tabValue)),
     placeMyBuyOffer: (
       cryptoCurrency: string,
       paymentMethod: string,

@@ -9,8 +9,9 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./NavigationBar.scss";
+import { useActionDispatch } from "../../hooks";
 
 const settings = ["Logout"];
 
@@ -34,6 +35,9 @@ export const NavigationBar: React.FC<INavigationBarProps> = (
     null
   );
 
+  const { doUserSignOut } = useActionDispatch();
+  const navigate = useNavigate();
+
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -42,26 +46,41 @@ export const NavigationBar: React.FC<INavigationBarProps> = (
     setAnchorElUser(null);
   };
 
+  const handleLogout = () => {
+    // Dispatch action to logout user
+    doUserSignOut().then(() => {
+      navigate("/");
+    });
+  };
+
   return (
     <AppBar position="static">
       <Toolbar sx={{ display: "flex" }}>
-        <Box sx={{ display: "flex", alignItems: "center", flex: 1 }}>
-          <Link to="/">
-            <Typography
-              variant="h6"
-              sx={{
-                mr: 2,
-                display: { xs: "none", md: "flex" },
-                fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".4rem",
-                color: "white",
-                textDecoration: "none",
-              }}
-            >
-              p2p_local
-            </Typography>
-          </Link>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            flex: 1,
+          }}
+        >
+          <div className="brandLogoClass">
+            <Link to="/">
+              <Typography
+                variant="h6"
+                sx={{
+                  mr: 2,
+                  display: { xs: "none", md: "flex" },
+                  fontFamily: "monospace",
+                  fontWeight: 700,
+                  letterSpacing: ".4rem",
+                  color: "white",
+                  textDecoration: "none",
+                }}
+              >
+                p2p_local
+              </Typography>
+            </Link>
+          </div>
         </Box>
         <Box sx={{ display: "flex", flex: 4 }}>
           {props.otherPages?.map((page, key) => (
@@ -109,7 +128,9 @@ export const NavigationBar: React.FC<INavigationBarProps> = (
               >
                 {settings.map((setting) => (
                   <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
+                    <Typography textAlign="center" onClick={handleLogout}>
+                      {setting}
+                    </Typography>
                   </MenuItem>
                 ))}
               </Menu>

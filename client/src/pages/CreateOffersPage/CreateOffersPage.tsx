@@ -1,5 +1,5 @@
 import { Button, Divider, SelectChangeEvent, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { StepperComponent } from "../../components/StepperComponent";
 import { StepsContent } from "../../models/interfaces";
 import {
@@ -18,7 +18,8 @@ import {
 import { useActionDispatch, useStateSelector } from "../../hooks";
 
 export const CreateOffersPage: React.FC = () => {
-  const { placeMyBuyOffer, placeMySellOffer } = useActionDispatch();
+  const { placeMyBuyOffer, placeMySellOffer, setDashBoardTab } =
+    useActionDispatch();
 
   const [activeStep, setActiveStep] = React.useState(0);
 
@@ -189,6 +190,10 @@ export const CreateOffersPage: React.FC = () => {
 
   const activeStepKey = steps.filter((step) => activeStep === step.index)[0]
     .stepKey;
+
+  useEffect(() => {
+    setDashBoardTab("");
+  }, []);
 
   return (
     <div className="createOffersPageContainer">

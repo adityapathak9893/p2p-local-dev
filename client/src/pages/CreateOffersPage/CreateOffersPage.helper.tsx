@@ -38,8 +38,8 @@ export const getPaymentMethodStepForm = (
           onChange={handleChangeCryptoCurrency}
         >
           <MenuItem value="Bitcoin">Bitcoin</MenuItem>
-          <MenuItem value="Tether">Tether</MenuItem>
-          <MenuItem value="USD Coin">USD Coin</MenuItem>
+          <MenuItem value="Ethereum">Ethereum</MenuItem>
+          <MenuItem value="USDT">USDT</MenuItem>
         </Select>
       </FormControl>
       <FormControl
@@ -93,6 +93,11 @@ export const getPaymentMethodStepForm = (
         >
           <MenuItem value="USD">USD</MenuItem>
           <MenuItem value="EURO">EURO</MenuItem>
+          <MenuItem value="AUD">AUD</MenuItem>
+          <MenuItem value="CAD">CAD</MenuItem>
+          <MenuItem value="HKD">HKD</MenuItem>
+          <MenuItem value="SGD">SGD</MenuItem>
+          <MenuItem value="TWD">TWD</MenuItem>
         </Select>
       </FormControl>
     </>
@@ -200,9 +205,9 @@ export const getOtherSettingsStepsForm = (
     <>
       <SelectMultipleChips
         options={[
-          "No verification needed",
-          "verified paypal only",
-          "receipt required",
+          "Verified only",
+          "Bank only",
+          "Paypal only",
         ]}
         label="Offer Tags"
         selectedOption={offersTags}

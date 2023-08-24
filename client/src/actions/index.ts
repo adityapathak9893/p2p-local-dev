@@ -3,16 +3,21 @@ import {
   doUserSignInApiCall,
   doUserSignOutApiCall,
   doUserSignUpApiCall,
+  getMyBuyOffersApiCall,
+  getMySellOffersApiCall,
   getSignedInUserApiCall,
   placeMyBuyOfferApiCall,
   placeMySellOfferApiCall,
 } from "../data-services";
 import {
+  GET_USER_BUY_OFFERS,
   GET_USER_PROFILE,
+  GET_USER_SELL_OFFERS,
   PLACE_USER_BUY_OFFER,
   PLACE_USER_SELL_OFFER,
   RESET_BACKEND_MESSAGE,
   RESET_ERROR_STATE,
+  SET_DASHBOARD_TAB,
   USER_SIGN_IN,
   USER_SIGN_OUT,
   USER_SIGN_UP,
@@ -28,6 +33,13 @@ export const resetBackendMessage = createAction(RESET_BACKEND_MESSAGE, () => ({
 export const resetErrorState = createAction(RESET_ERROR_STATE, () => ({
   payload: false,
 }));
+
+export const setDashBoardTab = createAction(
+  SET_DASHBOARD_TAB,
+  (tabValue: string) => ({
+    payload: tabValue,
+  })
+);
 
 export const doUserSignUp = createAsyncThunk<
   {
@@ -245,3 +257,21 @@ export const placeMySellOffer = createAsyncThunk<
     return mySellOfferInfo;
   }
 );
+
+export const getMyBuyOffers = createAsyncThunk<{
+  message: string;
+  doesErrorOccur: boolean;
+  myAllBuyOffersDetails: OfferDetails[];
+}>(GET_USER_BUY_OFFERS, async () => {
+  const myBuyOffersDetails = await getMyBuyOffersApiCall();
+  return myBuyOffersDetails;
+});
+
+export const getMySellOffers = createAsyncThunk<{
+  message: string;
+  doesErrorOccur: boolean;
+  myAllSellOffersDetails: OfferDetails[];
+}>(GET_USER_SELL_OFFERS, async () => {
+  const mySellOffersDetails = await getMySellOffersApiCall();
+  return mySellOffersDetails;
+});

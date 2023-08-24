@@ -8,6 +8,7 @@ export interface AppState {
   doesErrorOccur: boolean;
   isRequestPending: boolean;
   messageFromBackend: string;
+  activeDashBoardTab: string;
 }
 
 export interface UserProfileDetails {

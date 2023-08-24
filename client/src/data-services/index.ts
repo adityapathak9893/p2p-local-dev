@@ -283,3 +283,63 @@ export const placeMySellOfferApiCall = async (
     };
   }
 };
+
+export const getMyBuyOffersApiCall = async (): Promise<{
+  message: string;
+  doesErrorOccur: boolean;
+  myAllBuyOffersDetails: OfferDetails[];
+}> => {
+  const reponse = await fetch(GET_MY_BUY_OFFERS_API, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+
+  const data = await reponse.json();
+
+  if (!!data.success) {
+    return {
+      message: "",
+      doesErrorOccur: false,
+      myAllBuyOffersDetails: data.buyOffers,
+    };
+  } else {
+    return {
+      message: data.message,
+      doesErrorOccur: true,
+      myAllBuyOffersDetails: [],
+    };
+  }
+};
+
+export const getMySellOffersApiCall = async (): Promise<{
+  message: string;
+  doesErrorOccur: boolean;
+  myAllSellOffersDetails: OfferDetails[];
+}> => {
+  const reponse = await fetch(GET_MY_SELL_OFFERS_API, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+
+  const data = await reponse.json();
+
+  if (!!data.success) {
+    return {
+      message: "",
+      doesErrorOccur: false,
+      myAllSellOffersDetails: data.sellOffers,
+    };
+  } else {
+    return {
+      message: data.message,
+      doesErrorOccur: true,
+      myAllSellOffersDetails: [],
+    };
+  }
+};

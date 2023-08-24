@@ -32,4 +32,5 @@ export const initializedAppState: AppState = {
   doesErrorOccur: false,
   isRequestPending: false,
   messageFromBackend: "",
+  activeDashBoardTab: "",
 };

@@ -3,11 +3,14 @@ import {
   doUserSignIn,
   doUserSignOut,
   doUserSignUp,
+  getMyBuyOffers,
+  getMySellOffers,
   getSignedInUser,
   placeMyBuyOffer,
   placeMySellOffer,
   resetBackendMessage,
   resetErrorState,
+  setDashBoardTab,
 } from "../actions";
 import { initializedAppState } from "../models/initializations";
 import {
@@ -18,6 +21,9 @@ import {
 
 const AppReducer = createReducer(initializedAppState, (app) => {
   app
+    .addCase(setDashBoardTab, (state, action) => {
+      state.activeDashBoardTab = action.payload;
+    })
     .addCase(resetErrorState, (state, action) => {
       state.doesErrorOccur = action.payload;
     })
@@ -160,6 +166,7 @@ const AppReducer = createReducer(initializedAppState, (app) => {
         isUserLoggedIn: payload.isUserLoggedIn,
         messageFromBackend: payload.message,
         doesErrorOccur: payload.doesErrorOccur,
+        activeDashBoardTab: "",
       })
     )
     .addCase(
@@ -224,6 +231,72 @@ const AppReducer = createReducer(initializedAppState, (app) => {
         ...state,
         isRequestPending: false,
         isUserLoggedIn: payload.isUserLoggedIn,
+        messageFromBackend: payload.message,
+        doesErrorOccur: payload.doesErrorOccur,
+      })
+    )
+    .addCase(
+      getMyBuyOffers.pending,
+      (state: AppState): AppState => ({
+        ...state,
+        isRequestPending: true,
+      })
+    )
+    .addCase(
+      getMyBuyOffers.rejected,
+      (state: AppState): AppState => ({
+        ...state,
+        isRequestPending: false,
+      })
+    )
+    .addCase(
+      getMyBuyOffers.fulfilled,
+      (
+        state: AppState,
+        {
+          payload,
+        }: PayloadAction<{
+          message: string;
+          doesErrorOccur: boolean;
+          myAllBuyOffersDetails: OfferDetails[];
+        }>
+      ): AppState => ({
+        ...state,
+        isRequestPending: false,
+        myAllBuyOffersDetails: payload.myAllBuyOffersDetails,
+        messageFromBackend: payload.message,
+        doesErrorOccur: payload.doesErrorOccur,
+      })
+    )
+    .addCase(
+      getMySellOffers.pending,
+      (state: AppState): AppState => ({
+        ...state,
+        isRequestPending: true,
+      })
+    )
+    .addCase(
+      getMySellOffers.rejected,
+      (state: AppState): AppState => ({
+        ...state,
+        isRequestPending: false,
+      })
+    )
+    .addCase(
+      getMySellOffers.fulfilled,
+      (
+        state: AppState,
+        {
+          payload,
+        }: PayloadAction<{
+          message: string;
+          doesErrorOccur: boolean;
+          myAllSellOffersDetails: OfferDetails[];
+        }>
+      ): AppState => ({
+        ...state,
+        isRequestPending: false,
+        myAllSellOffersDetails: payload.myAllSellOffersDetails,
         messageFromBackend: payload.message,
         doesErrorOccur: payload.doesErrorOccur,
       })
