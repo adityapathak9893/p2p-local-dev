@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useActionDispatch, useStateSelector } from "../../hooks";
 import "./BuySellOfferForm.scss";
+import { useNavigate } from "react-router";
 
 export const BuySellOfferForm: React.FC = () => {
-  const [cryptoCurrency, setCryptoCurrency] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("");
-  const [money, setMoney] = useState("");
+  const [cryptoCurrency, setCryptoCurrency] = useState("Bitcoin");
+  const [paymentMethod, setPaymentMethod] = useState("Bank");
+  const [preferredCurrency, setPreferredCurrency] = useState("USD");
+  const [money, setMoney] = useState("250");
   const [offerLocation, setOfferLocation] = useState("");
   const [offerOwnerLocation, setOfferOwnerLocation] = useState("");
   const [tradeMode, setTradeMode] = useState("BUY");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isFormValid, setIsFormValid] = useState(false);
 
-  const { doUserSignUp } = useActionDispatch();
+  const { getSellOffersWithFilters, getBuyOffersWithFilters } =
+    useActionDispatch();
+  const navigate = useNavigate();
 
   const handleCryptoCurrencyChange = (
     e: React.ChangeEvent<HTMLSelectElement>
@@ -22,6 +26,17 @@ export const BuySellOfferForm: React.FC = () => {
     validateForm({
       ...errors,
       cryptoCurrency: validateCryptoCurrency(newCryptoCurrency),
+    });
+  };
+
+  const handlePreferredCurrencyChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const newPreferredCurrency = e.target.value;
+    setPreferredCurrency(newPreferredCurrency);
+    validateForm({
+      ...errors,
+      preferredCurrency: validatePreferredCurrency(newPreferredCurrency),
     });
   };
 
@@ -39,7 +54,7 @@ export const BuySellOfferForm: React.FC = () => {
   const handleMoneyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newMoney = e.target.value;
     setMoney(newMoney);
-    validateForm({ ...errors, email: validateMoney(newMoney) });
+    validateForm({ ...errors, money: validateMoney(newMoney) });
   };
 
   const handleOfferLocationChange = (
@@ -49,7 +64,7 @@ export const BuySellOfferForm: React.FC = () => {
     setOfferLocation(newOfferLocation);
     validateForm({
       ...errors,
-      password: validateOfferLocation(newOfferLocation),
+      offerLocation: validateOfferLocation(newOfferLocation),
     });
   };
 
@@ -60,7 +75,7 @@ export const BuySellOfferForm: React.FC = () => {
     setOfferOwnerLocation(newOfferOwnerLocation);
     validateForm({
       ...errors,
-      password: validateOfferOwnerLocation(newOfferOwnerLocation),
+      offerOwnerLocation: validateOfferOwnerLocation(newOfferOwnerLocation),
     });
   };
 
@@ -70,34 +85,53 @@ export const BuySellOfferForm: React.FC = () => {
   };
 
   const validateCryptoCurrency = (cryptoCurrency: string) => {
-    // Implement validation logic for country code here
     return cryptoCurrency ? "" : "Crypto currency is required ";
   };
 
+  const validatePreferredCurrency = (preferredCurrency: string) => {
+    return preferredCurrency ? "" : "preferred currency is required";
+  };
+
   const validatePaymentMethod = (paymentMethod: string) => {
-    // Implement email validation logic here
     return paymentMethod ? "" : "Payment method is required";
   };
 
   const validateMoney = (money: string) => {
-    // Implement password validation logic here
     return money ? "" : "This field is required";
   };
 
   const validateOfferLocation = (offerLocation: string) => {
-    // Implement password validation logic here
     return offerLocation ? "" : "Offer location is required";
   };
 
   const validateOfferOwnerLocation = (offerOwnerLocation: string) => {
-    // Implement password validation logic here
     return offerOwnerLocation ? "" : "Offer owner location is required";
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isFormValid) {
-      // Perform signup logic here
+      if (tradeMode === "BUY") {
+        navigate("/buy");
+        getSellOffersWithFilters(
+          cryptoCurrency,
+          Number(money),
+          preferredCurrency,
+          paymentMethod,
+          offerLocation,
+          offerOwnerLocation
+        );
+      } else {
+        navigate("/sell");
+        getBuyOffersWithFilters(
+          cryptoCurrency,
+          Number(money),
+          preferredCurrency,
+          paymentMethod,
+          offerLocation,
+          offerOwnerLocation
+        );
+      }
     }
   };
 
@@ -109,6 +143,7 @@ export const BuySellOfferForm: React.FC = () => {
     setErrors({
       cryptoCurrency: "",
       paymentMethod: "",
+      preferredCurrency: "",
       money: "",
       offerLocation: "",
       offerOwnerLocation: "",
@@ -167,10 +202,10 @@ export const BuySellOfferForm: React.FC = () => {
               errors.cryptoCurrency ? "buySell-error" : "buySell-selectField"
             }
           >
-            <option value="">Select Crypto Currency</option>
+            <option value="">Select payment method</option>
             <option value="Bitcoin">Bitcoin</option>
-            <option value="Tether">Tether</option>
-            <option value="USDCoin">USDCoin</option>
+            <option value="Ethereum">Ethereum</option>
+            <option value="USDT">USDT</option>
           </select>
           {errors.cryptoCurrency && (
             <span className="buySell-error-message">
@@ -189,8 +224,7 @@ export const BuySellOfferForm: React.FC = () => {
           >
             <option value="">Select payment method</option>
             <option value="Paypal">Paypal</option>
-            <option value="PayTM">PayTM</option>
-            <option value="PhonePe">PhonePe</option>
+            <option value="Bank">Bank</option>
           </select>
           {errors.paymentMethod && (
             <span className="buySell-error-message">
@@ -199,10 +233,32 @@ export const BuySellOfferForm: React.FC = () => {
           )}
         </div>
         <div className="buySell-form-group">
+          <label>Preferred Currency</label>
+          <select
+            value={preferredCurrency}
+            onChange={handlePreferredCurrencyChange}
+            className={
+              errors.preferredCurrency ? "buySell-error" : "buySell-selectField"
+            }
+          >
+            <option value="">Select Currency</option>
+            <option value="USD">USD</option>
+            <option value="EURO">EURO</option>
+            <option value="AUD">AUD</option>
+            <option value="CAD">CAD</option>
+            <option value="HKD">HKD</option>
+            <option value="SGD">SGD</option>
+            <option value="TWD">TWD</option>
+          </select>
+          {errors.preferredCurrency && (
+            <span className="buySell-error-message">
+              {errors.preferredCurrency}
+            </span>
+          )}
+        </div>
+        <div className="buySell-form-group">
           <label>
-            {tradeMode === "BUY"
-              ? "I want to spend (Curreny in USD)"
-              : "I want to get (Curreny in USD)"}
+            {tradeMode === "BUY" ? "I want to spend" : "I want to get"}
           </label>
           <input
             type="text"

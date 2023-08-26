@@ -1,8 +1,9 @@
+import { initializedUserProfileDetails } from "../models/initializations";
 import {
-  initializedOfferDetails,
-  initializedUserProfileDetails,
-} from "../models/initializations";
-import { OfferDetails, UserProfileDetails } from "../models/interfaces";
+  Feedbacks,
+  OfferDetails,
+  UserProfileDetails,
+} from "../models/interfaces";
 
 const SIGN_UP_API = `${process.env.REACT_APP_API_HOST}/api/signup`;
 const SIGN_IN_API = `${process.env.REACT_APP_API_HOST}/api/signin`;
@@ -10,10 +11,14 @@ const GET_SIGNED_IN_USER_PROFILE_API = `${process.env.REACT_APP_API_HOST}/api/ge
 const SIGN_OUT_API = `${process.env.REACT_APP_API_HOST}/api/signout`;
 const PLACE_MY_BUY_OFFER_API = `${process.env.REACT_APP_API_HOST}/api/placeMyBuyOffer`;
 const GET_MY_BUY_OFFERS_API = `${process.env.REACT_APP_API_HOST}/api/getMyBuyOffers`;
-const GET_ALL_BUY_OFFERS_API = `${process.env.REACT_APP_API_HOST}/api/getAllBuyOffers`;
+const GET_BUY_OFFERS_FILTERS_API = `${process.env.REACT_APP_API_HOST}/api/getBuyOffersWithFilters`;
 const PLACE_MY_SELL_OFFER_API = `${process.env.REACT_APP_API_HOST}/api/placeMySellOffer`;
 const GET_MY_SELL_OFFERS_API = `${process.env.REACT_APP_API_HOST}/api/getMysellOffers`;
-const GET_ALL_SELL_OFFERS_API = `${process.env.REACT_APP_API_HOST}/api/getAllSellOffers`;
+const GET_SELL_OFFERS_FILTERS_API = `${process.env.REACT_APP_API_HOST}/api/getSellOffersWithFilters`;
+const SUBMIT_FEEDBACK = `${process.env.REACT_APP_API_HOST}/api/submitFeedback`;
+const GET_FEEDBACKS_SUBMITTED_BY_ME = `${process.env.REACT_APP_API_HOST}/api/getFeedbacksSubmittedByMe`;
+const GET_FEEDBACKS_RECEIVED_BY_ME = `${process.env.REACT_APP_API_HOST}/api/getFeedbacksReceivedToMe`;
+const GET_USER_FEEDBACKS = `${process.env.REACT_APP_API_HOST}/api/getUserFeedbacks`;
 
 export const doUserSignUpApiCall = async (
   phone: string,
@@ -340,6 +345,205 @@ export const getMySellOffersApiCall = async (): Promise<{
       message: data.message,
       doesErrorOccur: true,
       myAllSellOffersDetails: [],
+    };
+  }
+};
+
+export const getBuyOffersWithFiltersApiCall = async (
+  cryptoCurrency: string,
+  minAmount: number,
+  preferredCurrency: string,
+  paymentMethod: string,
+  offerLocation: string,
+  offerOwnerLocation: string
+): Promise<{
+  message: string;
+  doesErrorOccur: boolean;
+  allBuyOfferDetails: OfferDetails[];
+}> => {
+  const reponse = await fetch(
+    GET_BUY_OFFERS_FILTERS_API +
+      `?cryptoCurrency=${cryptoCurrency}&minAmount=${minAmount}&preferredCurrency=${preferredCurrency}&paymentMethod=${paymentMethod}&offerLocation=${offerLocation}&offerOwnerLocation=${offerOwnerLocation}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    }
+  );
+  const data = await reponse.json();
+
+  if (data.success) {
+    return {
+      message: "",
+      doesErrorOccur: false,
+      allBuyOfferDetails: data.buyOffers,
+    };
+  } else {
+    return {
+      message: data.message,
+      doesErrorOccur: true,
+      allBuyOfferDetails: [],
+    };
+  }
+};
+
+export const getSellOffersWithFiltersApiCall = async (
+  cryptoCurrency: string,
+  minAmount: number,
+  preferredCurrency: string,
+  paymentMethod: string,
+  offerLocation: string,
+  offerOwnerLocation: string
+): Promise<{
+  message: string;
+  doesErrorOccur: boolean;
+  allSellOfferDetails: OfferDetails[];
+}> => {
+  const reponse = await fetch(
+    GET_SELL_OFFERS_FILTERS_API +
+      `?cryptoCurrency=${cryptoCurrency}&minAmount=${minAmount}&preferredCurrency=${preferredCurrency}&paymentMethod=${paymentMethod}&offerLocation=${offerLocation}&offerOwnerLocation=${offerOwnerLocation}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    }
+  );
+  const data = await reponse.json();
+
+  if (data.success) {
+    return {
+      message: "",
+      doesErrorOccur: false,
+      allSellOfferDetails: data.sellOffers,
+    };
+  } else {
+    return {
+      message: data.message,
+      doesErrorOccur: true,
+      allSellOfferDetails: [],
+    };
+  }
+};
+
+export const doSubmitFeedbackApiCall = async (
+  userName: string,
+  message: string,
+  rating: number
+): Promise<{ message: string; doesErrorOccur: boolean }> => {
+  const reponse = await fetch(SUBMIT_FEEDBACK, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({
+      userName,
+      message,
+      rating,
+    }),
+  });
+
+  const data = await reponse.json();
+
+  if (data.success) {
+    return { message: data.message, doesErrorOccur: false };
+  } else {
+    return { message: data.message, doesErrorOccur: true };
+  }
+};
+
+export const getFeedbacksSubmittedByMeApiCall = async (): Promise<{
+  message: string;
+  doesErrorOccur: boolean;
+  mySubmittedfeedBacks: Feedbacks[];
+}> => {
+  const reponse = await fetch(GET_FEEDBACKS_SUBMITTED_BY_ME, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+  const data = await reponse.json();
+
+  if (data.success) {
+    return {
+      message: "",
+      doesErrorOccur: false,
+      mySubmittedfeedBacks: data.feedbacks,
+    };
+  } else {
+    return {
+      message: data.message,
+      doesErrorOccur: true,
+      mySubmittedfeedBacks: [],
+    };
+  }
+};
+
+export const getFeedbacksReceivedByMeApiCall = async (): Promise<{
+  message: string;
+  doesErrorOccur: boolean;
+  myReceivedfeedBacks: Feedbacks[];
+}> => {
+  const reponse = await fetch(GET_FEEDBACKS_RECEIVED_BY_ME, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+  const data = await reponse.json();
+
+  if (data.success) {
+    return {
+      message: "",
+      doesErrorOccur: false,
+      myReceivedfeedBacks: data.feedbacks,
+    };
+  } else {
+    return {
+      message: data.message,
+      doesErrorOccur: true,
+      myReceivedfeedBacks: [],
+    };
+  }
+};
+
+export const getUserFeedbackApiCall = async (
+  selectedUserName: string
+): Promise<{
+  message: string;
+  doesErrorOccur: boolean;
+  feedBacksReceivedBySelectedUser: Feedbacks[];
+}> => {
+  const reponse = await fetch(
+    GET_USER_FEEDBACKS + `?selectedUserName=${selectedUserName}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    }
+  );
+  const data = await reponse.json();
+
+  if (data.success) {
+    return {
+      message: "",
+      doesErrorOccur: false,
+      feedBacksReceivedBySelectedUser: data.feedbacks,
+    };
+  } else {
+    return {
+      message: data.message,
+      doesErrorOccur: true,
+      feedBacksReceivedBySelectedUser: [],
     };
   }
 };

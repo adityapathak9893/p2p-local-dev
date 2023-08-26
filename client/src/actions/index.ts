@@ -1,15 +1,27 @@
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
 import {
+  doSubmitFeedbackApiCall,
   doUserSignInApiCall,
   doUserSignOutApiCall,
   doUserSignUpApiCall,
+  getBuyOffersWithFiltersApiCall,
+  getFeedbacksReceivedByMeApiCall,
+  getFeedbacksSubmittedByMeApiCall,
   getMyBuyOffersApiCall,
   getMySellOffersApiCall,
+  getSellOffersWithFiltersApiCall,
   getSignedInUserApiCall,
+  getUserFeedbackApiCall,
   placeMyBuyOfferApiCall,
   placeMySellOfferApiCall,
 } from "../data-services";
 import {
+  DO_SUBMIT_FEEDBACK,
+  GET_FEEDBACKS_RECEIVED_BY_SELECTED_USER,
+  GET_FEEDBACKS_RECEIVED_TO_ME,
+  GET_FEEDBACKS_SUBMITTED_BY_ME,
+  GET_FILTERED_BUY_OFFERS,
+  GET_FILTERED_SELL_OFFERS,
   GET_USER_BUY_OFFERS,
   GET_USER_PROFILE,
   GET_USER_SELL_OFFERS,
@@ -22,7 +34,11 @@ import {
   USER_SIGN_OUT,
   USER_SIGN_UP,
 } from "../models/constants";
-import { OfferDetails, UserProfileDetails } from "../models/interfaces";
+import {
+  Feedbacks,
+  OfferDetails,
+  UserProfileDetails,
+} from "../models/interfaces";
 import { initializedUserProfileDetails } from "../models/initializations";
 import { RootState } from "../reducers/store";
 
@@ -274,4 +290,147 @@ export const getMySellOffers = createAsyncThunk<{
 }>(GET_USER_SELL_OFFERS, async () => {
   const mySellOffersDetails = await getMySellOffersApiCall();
   return mySellOffersDetails;
+});
+
+export const getBuyOffersWithFilters = createAsyncThunk<
+  {
+    message: string;
+    doesErrorOccur: boolean;
+    allBuyOfferDetails: OfferDetails[];
+  },
+  {
+    cryptoCurrency: string;
+    minAmount: number;
+    preferredCurrency: string;
+    paymentMethod: string;
+    offerLocation: string;
+    offerOwnerLocation: string;
+  }
+>(
+  GET_FILTERED_BUY_OFFERS,
+  async (formDetails: {
+    cryptoCurrency: string;
+    minAmount: number;
+    preferredCurrency: string;
+    paymentMethod: string;
+    offerLocation: string;
+    offerOwnerLocation: string;
+  }) => {
+    const {
+      cryptoCurrency,
+      minAmount,
+      preferredCurrency,
+      paymentMethod,
+      offerLocation,
+      offerOwnerLocation,
+    } = formDetails;
+    const allBuyOffersDetails = await getBuyOffersWithFiltersApiCall(
+      cryptoCurrency,
+      minAmount,
+      preferredCurrency,
+      paymentMethod,
+      offerLocation,
+      offerOwnerLocation
+    );
+    return allBuyOffersDetails;
+  }
+);
+
+export const getSellOffersWithFilters = createAsyncThunk<
+  {
+    message: string;
+    doesErrorOccur: boolean;
+    allSellOfferDetails: OfferDetails[];
+  },
+  {
+    cryptoCurrency: string;
+    minAmount: number;
+    preferredCurrency: string;
+    paymentMethod: string;
+    offerLocation: string;
+    offerOwnerLocation: string;
+  }
+>(
+  GET_FILTERED_SELL_OFFERS,
+  async (formDetails: {
+    cryptoCurrency: string;
+    minAmount: number;
+    preferredCurrency: string;
+    paymentMethod: string;
+    offerLocation: string;
+    offerOwnerLocation: string;
+  }) => {
+    const {
+      cryptoCurrency,
+      minAmount,
+      preferredCurrency,
+      paymentMethod,
+      offerLocation,
+      offerOwnerLocation,
+    } = formDetails;
+    const allSellOffersDetails = await getSellOffersWithFiltersApiCall(
+      cryptoCurrency,
+      minAmount,
+      preferredCurrency,
+      paymentMethod,
+      offerLocation,
+      offerOwnerLocation
+    );
+    return allSellOffersDetails;
+  }
+);
+
+export const doSubmitFeedback = createAsyncThunk<
+  { message: string; doesErrorOccur: boolean },
+  {
+    userName: string;
+    message: string;
+    rating: number;
+  }
+>(
+  DO_SUBMIT_FEEDBACK,
+  async (dataToBeSubmitted: {
+    userName: string;
+    message: string;
+    rating: number;
+  }) => {
+    const submitFeedbackInfo = await doSubmitFeedbackApiCall(
+      dataToBeSubmitted.userName,
+      dataToBeSubmitted.message,
+      dataToBeSubmitted.rating
+    );
+    return submitFeedbackInfo;
+  }
+);
+
+export const getFeedbacksSubmittedByMe = createAsyncThunk<{
+  message: string;
+  doesErrorOccur: boolean;
+  mySubmittedfeedBacks: Feedbacks[];
+}>(GET_FEEDBACKS_SUBMITTED_BY_ME, async () => {
+  const feedBacksSubmittedByMe = await getFeedbacksSubmittedByMeApiCall();
+  return feedBacksSubmittedByMe;
+});
+
+export const getFeedbacksReceivedByMe = createAsyncThunk<{
+  message: string;
+  doesErrorOccur: boolean;
+  myReceivedfeedBacks: Feedbacks[];
+}>(GET_FEEDBACKS_RECEIVED_TO_ME, async () => {
+  const feedBacksReceivedByMe = await getFeedbacksReceivedByMeApiCall();
+  return feedBacksReceivedByMe;
+});
+
+export const getUserFeedback = createAsyncThunk<
+  {
+    message: string;
+    doesErrorOccur: boolean;
+    feedBacksReceivedBySelectedUser: Feedbacks[];
+  },
+  string
+>(GET_FEEDBACKS_RECEIVED_BY_SELECTED_USER, async (selectedUserName: string) => {
+  const feedBacksReceivedBySelectedUser = await getUserFeedbackApiCall(
+    selectedUserName
+  );
+  return feedBacksReceivedBySelectedUser;
 });

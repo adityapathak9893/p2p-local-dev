@@ -204,11 +204,7 @@ export const getOtherSettingsStepsForm = (
   return (
     <>
       <SelectMultipleChips
-        options={[
-          "Verified only",
-          "Bank only",
-          "Paypal only",
-        ]}
+        options={["Verified only", "Bank only", "Paypal only"]}
         label="Offer Tags"
         selectedOption={offersTags}
         setOption={setOffersTags}
@@ -230,7 +226,7 @@ export const getOtherSettingsStepsForm = (
           onChange={handleChangeOfferLocation}
         >
           <MenuItem value="USA">USA</MenuItem>
-          <MenuItem value="Germany">Germany</MenuItem>
+          <MenuItem value="GERMANY">GERMANY</MenuItem>
         </Select>
       </FormControl>
 

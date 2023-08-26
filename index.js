@@ -12,6 +12,7 @@ const app = express();
 const userProfile = Model.userProfile;
 const buyOffers = Model.buyOffers;
 const sellOffers = Model.sellOffers;
+const feedbacks = Model.feedbacks;
 
 const allowedOrigins = [
   "https://gold-careful-drill.cyclic.app",
@@ -143,7 +144,6 @@ app.get("/api/signout", auth, function (req, res) {
   });
 });
 
-// place buy offer
 app.post("/api/placeMyBuyOffer", auth, (req, res) => {
   const newBuyOffer = new buyOffers({
     ...req.body,
@@ -183,9 +183,26 @@ app.get("/api/getMyBuyOffers", auth, (req, res) => {
 });
 
 //get all buy Offers (this can be seen without login)
-app.get("/api/getAllBuyOffers", (req, res) => {
+app.get("/api/getBuyOffersWithFilters", (req, res) => {
+  const {
+    cryptoCurrency,
+    minAmount,
+    preferredCurrency,
+    paymentMethod,
+    offerLocation,
+    offerOwnerLocation,
+  } = req.query;
+
+  const query = {
+    cryptoCurrency: cryptoCurrency,
+    minAmount: { $gte: Number(minAmount) },
+    paymentMethod: paymentMethod,
+    preferredCurrency: preferredCurrency,
+    offerLocation: offerLocation,
+    offerOwnerLocation: offerOwnerLocation,
+  };
   buyOffers
-    .find()
+    .find(query)
     .then((docs) => {
       res.status(200).json({
         success: true,
@@ -194,7 +211,7 @@ app.get("/api/getAllBuyOffers", (req, res) => {
     })
     .catch((err) => {
       if (err) {
-        return res.status(400).json({ success: false });
+        return res.status(400).json({ success: false, message: err.message });
       }
     });
 });
@@ -233,15 +250,32 @@ app.get("/api/getMysellOffers", auth, (req, res) => {
     })
     .catch((err) => {
       if (err) {
-        return res.status(400).json({ success: false, message: err });
+        return res.status(400).json({ success: false, message: err.message });
       }
     });
 });
 
 //get all sell Offers (this can be seen without login)
-app.get("/api/getAllSellOffers", (req, res) => {
-  buyOffers
-    .find()
+app.get("/api/getSellOffersWithFilters", (req, res) => {
+  const {
+    cryptoCurrency,
+    minAmount,
+    preferredCurrency,
+    paymentMethod,
+    offerLocation,
+    offerOwnerLocation,
+  } = req.query;
+
+  const query = {
+    cryptoCurrency: cryptoCurrency,
+    minAmount: { $gte: Number(minAmount) },
+    paymentMethod: paymentMethod,
+    preferredCurrency: preferredCurrency,
+    offerLocation: offerLocation,
+    offerOwnerLocation: offerOwnerLocation,
+  };
+  sellOffers
+    .find(query)
     .then((docs) => {
       res.status(200).json({
         success: true,
@@ -250,7 +284,81 @@ app.get("/api/getAllSellOffers", (req, res) => {
     })
     .catch((err) => {
       if (err) {
-        return res.status(400).json({ success: false });
+        return res.status(400).json({ success: false, message: err.message });
+      }
+    });
+});
+
+// submit feedback
+app.post("/api/submitFeedback", auth, (req, res) => {
+  const newFeedbackSubmit = new feedbacks({
+    ...req.body,
+    givenBy_userName: req.user.userName,
+  });
+  newFeedbackSubmit
+    .save()
+    .then((doc) => {
+      res.status(200).json({
+        success: true,
+        message: "Feedback submitted!",
+        feedbacks: doc,
+      });
+    })
+    .catch((err) => {
+      if (err) {
+        return res.status(400).json({ success: false, message: err });
+      }
+    });
+});
+
+// get all submitted feedbacks given by the signed-in user
+app.get("/api/getFeedbacksSubmittedByMe", auth, (req, res) => {
+  feedbacks
+    .find({ givenBy_userName: req.user.userName })
+    .then((docs) => {
+      res.status(200).json({
+        success: true,
+        feedbacks: docs,
+      });
+    })
+    .catch((err) => {
+      if (err) {
+        return res.status(400).json({ success: false, message: err });
+      }
+    });
+});
+
+// get all submitted feedbacks given by the signed-in user
+app.get("/api/getFeedbacksReceivedToMe", auth, (req, res) => {
+  feedbacks
+    .find({ userName: req.user.userName })
+    .then((docs) => {
+      res.status(200).json({
+        success: true,
+        feedbacks: docs,
+      });
+    })
+    .catch((err) => {
+      if (err) {
+        return res.status(400).json({ success: false, message: err });
+      }
+    });
+});
+
+//get the feedbacks given to the specific user
+app.get("/api/getUserFeedbacks", (req, res) => {
+  const userName = req.query.selectedUserName;
+  feedbacks
+    .find({ userName: userName })
+    .then((docs) => {
+      res.status(200).json({
+        success: true,
+        feedbacks: docs,
+      });
+    })
+    .catch((err) => {
+      if (err) {
+        return res.status(400).json({ success: false, message: err.message });
       }
     });
 });

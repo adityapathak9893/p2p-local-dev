@@ -42,6 +42,14 @@ const SellOffers = new mongoose.Schema({
   offerOwnerLocation: { type: String, required: true },
 });
 
+const Feedbacks = new mongoose.Schema({
+  userName: { type: String, required: true },
+  givenBy_userName: { type: String, required: true },
+  message: { type: String, required: true },
+  rating: { type: Number, required: true, min: 1, max: 5 },
+  createdAt: { type: Date, default: Date.now },
+});
+
 //hashing the user password
 UserProfile.pre("save", function (next) {
   var user = this;
@@ -115,9 +123,11 @@ UserProfile.methods.deleteToken = function (token, cb) {
 const userProfile = mongoose.model("UserProfile", UserProfile);
 const buyOffers = mongoose.model("BuyOffers", BuyOffers);
 const sellOffers = mongoose.model("SellOffers", SellOffers);
+const feedbacks = mongoose.model("Feedbacks", Feedbacks);
 
 module.exports = {
   userProfile: userProfile,
   buyOffers: buyOffers,
   sellOffers: sellOffers,
+  feedbacks: feedbacks,
 };

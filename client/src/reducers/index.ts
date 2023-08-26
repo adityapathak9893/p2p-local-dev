@@ -1,11 +1,17 @@
 import { createReducer, PayloadAction } from "@reduxjs/toolkit";
 import {
+  doSubmitFeedback,
   doUserSignIn,
   doUserSignOut,
   doUserSignUp,
+  getBuyOffersWithFilters,
+  getFeedbacksReceivedByMe,
+  getFeedbacksSubmittedByMe,
   getMyBuyOffers,
   getMySellOffers,
+  getSellOffersWithFilters,
   getSignedInUser,
+  getUserFeedback,
   placeMyBuyOffer,
   placeMySellOffer,
   resetBackendMessage,
@@ -15,6 +21,7 @@ import {
 import { initializedAppState } from "../models/initializations";
 import {
   AppState,
+  Feedbacks,
   OfferDetails,
   UserProfileDetails,
 } from "../models/interfaces";
@@ -264,7 +271,7 @@ const AppReducer = createReducer(initializedAppState, (app) => {
         ...state,
         isRequestPending: false,
         myAllBuyOffersDetails: payload.myAllBuyOffersDetails,
-        messageFromBackend: payload.message,
+        //messageFromBackend: payload.message,
         doesErrorOccur: payload.doesErrorOccur,
       })
     )
@@ -297,6 +304,199 @@ const AppReducer = createReducer(initializedAppState, (app) => {
         ...state,
         isRequestPending: false,
         myAllSellOffersDetails: payload.myAllSellOffersDetails,
+        //messageFromBackend: payload.message,
+        doesErrorOccur: payload.doesErrorOccur,
+      })
+    )
+    .addCase(
+      getBuyOffersWithFilters.pending,
+      (state: AppState): AppState => ({
+        ...state,
+        isRequestPending: true,
+      })
+    )
+    .addCase(
+      getBuyOffersWithFilters.rejected,
+      (state: AppState): AppState => ({
+        ...state,
+        isRequestPending: false,
+      })
+    )
+    .addCase(
+      getBuyOffersWithFilters.fulfilled,
+      (
+        state: AppState,
+        {
+          payload,
+        }: PayloadAction<{
+          message: string;
+          doesErrorOccur: boolean;
+          allBuyOfferDetails: OfferDetails[];
+        }>
+      ): AppState => ({
+        ...state,
+        isRequestPending: false,
+        allBuyOfferDetails: payload.allBuyOfferDetails,
+        messageFromBackend: payload.message,
+        doesErrorOccur: payload.doesErrorOccur,
+      })
+    )
+    .addCase(
+      getSellOffersWithFilters.pending,
+      (state: AppState): AppState => ({
+        ...state,
+        isRequestPending: true,
+      })
+    )
+    .addCase(
+      getSellOffersWithFilters.rejected,
+      (state: AppState): AppState => ({
+        ...state,
+        isRequestPending: false,
+      })
+    )
+    .addCase(
+      getSellOffersWithFilters.fulfilled,
+      (
+        state: AppState,
+        {
+          payload,
+        }: PayloadAction<{
+          message: string;
+          doesErrorOccur: boolean;
+          allSellOfferDetails: OfferDetails[];
+        }>
+      ): AppState => ({
+        ...state,
+        isRequestPending: false,
+        allSellOfferDetails: payload.allSellOfferDetails,
+        messageFromBackend: payload.message,
+        doesErrorOccur: payload.doesErrorOccur,
+      })
+    )
+    .addCase(
+      doSubmitFeedback.pending,
+      (state: AppState): AppState => ({
+        ...state,
+        isRequestPending: true,
+      })
+    )
+    .addCase(
+      doSubmitFeedback.rejected,
+      (state: AppState): AppState => ({
+        ...state,
+        isRequestPending: false,
+      })
+    )
+    .addCase(
+      doSubmitFeedback.fulfilled,
+      (
+        state: AppState,
+        { payload }: PayloadAction<{ message: string; doesErrorOccur: boolean }>
+      ): AppState => ({
+        ...state,
+        isRequestPending: false,
+        messageFromBackend: payload.message,
+        doesErrorOccur: payload.doesErrorOccur,
+      })
+    )
+    .addCase(
+      getFeedbacksSubmittedByMe.pending,
+      (state: AppState): AppState => ({
+        ...state,
+        isRequestPending: true,
+      })
+    )
+    .addCase(
+      getFeedbacksSubmittedByMe.rejected,
+      (state: AppState): AppState => ({
+        ...state,
+        isRequestPending: false,
+      })
+    )
+    .addCase(
+      getFeedbacksSubmittedByMe.fulfilled,
+      (
+        state: AppState,
+        {
+          payload,
+        }: PayloadAction<{
+          message: string;
+          doesErrorOccur: boolean;
+          mySubmittedfeedBacks: Feedbacks[];
+        }>
+      ): AppState => ({
+        ...state,
+        isRequestPending: false,
+        mySubmittedfeedBacks: payload.mySubmittedfeedBacks,
+        messageFromBackend: payload.message,
+        doesErrorOccur: payload.doesErrorOccur,
+      })
+    )
+    .addCase(
+      getFeedbacksReceivedByMe.pending,
+      (state: AppState): AppState => ({
+        ...state,
+        isRequestPending: true,
+      })
+    )
+    .addCase(
+      getFeedbacksReceivedByMe.rejected,
+      (state: AppState): AppState => ({
+        ...state,
+        isRequestPending: false,
+      })
+    )
+    .addCase(
+      getFeedbacksReceivedByMe.fulfilled,
+      (
+        state: AppState,
+        {
+          payload,
+        }: PayloadAction<{
+          message: string;
+          doesErrorOccur: boolean;
+          myReceivedfeedBacks: Feedbacks[];
+        }>
+      ): AppState => ({
+        ...state,
+        isRequestPending: false,
+        myReceivedfeedBacks: payload.myReceivedfeedBacks,
+        messageFromBackend: payload.message,
+        doesErrorOccur: payload.doesErrorOccur,
+      })
+    )
+
+    .addCase(
+      getUserFeedback.pending,
+      (state: AppState): AppState => ({
+        ...state,
+        isRequestPending: true,
+      })
+    )
+    .addCase(
+      getUserFeedback.rejected,
+      (state: AppState): AppState => ({
+        ...state,
+        isRequestPending: false,
+      })
+    )
+    .addCase(
+      getUserFeedback.fulfilled,
+      (
+        state: AppState,
+        {
+          payload,
+        }: PayloadAction<{
+          message: string;
+          doesErrorOccur: boolean;
+          feedBacksReceivedBySelectedUser: Feedbacks[];
+        }>
+      ): AppState => ({
+        ...state,
+        isRequestPending: false,
+        feedBacksReceivedBySelectedUser:
+          payload.feedBacksReceivedBySelectedUser,
         messageFromBackend: payload.message,
         doesErrorOccur: payload.doesErrorOccur,
       })

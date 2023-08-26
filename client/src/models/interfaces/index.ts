@@ -5,6 +5,9 @@ export interface AppState {
   allBuyOfferDetails: OfferDetails[];
   myAllSellOffersDetails: OfferDetails[];
   allSellOfferDetails: OfferDetails[];
+  mySubmittedfeedBacks: Feedbacks[];
+  myReceivedfeedBacks: Feedbacks[];
+  feedBacksReceivedBySelectedUser: Feedbacks[];
   doesErrorOccur: boolean;
   isRequestPending: boolean;
   messageFromBackend: string;
@@ -31,6 +34,14 @@ export interface OfferDetails {
   offersTags: string[];
   offerLocation: string;
   offerOwnerLocation: string;
+}
+
+export interface Feedbacks {
+  userName: string;
+  givenBy_userName: string;
+  message: string;
+  rating: number;
+  createdAt: string;
 }
 
 export interface LinkWithLabels {

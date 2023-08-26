@@ -1,7 +1,7 @@
-import MailIcon from "@mui/icons-material/Mail";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import { Box, CssBaseline } from "@mui/material";
-import React, { useEffect, useLayoutEffect } from "react";
+import React, { useEffect } from "react";
 import { Outlet, Route, Routes, useNavigate } from "react-router-dom";
 import { SideDrawer } from "../../components/SideDrawer";
 import { useActionDispatch, useStateSelector } from "../../hooks";
@@ -17,25 +17,19 @@ export const UserDashBoardPage: React.FC = () => {
 
   const listItems = [
     {
-      icon: <InboxIcon />,
+      icon: <MonetizationOnIcon />,
       text: "My buy offers",
       key: "myBuyOffers",
       path: "myBuyOffers",
     },
     {
-      icon: <MailIcon />,
+      icon: <MonetizationOnIcon />,
       text: "My sell offers",
       key: "mySellOffers",
       path: "mySellOffers",
     },
     {
       icon: <InboxIcon />,
-      text: "My trade history",
-      key: "myTradeHistory",
-      path: "myTradeHistory",
-    },
-    {
-      icon: <MailIcon />,
       text: "Received feedbacks",
       key: "receivedFeedbacks",
       path: "receivedFeedbacks",
@@ -74,16 +68,40 @@ export const UserDashBoardPage: React.FC = () => {
             <Route
               path="myBuyOffers"
               element={
-                <OffersPage offersList={myAllBuyOffersDetails} isBuyOffer />
+                !!myAllBuyOffersDetails.length ? (
+                  <OffersPage offersList={myAllBuyOffersDetails} isBuyOffer />
+                ) : (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      padding: "10px",
+                      flex: 3,
+                    }}
+                  >
+                    You haven't placed any buy offer yet
+                  </Box>
+                )
               }
             />
             <Route
               path="mySellOffers"
               element={
-                <OffersPage
-                  offersList={myAllSellOffersDetails}
-                  isBuyOffer={false}
-                />
+                !!myAllSellOffersDetails.length ? (
+                  <OffersPage
+                    offersList={myAllSellOffersDetails}
+                    isBuyOffer={false}
+                  />
+                ) : (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      padding: "10px",
+                      flex: 3,
+                    }}
+                  >
+                    You haven't placed any sell offer yet
+                  </Box>
+                )
               }
             />
           </Route>

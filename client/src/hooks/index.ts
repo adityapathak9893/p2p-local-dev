@@ -11,8 +11,15 @@ import {
   getMyBuyOffers,
   getMySellOffers,
   setDashBoardTab,
+  getBuyOffersWithFilters,
+  getSellOffersWithFilters,
+  doSubmitFeedback,
+  getFeedbacksSubmittedByMe,
+  getFeedbacksReceivedByMe,
+  getUserFeedback,
 } from "../actions";
 import { AppDispatch, RootState } from "../reducers/store";
+import { useEffect, useRef } from "react";
 
 export const useStateSelector = () => ({
   isRequestPending: useSelector((state: RootState) => state.isRequestPending),
@@ -31,6 +38,15 @@ export const useStateSelector = () => ({
   ),
   allSellOfferDetails: useSelector(
     (state: RootState) => state.allSellOfferDetails
+  ),
+  mySubmittedfeedBacks: useSelector(
+    (state: RootState) => state.mySubmittedfeedBacks
+  ),
+  myReceivedfeedBacks: useSelector(
+    (state: RootState) => state.myReceivedfeedBacks
+  ),
+  feedBacksReceivedBySelectedUser: useSelector(
+    (state: RootState) => state.feedBacksReceivedBySelectedUser
   ),
   messageFromBackend: useSelector(
     (state: RootState) => state.messageFromBackend
@@ -55,6 +71,54 @@ export const useActionDispatch = () => {
     getMyBuyOffers: () => dispatch(getMyBuyOffers()),
     getMySellOffers: () => dispatch(getMySellOffers()),
     setDashBoardTab: (tabValue: string) => dispatch(setDashBoardTab(tabValue)),
+    getBuyOffersWithFilters: (
+      cryptoCurrency: string,
+      minAmount: number,
+      preferredCurrency: string,
+      paymentMethod: string,
+      offerLocation: string,
+      offerOwnerLocation: string
+    ) =>
+      dispatch(
+        getBuyOffersWithFilters({
+          cryptoCurrency,
+          minAmount,
+          preferredCurrency,
+          paymentMethod,
+          offerLocation,
+          offerOwnerLocation,
+        })
+      ),
+    getSellOffersWithFilters: (
+      cryptoCurrency: string,
+      minAmount: number,
+      preferredCurrency: string,
+      paymentMethod: string,
+      offerLocation: string,
+      offerOwnerLocation: string
+    ) =>
+      dispatch(
+        getSellOffersWithFilters({
+          cryptoCurrency,
+          minAmount,
+          preferredCurrency,
+          paymentMethod,
+          offerLocation,
+          offerOwnerLocation,
+        })
+      ),
+    doSubmitFeedback: (userName: string, message: string, rating: number) =>
+      dispatch(
+        doSubmitFeedback({
+          userName,
+          message,
+          rating,
+        })
+      ),
+    getFeedbacksSubmittedByMe: () => dispatch(getFeedbacksSubmittedByMe()),
+    getFeedbacksReceivedByMe: () => dispatch(getFeedbacksReceivedByMe()),
+    getUserFeedback: (selectedUserName: string) =>
+      dispatch(getUserFeedback(selectedUserName)),
     placeMyBuyOffer: (
       cryptoCurrency: string,
       paymentMethod: string,

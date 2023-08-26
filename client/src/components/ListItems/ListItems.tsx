@@ -28,20 +28,7 @@ export const ListItems: React.FC<IListItemsProps> = ({
   offersList,
   isBuyOffer,
 }) => {
-  return !offersList.length ? (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "16px",
-      }}
-    >
-      <Typography variant="h6" gutterBottom>{`You haven't placed any ${
-        isBuyOffer ? "buy" : "sell"
-      } offer yet`}</Typography>
-    </Box>
-  ) : (
+  return (
     <List sx={{ width: "100%", bgcolor: "background.paper" }}>
       {offersList.map((offer, index) => {
         const currentCryptoPrice = Number(
@@ -67,7 +54,7 @@ export const ListItems: React.FC<IListItemsProps> = ({
                 primary={
                   <Link
                     to={`/user/${offer.userName}`}
-                    state={{ userEmail: offer.email }}
+                    state={{ userEmail: offer.email, userName: offer.userName }}
                     /* target="_blank"
                   rel="noopener noreferrer" */
                     style={{ textDecoration: "none" }}

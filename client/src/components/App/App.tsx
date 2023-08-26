@@ -8,7 +8,7 @@ import {
 import { useActionDispatch, useStateSelector } from "../../hooks";
 import { CreateOffersPage } from "../../pages/CreateOffersPage";
 import { HomePage } from "../../pages/HomePage";
-import { OtherUserProfilePage } from "../../pages/OtherUserProfilePage";
+import { UserProfilePage } from "../../pages/UserProfilePage";
 import { SignInPage } from "../../pages/SignInPage";
 import { SignUpPage } from "../../pages/SignUpPage";
 import { UserDashBoardPage } from "../../pages/UserDashBoardPage";
@@ -16,6 +16,9 @@ import { LoadingIndicator } from "../LoadingIndicator/LoadingIndicator";
 import { NavigationBar } from "../NavigationBar";
 import { NotificationPopper } from "../NotificationPopper";
 import "./App.scss";
+import { OffersPage } from "../../pages/OffersPage";
+import { SellOffersPage } from "../../pages/SellOffersPage";
+import { BuyOffersPage } from "../../pages/BuyOffersPage";
 
 export const App: React.FC = () => {
   const {
@@ -24,6 +27,8 @@ export const App: React.FC = () => {
     isRequestPending,
     doesErrorOccur,
     userProfileDetails,
+    allSellOfferDetails,
+    allBuyOfferDetails,
   } = useStateSelector();
   const { getSignedInUser } = useActionDispatch();
   const logoutChannel = new BroadcastChannel("user-logout");
@@ -53,14 +58,14 @@ export const App: React.FC = () => {
               otherPages={
                 isUserLoggedIn
                   ? [
-                      { label: "Buy", link: "/buyOffers" },
-                      { label: "Sell", link: "/sellOffers" },
+                      { label: "Buy", link: "/buy" },
+                      { label: "Sell", link: "/sell" },
                       { label: "Create an offer", link: "/createOffers" },
                       { label: "DashBoard", link: "/user-dashboard" },
                     ]
                   : [
-                      { label: "Buy", link: "/buyOffers" },
-                      { label: "Sell", link: "/sellOffers" },
+                      { label: "Buy", link: "/buy" },
+                      { label: "Sell", link: "/sell" },
                     ]
               }
               signInSignUpPages={[
@@ -127,7 +132,9 @@ export const App: React.FC = () => {
                 )
               }
             />
-            <Route path="/user/:username" element={<OtherUserProfilePage />} />
+            <Route path="/buy" element={<SellOffersPage />} />
+            <Route path="/sell" element={<BuyOffersPage />} />
+            <Route path="/user/:username" element={<UserProfilePage />} />
           </Routes>
         </Router>
       )}
