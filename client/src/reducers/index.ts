@@ -16,7 +16,10 @@ import {
   placeMySellOffer,
   resetBackendMessage,
   resetErrorState,
+  setBuyOfferFormDetails,
   setDashBoardTab,
+  setSellOfferFormDetails,
+  setTradeMode,
 } from "../actions";
 import { initializedAppState } from "../models/initializations";
 import {
@@ -28,6 +31,15 @@ import {
 
 const AppReducer = createReducer(initializedAppState, (app) => {
   app
+    .addCase(setTradeMode, (state, action) => {
+      state.tradeMode = action.payload;
+    })
+    .addCase(setBuyOfferFormDetails, (state, action) => {
+      state.buyOfferFormDetails = action.payload;
+    })
+    .addCase(setSellOfferFormDetails, (state, action) => {
+      state.sellOfferFormDetails = action.payload;
+    })
     .addCase(setDashBoardTab, (state, action) => {
       state.activeDashBoardTab = action.payload;
     })

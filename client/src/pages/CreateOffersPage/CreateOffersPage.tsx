@@ -1,6 +1,7 @@
 import { Button, Divider, SelectChangeEvent, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import React from "react";
 import { StepperComponent } from "../../components/StepperComponent";
+import { useActionDispatch } from "../../hooks";
 import { StepsContent } from "../../models/interfaces";
 import {
   getOtherSettingsStepsForm,
@@ -15,7 +16,7 @@ import {
   step3Summary,
   steps,
 } from "./CreateOffersPage.utils";
-import { useActionDispatch, useStateSelector } from "../../hooks";
+import { BUY } from "../../models/constants";
 
 export const CreateOffersPage: React.FC = () => {
   const { placeMyBuyOffer, placeMySellOffer, setDashBoardTab } =
@@ -24,29 +25,27 @@ export const CreateOffersPage: React.FC = () => {
   const [activeStep, setActiveStep] = React.useState(0);
 
   /* local states for 1st step*/
-  const [cryptoCurrency, setCryptoCurrency] = React.useState("Bitcoin");
-  const [buySellOffer, setBuySellOffer] = React.useState("Buy");
-  const [paymentMethod, setPaymentMethod] = React.useState("Paypal");
-  const [preferredCurrency, setPreferredCurrency] = React.useState("USD");
+  const [cryptoCurrency, setCryptoCurrency] = React.useState("");
+  const [buySellOffer, setBuySellOffer] = React.useState("");
+  const [paymentMethod, setPaymentMethod] = React.useState("");
+  const [preferredCurrency, setPreferredCurrency] = React.useState("");
 
   /* local states for 2nd step*/
-  const [cryptoCurrencyRate, setCryptoCurrencyRate] =
-    React.useState("Market price");
+  const [cryptoCurrencyRate, setCryptoCurrencyRate] = React.useState("");
   const [minOfferTradeLimit, setMinOfferTradeLimit] = React.useState(250);
   const [maxOfferTradeLimit, setMaxOfferTradeLimit] = React.useState(350);
   const [offerMargin, setOfferMargin] = React.useState(5);
-  //const [offerTimeLimit, setOfferTimeLimit] = React.useState(30);
 
   /* local states for 3rd step*/
   const [offersTags, setOffersTags] = React.useState<string[]>([]);
-  const [offerLocation, setOfferLocation] = React.useState("USA");
-  const [offerOwnerLocation, setOfferOwnerLocation] = React.useState("USA");
+  const [offerLocation, setOfferLocation] = React.useState("");
+  const [offerOwnerLocation, setOfferOwnerLocation] = React.useState("");
 
   /* handles for Next/previous step */
 
   const handleNext = (activatedButton: string) => {
     if (activatedButton === "Create an offer") {
-      if (buySellOffer === "Buy") {
+      if (buySellOffer === BUY) {
         placeMyBuyOffer(
           cryptoCurrency,
           paymentMethod,
@@ -147,7 +146,7 @@ export const CreateOffersPage: React.FC = () => {
       getStepsSummaryWithPoints(step1Summary, [
         `You want to ${buySellOffer} ${cryptoCurrency}`,
         `And ${
-          buySellOffer === "Buy" ? "pay for it" : "get paid"
+          buySellOffer === BUY ? "pay for it" : "get paid"
         } via ${paymentMethod} in ${preferredCurrency}`,
       ]),
     ],
@@ -180,7 +179,7 @@ export const CreateOffersPage: React.FC = () => {
       ),
       getStepsSummaryWithPoints(step3Summary, [
         `Your preferred offer tags are ${offersTags.map(
-          (offerTag, index) => `"${offerTag}"`
+          (offerTag) => `"${offerTag}"`
         )}`,
         `Your offer location is ${offerLocation}`,
         `Your location is ${offerOwnerLocation}`,
@@ -190,10 +189,6 @@ export const CreateOffersPage: React.FC = () => {
 
   const activeStepKey = steps.filter((step) => activeStep === step.index)[0]
     .stepKey;
-
-  useEffect(() => {
-    setDashBoardTab("");
-  }, []);
 
   return (
     <div className="createOffersPageContainer">

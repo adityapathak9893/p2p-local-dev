@@ -2,39 +2,33 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import { Box, CssBaseline } from "@mui/material";
 import React, { useEffect } from "react";
-import { Outlet, Route, Routes, useNavigate } from "react-router-dom";
+import { ListItems } from "../../components/ListItems";
 import { SideDrawer } from "../../components/SideDrawer";
 import { useActionDispatch, useStateSelector } from "../../hooks";
-import { OffersPage } from "../OffersPage";
+
+const listItems = [
+  {
+    icon: <MonetizationOnIcon />,
+    text: "My buy offers",
+    key: "myBuyOffers",
+  },
+  {
+    icon: <MonetizationOnIcon />,
+    text: "My sell offers",
+    key: "mySellOffers",
+  },
+  {
+    icon: <InboxIcon />,
+    text: "Received feedbacks",
+    key: "receivedFeedbacks",
+  },
+];
 
 export const UserDashBoardPage: React.FC = () => {
-  const navigate = useNavigate();
-
   const { getMyBuyOffers, getMySellOffers, setDashBoardTab } =
     useActionDispatch();
   const { myAllBuyOffersDetails, myAllSellOffersDetails, activeDashBoardTab } =
     useStateSelector();
-
-  const listItems = [
-    {
-      icon: <MonetizationOnIcon />,
-      text: "My buy offers",
-      key: "myBuyOffers",
-      path: "myBuyOffers",
-    },
-    {
-      icon: <MonetizationOnIcon />,
-      text: "My sell offers",
-      key: "mySellOffers",
-      path: "mySellOffers",
-    },
-    {
-      icon: <InboxIcon />,
-      text: "Received feedbacks",
-      key: "receivedFeedbacks",
-      path: "receivedFeedbacks",
-    },
-  ];
 
   const handleListItemClick = (key: string) => {
     setDashBoardTab(key);
@@ -47,12 +41,8 @@ export const UserDashBoardPage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!activeDashBoardTab) {
-      navigate("/user-dashboard/myBuyOffers");
-      setDashBoardTab("myBuyOffers");
-      getMyBuyOffers();
-    }
-  }, [activeDashBoardTab]);
+    handleListItemClick("myBuyOffers");
+  }, []);
 
   return (
     <Box sx={{ display: "flex", height: "100%" }}>
@@ -63,49 +53,39 @@ export const UserDashBoardPage: React.FC = () => {
         handleListItemClick={handleListItemClick}
       />
       <Box component="main" sx={{ flexGrow: 1, p: 1 }}>
-        <Routes>
-          <Route path="/" element={<Outlet />}>
-            <Route
-              path="myBuyOffers"
-              element={
-                !!myAllBuyOffersDetails.length ? (
-                  <OffersPage offersList={myAllBuyOffersDetails} isBuyOffer />
-                ) : (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      padding: "10px",
-                      flex: 3,
-                    }}
-                  >
-                    You haven't placed any buy offer yet
-                  </Box>
-                )
-              }
-            />
-            <Route
-              path="mySellOffers"
-              element={
-                !!myAllSellOffersDetails.length ? (
-                  <OffersPage
-                    offersList={myAllSellOffersDetails}
-                    isBuyOffer={false}
-                  />
-                ) : (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      padding: "10px",
-                      flex: 3,
-                    }}
-                  >
-                    You haven't placed any sell offer yet
-                  </Box>
-                )
-              }
-            />
-          </Route>
-        </Routes>
+        {activeDashBoardTab === "myBuyOffers" ? (
+          !!myAllBuyOffersDetails.length ? (
+            <ListItems offersList={myAllBuyOffersDetails} isBuyOffer />
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                padding: "10px",
+                flex: 3,
+              }}
+            >
+              You haven't placed any buy offer yet
+            </Box>
+          )
+        ) : activeDashBoardTab === "mySellOffers" ? (
+          !!myAllSellOffersDetails.length ? (
+            <ListItems offersList={myAllSellOffersDetails} isBuyOffer={false} />
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                padding: "10px",
+                flex: 3,
+              }}
+            >
+              You haven't placed any sell offer yet
+            </Box>
+          )
+        ) : (
+          activeDashBoardTab === "receivedFeedbacks" && (
+            <h1>This is in progress</h1>
+          )
+        )}
       </Box>
     </Box>
   );

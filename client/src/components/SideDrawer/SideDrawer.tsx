@@ -5,14 +5,12 @@ import List from "@mui/material/List";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemButton from "@mui/material/ListItemButton";
-import { Link } from "react-router-dom";
 
 interface SideDrawerProps {
   listItems: Array<{
     icon: React.ReactNode;
     text: string;
     key: string;
-    path: string;
   }>;
   selectedItem: string | null;
   handleListItemClick: (key: string) => void;
@@ -37,17 +35,15 @@ export const SideDrawer: React.FC<SideDrawerProps> = ({
     >
       <List>
         {listItems.map((item, index) => (
-          <Link to={item.path} style={{ textDecoration: "none" }}>
-            <ListItemButton
-              key={index}
-              selected={selectedItem === item.key}
-              onClick={() => handleListItemClick(item.key)}
-              sx={{ color: "text.primary" }}
-            >
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItemButton>
-          </Link>
+          <ListItemButton
+            key={index}
+            selected={selectedItem === item.key}
+            onClick={() => handleListItemClick(item.key)}
+            sx={{ color: "text.primary" }}
+          >
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemText primary={item.text} />
+          </ListItemButton>
         ))}
       </List>
     </Drawer>

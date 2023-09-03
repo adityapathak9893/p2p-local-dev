@@ -12,6 +12,9 @@ export interface AppState {
   isRequestPending: boolean;
   messageFromBackend: string;
   activeDashBoardTab: string;
+  tradeMode: string;
+  buyOfferFormDetails: OfferFormDetails;
+  sellOfferFormDetails: OfferFormDetails;
 }
 
 export interface UserProfileDetails {
@@ -53,4 +56,15 @@ export interface StepsContent {
   PaymentMethod: JSX.Element[];
   Pricing: JSX.Element[];
   OtherSettings: JSX.Element[];
+}
+
+export interface OfferFormDetails {
+  cryptoCurrency: string;
+  paymentMethod: string;
+  preferredCurrency: string;
+  money: string;
+  offerLocation: string;
+  offerOwnerLocation: string;
+  errors: { [key: string]: string };
+  isFormValid: boolean;
 }

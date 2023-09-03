@@ -13,7 +13,7 @@
     }
 
     .buySell-form-group {
-        margin-bottom: 20px;
+        margin-bottom: 10px;
     }
 
     label {
@@ -64,12 +64,12 @@
     }
 
     .buySell-input {
-        width: 100%;
         padding: 10px 10px;
         border: 1px solid #d1d1d1;
         border-radius: 5px;
         font-size: 16px;
         color: #333;
+        width: -webkit-fill-available;
     }
 
     .buy-button,

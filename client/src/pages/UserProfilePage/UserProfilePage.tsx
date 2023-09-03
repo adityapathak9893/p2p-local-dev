@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Box } from "@mui/material";
+import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { FeedBackForm } from "../../components/FeedBackForm";
 import { UserProfile } from "../../components/UserProfile";
 import { useActionDispatch, useStateSelector } from "../../hooks";
-import { Box } from "@mui/material";
-import { FeedBackForm } from "../../components/FeedBackForm";
 
 export const UserProfilePage: React.FC = () => {
   const location = useLocation();
@@ -11,26 +11,19 @@ export const UserProfilePage: React.FC = () => {
 
   const { userName, userEmail } = state;
 
-  const { getUserFeedback, setDashBoardTab, doSubmitFeedback } =
-    useActionDispatch();
-  const {
-    feedBacksReceivedBySelectedUser,
-    activeDashBoardTab,
-    isUserLoggedIn,
-  } = useStateSelector();
+  const { getUserFeedback, doSubmitFeedback } = useActionDispatch();
+  const { feedBacksReceivedBySelectedUser, isUserLoggedIn } =
+    useStateSelector();
+
+  useEffect(() => {
+    getUserFeedback(userName);
+  }, []);
 
   const handleSubmit = (feedback: { message: string; rating: number }) => {
     doSubmitFeedback(userName, feedback.message, feedback.rating).then(() => {
       getUserFeedback(userName);
     });
   };
-
-  useEffect(() => {
-    if (!activeDashBoardTab) {
-      setDashBoardTab("kgkg");
-      getUserFeedback(userName);
-    }
-  }, [activeDashBoardTab]);
 
   return (
     <Box

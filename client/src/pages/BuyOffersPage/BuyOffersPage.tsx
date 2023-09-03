@@ -1,15 +1,52 @@
 import { Box } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { BuySellOfferForm } from "../../components/BuySellOfferForm";
 import { ListItems } from "../../components/ListItems";
 import { useActionDispatch, useStateSelector } from "../../hooks";
+import { OfferFormDetails } from "../../models/interfaces";
+import { SELL } from "../../models/constants";
 
 export const BuyOffersPage: React.FC = () => {
-  const { allBuyOfferDetails } = useStateSelector();
-  const { setDashBoardTab } = useActionDispatch();
-  /* useEffect(() => {
-    setDashBoardTab("");
-  }, []); */
+  const { setSellOfferFormDetails, setTradeMode, getBuyOffersWithFilters } =
+    useActionDispatch();
+  const { sellOfferFormDetails, tradeMode, allBuyOfferDetails } =
+    useStateSelector();
+
+  const {
+    cryptoCurrency,
+    paymentMethod,
+    preferredCurrency,
+    money,
+    offerLocation,
+    offerOwnerLocation,
+    isFormValid,
+  } = sellOfferFormDetails;
+
+  useEffect(() => {
+    setTradeMode(SELL);
+    getBuyOffersWithFilters(
+      cryptoCurrency,
+      Number(money),
+      preferredCurrency,
+      paymentMethod,
+      offerLocation,
+      offerOwnerLocation
+    );
+  }, []);
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (isFormValid) {
+      getBuyOffersWithFilters(
+        cryptoCurrency,
+        Number(money),
+        preferredCurrency,
+        paymentMethod,
+        offerLocation,
+        offerOwnerLocation
+      );
+    }
+  };
   return (
     <Box
       sx={{
@@ -22,7 +59,19 @@ export const BuyOffersPage: React.FC = () => {
           flex: 1,
         }}
       >
-        <BuySellOfferForm />
+        <BuySellOfferForm
+          offerFormDetails={sellOfferFormDetails}
+          tradeMode={tradeMode}
+          showBuySellButtons={false}
+          setTradeMode={(tradeMode: string) => {
+            setTradeMode(tradeMode);
+          }}
+          setOfferForm={(offerFormDetails: OfferFormDetails) => {
+            setSellOfferFormDetails(offerFormDetails);
+          }}
+          onSubmit={onSubmit}
+          isHomePageActive
+        />
       </Box>
       <Box
         sx={{

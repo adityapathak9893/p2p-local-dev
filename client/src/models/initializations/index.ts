@@ -1,4 +1,10 @@
-import { AppState, UserProfileDetails, OfferDetails } from "../interfaces";
+import { BUY, CRYPTOCURRENCY } from "../constants";
+import {
+  AppState,
+  UserProfileDetails,
+  OfferDetails,
+  OfferFormDetails,
+} from "../interfaces";
 
 export const initializedUserProfileDetails: UserProfileDetails = {
   id: "",
@@ -22,6 +28,17 @@ export const initializedOfferDetails: OfferDetails = {
   offerOwnerLocation: "",
 };
 
+export const initializeOfferFormDetails: OfferFormDetails = {
+  cryptoCurrency: CRYPTOCURRENCY,
+  paymentMethod: "",
+  preferredCurrency: "",
+  money: "",
+  offerLocation: "",
+  offerOwnerLocation: "",
+  errors: {},
+  isFormValid: false,
+};
+
 export const initializedAppState: AppState = {
   isUserLoggedIn: false,
   userProfileDetails: initializedUserProfileDetails,
@@ -36,4 +53,7 @@ export const initializedAppState: AppState = {
   isRequestPending: false,
   messageFromBackend: "",
   activeDashBoardTab: "",
+  tradeMode: BUY,
+  buyOfferFormDetails: initializeOfferFormDetails,
+  sellOfferFormDetails: initializeOfferFormDetails,
 };

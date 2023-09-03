@@ -29,7 +29,11 @@ import {
   PLACE_USER_SELL_OFFER,
   RESET_BACKEND_MESSAGE,
   RESET_ERROR_STATE,
+  SET_BUY_OFFERS_FORM_DETAILS,
   SET_DASHBOARD_TAB,
+  SET_SELL_OFFERS_FORM_DETAILS,
+  SET_TOGGLED_STATE,
+  SET_TRADE_MODE,
   USER_SIGN_IN,
   USER_SIGN_OUT,
   USER_SIGN_UP,
@@ -38,9 +42,31 @@ import {
   Feedbacks,
   OfferDetails,
   UserProfileDetails,
+  OfferFormDetails,
 } from "../models/interfaces";
 import { initializedUserProfileDetails } from "../models/initializations";
 import { RootState } from "../reducers/store";
+
+export const setTradeMode = createAction(
+  SET_TRADE_MODE,
+  (tradeMode: string) => ({
+    payload: tradeMode,
+  })
+);
+
+export const setBuyOfferFormDetails = createAction(
+  SET_BUY_OFFERS_FORM_DETAILS,
+  (buyOfferFormDetails: OfferFormDetails) => ({
+    payload: buyOfferFormDetails,
+  })
+);
+
+export const setSellOfferFormDetails = createAction(
+  SET_SELL_OFFERS_FORM_DETAILS,
+  (sellOfferFormDetails: OfferFormDetails) => ({
+    payload: sellOfferFormDetails,
+  })
+);
 
 export const resetBackendMessage = createAction(RESET_BACKEND_MESSAGE, () => ({
   payload: "",

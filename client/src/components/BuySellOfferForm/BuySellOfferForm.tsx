@@ -1,42 +1,60 @@
-import React, { useEffect, useState } from "react";
-import { useActionDispatch, useStateSelector } from "../../hooks";
+import React, { useEffect } from "react";
+import { getMinAmountValidationByCurrency } from "../../helpers";
+import {
+  BUY,
+  COUNTRIES,
+  CRYPTOCURRENCY,
+  FIATCURRENCIES,
+  PAYMENTMETHODS,
+  SELL,
+} from "../../models/constants";
+import { OfferFormDetails } from "../../models/interfaces";
 import "./BuySellOfferForm.scss";
-import { useNavigate } from "react-router";
 
-export const BuySellOfferForm: React.FC = () => {
-  const [cryptoCurrency, setCryptoCurrency] = useState("Bitcoin");
-  const [paymentMethod, setPaymentMethod] = useState("Bank");
-  const [preferredCurrency, setPreferredCurrency] = useState("USD");
-  const [money, setMoney] = useState("250");
-  const [offerLocation, setOfferLocation] = useState("");
-  const [offerOwnerLocation, setOfferOwnerLocation] = useState("");
-  const [tradeMode, setTradeMode] = useState("BUY");
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [isFormValid, setIsFormValid] = useState(false);
+interface IBuySellOfferForm {
+  offerFormDetails: OfferFormDetails;
+  tradeMode: string;
+  showBuySellButtons: boolean;
+  setTradeMode: (tradeMode: string) => void;
+  setOfferForm: (offerFormDetails: OfferFormDetails) => void;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  isHomePageActive: boolean;
+}
 
-  const { getSellOffersWithFilters, getBuyOffersWithFilters } =
-    useActionDispatch();
-  const navigate = useNavigate();
+export const BuySellOfferForm: React.FC<IBuySellOfferForm> = ({
+  offerFormDetails,
+  tradeMode,
+  showBuySellButtons,
+  setTradeMode,
+  setOfferForm,
+  onSubmit,
+  isHomePageActive,
+}) => {
+  const {
+    cryptoCurrency,
+    paymentMethod,
+    preferredCurrency,
+    money,
+    offerLocation,
+    offerOwnerLocation,
+    errors,
+    isFormValid,
+  } = offerFormDetails;
 
   const handleCryptoCurrencyChange = (
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const newCryptoCurrency = e.target.value;
-    setCryptoCurrency(newCryptoCurrency);
-    validateForm({
-      ...errors,
-      cryptoCurrency: validateCryptoCurrency(newCryptoCurrency),
-    });
+    setOfferForm({ ...offerFormDetails, cryptoCurrency: newCryptoCurrency });
   };
 
   const handlePreferredCurrencyChange = (
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const newPreferredCurrency = e.target.value;
-    setPreferredCurrency(newPreferredCurrency);
-    validateForm({
-      ...errors,
-      preferredCurrency: validatePreferredCurrency(newPreferredCurrency),
+    setOfferForm({
+      ...offerFormDetails,
+      preferredCurrency: newPreferredCurrency,
     });
   };
 
@@ -44,95 +62,38 @@ export const BuySellOfferForm: React.FC = () => {
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const newPaymentMethod = e.target.value;
-    setPaymentMethod(newPaymentMethod);
-    validateForm({
-      ...errors,
-      paymentMethod: validatePaymentMethod(newPaymentMethod),
-    });
+    setOfferForm({ ...offerFormDetails, paymentMethod: newPaymentMethod });
   };
 
   const handleMoneyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newMoney = e.target.value;
-    setMoney(newMoney);
-    validateForm({ ...errors, money: validateMoney(newMoney) });
+    const formErrors = {
+      ...errors,
+      money: getMinAmountValidationByCurrency(preferredCurrency, newMoney),
+    };
+    setOfferForm({
+      ...offerFormDetails,
+      money: newMoney,
+      errors: formErrors,
+      isFormValid: Object.values(formErrors).every((error) => error === ""),
+    });
   };
 
   const handleOfferLocationChange = (
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const newOfferLocation = e.target.value;
-    setOfferLocation(newOfferLocation);
-    validateForm({
-      ...errors,
-      offerLocation: validateOfferLocation(newOfferLocation),
-    });
+    setOfferForm({ ...offerFormDetails, offerLocation: newOfferLocation });
   };
 
   const handleOfferOwnerLocationChange = (
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const newOfferOwnerLocation = e.target.value;
-    setOfferOwnerLocation(newOfferOwnerLocation);
-    validateForm({
-      ...errors,
-      offerOwnerLocation: validateOfferOwnerLocation(newOfferOwnerLocation),
+    setOfferForm({
+      ...offerFormDetails,
+      offerOwnerLocation: newOfferOwnerLocation,
     });
-  };
-
-  const validateForm = (formErrors: { [key: string]: string }) => {
-    setErrors(formErrors);
-    setIsFormValid(Object.values(formErrors).every((error) => error === ""));
-  };
-
-  const validateCryptoCurrency = (cryptoCurrency: string) => {
-    return cryptoCurrency ? "" : "Crypto currency is required ";
-  };
-
-  const validatePreferredCurrency = (preferredCurrency: string) => {
-    return preferredCurrency ? "" : "preferred currency is required";
-  };
-
-  const validatePaymentMethod = (paymentMethod: string) => {
-    return paymentMethod ? "" : "Payment method is required";
-  };
-
-  const validateMoney = (money: string) => {
-    return money ? "" : "This field is required";
-  };
-
-  const validateOfferLocation = (offerLocation: string) => {
-    return offerLocation ? "" : "Offer location is required";
-  };
-
-  const validateOfferOwnerLocation = (offerOwnerLocation: string) => {
-    return offerOwnerLocation ? "" : "Offer owner location is required";
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (isFormValid) {
-      if (tradeMode === "BUY") {
-        navigate("/buy");
-        getSellOffersWithFilters(
-          cryptoCurrency,
-          Number(money),
-          preferredCurrency,
-          paymentMethod,
-          offerLocation,
-          offerOwnerLocation
-        );
-      } else {
-        navigate("/sell");
-        getBuyOffersWithFilters(
-          cryptoCurrency,
-          Number(money),
-          preferredCurrency,
-          paymentMethod,
-          offerLocation,
-          offerOwnerLocation
-        );
-      }
-    }
   };
 
   const handleBuySell = (buttonToBeActivated: string) => {
@@ -140,25 +101,31 @@ export const BuySellOfferForm: React.FC = () => {
   };
 
   useEffect(() => {
-    setErrors({
-      cryptoCurrency: "",
-      paymentMethod: "",
-      preferredCurrency: "",
-      money: "",
-      offerLocation: "",
-      offerOwnerLocation: "",
+    setOfferForm({
+      ...offerFormDetails,
+      errors: {
+        cryptoCurrency: "",
+        paymentMethod: "",
+        preferredCurrency: "",
+        money: "",
+        offerLocation: "",
+        offerOwnerLocation: "",
+      },
     });
   }, []);
 
   useEffect(() => {
     const validity =
       cryptoCurrency &&
-      paymentMethod &&
+      /* paymentMethod &&
       money &&
       offerLocation &&
-      offerOwnerLocation &&
+      offerOwnerLocation && */
       Object.values(errors).every((error) => error === "");
-    setIsFormValid(validity === "" ? false : validity);
+    setOfferForm({
+      ...offerFormDetails,
+      isFormValid: validity === "" ? false : validity,
+    });
   }, [
     cryptoCurrency,
     paymentMethod,
@@ -166,33 +133,36 @@ export const BuySellOfferForm: React.FC = () => {
     offerLocation,
     offerOwnerLocation,
     errors,
+    tradeMode,
   ]);
 
   return (
     <div className="buySell-container">
-      <div className="buySellButtonWrapper">
-        <button
-          className={
-            tradeMode === "BUY"
-              ? " buy-button activeButton"
-              : " buy-button deActiveButton"
-          }
-          onClick={() => handleBuySell("BUY")}
-        >
-          Buy
-        </button>
-        <button
-          className={
-            tradeMode === "SELL"
-              ? " sell-button activeButton"
-              : "sell-button deActiveButton"
-          }
-          onClick={() => handleBuySell("SELL")}
-        >
-          Sell
-        </button>
-      </div>
-      <form onSubmit={handleSubmit}>
+      {showBuySellButtons && (
+        <div className="buySellButtonWrapper">
+          <button
+            className={
+              tradeMode === BUY
+                ? " buy-button activeButton"
+                : " buy-button deActiveButton"
+            }
+            onClick={() => handleBuySell(BUY)}
+          >
+            Buy
+          </button>
+          <button
+            className={
+              tradeMode === SELL
+                ? " sell-button activeButton"
+                : "sell-button deActiveButton"
+            }
+            onClick={() => handleBuySell(SELL)}
+          >
+            Sell
+          </button>
+        </div>
+      )}
+      <form onSubmit={onSubmit}>
         <div className="buySell-form-group">
           <label>Crypto Currency</label>
           <select
@@ -202,10 +172,8 @@ export const BuySellOfferForm: React.FC = () => {
               errors.cryptoCurrency ? "buySell-error" : "buySell-selectField"
             }
           >
-            <option value="">Select payment method</option>
-            <option value="Bitcoin">Bitcoin</option>
-            <option value="Ethereum">Ethereum</option>
-            <option value="USDT">USDT</option>
+            <option value="">Select crypto currency</option>
+            <option value={CRYPTOCURRENCY}>{CRYPTOCURRENCY}</option>
           </select>
           {errors.cryptoCurrency && (
             <span className="buySell-error-message">
@@ -223,8 +191,9 @@ export const BuySellOfferForm: React.FC = () => {
             }
           >
             <option value="">Select payment method</option>
-            <option value="Paypal">Paypal</option>
-            <option value="Bank">Bank</option>
+            {PAYMENTMETHODS.map((paymentMethod) => (
+              <option value={paymentMethod}>{paymentMethod}</option>
+            ))}
           </select>
           {errors.paymentMethod && (
             <span className="buySell-error-message">
@@ -241,14 +210,12 @@ export const BuySellOfferForm: React.FC = () => {
               errors.preferredCurrency ? "buySell-error" : "buySell-selectField"
             }
           >
-            <option value="">Select Currency</option>
-            <option value="USD">USD</option>
-            <option value="EURO">EURO</option>
-            <option value="AUD">AUD</option>
-            <option value="CAD">CAD</option>
-            <option value="HKD">HKD</option>
-            <option value="SGD">SGD</option>
-            <option value="TWD">TWD</option>
+            <option value="">Select your preferred currency</option>
+            {FIATCURRENCIES.map((currencyDetails) => (
+              <option value={currencyDetails.key}>
+                {currencyDetails.label}
+              </option>
+            ))}
           </select>
           {errors.preferredCurrency && (
             <span className="buySell-error-message">
@@ -258,7 +225,7 @@ export const BuySellOfferForm: React.FC = () => {
         </div>
         <div className="buySell-form-group">
           <label>
-            {tradeMode === "BUY" ? "I want to spend" : "I want to get"}
+            {tradeMode === BUY ? "I want to spend" : "I want to get"}
           </label>
           <input
             type="text"
@@ -270,42 +237,52 @@ export const BuySellOfferForm: React.FC = () => {
             <span className="buySell-error-message">{errors.money}</span>
           )}
         </div>
-        <div className="buySell-form-group">
-          <label>Offer location</label>
-          <select
-            value={offerLocation}
-            onChange={handleOfferLocationChange}
-            className={errors.money ? "buySell-error" : "buySell-selectField"}
-          >
-            <option value="">Select location</option>
-            <option value="USA">USA</option>
-            <option value="GERMANY">GERMANY</option>
-          </select>
-          {errors.money && (
-            <span className="buySell-error-message">{errors.money}</span>
-          )}
-        </div>
-        <div className="buySell-form-group">
-          <label>Offer Owner location</label>
-          <select
-            value={offerOwnerLocation}
-            onChange={handleOfferOwnerLocationChange}
-            className={
-              errors.offerOwnerLocation
-                ? "buySell-error"
-                : "buySell-selectField"
-            }
-          >
-            <option value="">Select location</option>
-            <option value="USA">USA</option>
-            <option value="GERMANY">GERMANY</option>
-          </select>
-          {errors.offerOwnerLocation && (
-            <span className="buySell-error-message">
-              {errors.offerOwnerLocation}
-            </span>
-          )}
-        </div>
+        {isHomePageActive && (
+          <>
+            <div className="buySell-form-group">
+              <label>Offer location</label>
+              <select
+                value={offerLocation}
+                onChange={handleOfferLocationChange}
+                className={
+                  errors.offerLocation ? "buySell-error" : "buySell-selectField"
+                }
+              >
+                <option value="">Select location</option>
+                {COUNTRIES.map((country) => (
+                  <option value={country}>{country}</option>
+                ))}
+              </select>
+              {errors.offerLocation && (
+                <span className="buySell-error-message">
+                  {errors.offerLocation}
+                </span>
+              )}
+            </div>
+            <div className="buySell-form-group">
+              <label>Offer Owner location</label>
+              <select
+                value={offerOwnerLocation}
+                onChange={handleOfferOwnerLocationChange}
+                className={
+                  errors.offerOwnerLocation
+                    ? "buySell-error"
+                    : "buySell-selectField"
+                }
+              >
+                <option value="">Select location</option>
+                {COUNTRIES.map((country) => (
+                  <option value={country}>{country}</option>
+                ))}
+              </select>
+              {errors.offerOwnerLocation && (
+                <span className="buySell-error-message">
+                  {errors.offerOwnerLocation}
+                </span>
+              )}
+            </div>
+          </>
+        )}
         <button
           className="findOffersSubmit"
           type="submit"

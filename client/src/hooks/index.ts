@@ -17,9 +17,13 @@ import {
   getFeedbacksSubmittedByMe,
   getFeedbacksReceivedByMe,
   getUserFeedback,
+  setTradeMode,
+  setBuyOfferFormDetails,
+  setSellOfferFormDetails,
 } from "../actions";
 import { AppDispatch, RootState } from "../reducers/store";
 import { useEffect, useRef } from "react";
+import { OfferFormDetails } from "../models/interfaces";
 
 export const useStateSelector = () => ({
   isRequestPending: useSelector((state: RootState) => state.isRequestPending),
@@ -51,6 +55,13 @@ export const useStateSelector = () => ({
   messageFromBackend: useSelector(
     (state: RootState) => state.messageFromBackend
   ),
+  tradeMode: useSelector((state: RootState) => state.tradeMode),
+  buyOfferFormDetails: useSelector(
+    (state: RootState) => state.buyOfferFormDetails
+  ),
+  sellOfferFormDetails: useSelector(
+    (state: RootState) => state.sellOfferFormDetails
+  ),
   doesErrorOccur: useSelector((state: RootState) => state.doesErrorOccur),
   activeDashBoardTab: useSelector(
     (state: RootState) => state.activeDashBoardTab
@@ -68,6 +79,11 @@ export const useActionDispatch = () => {
     doUserSignOut: () => dispatch(doUserSignOut()),
     resetBackendMessage: () => dispatch(resetBackendMessage()),
     resetErrorState: () => dispatch(resetErrorState()),
+    setTradeMode: (tradeMode: string) => dispatch(setTradeMode(tradeMode)),
+    setBuyOfferFormDetails: (buyOfferFormDetails: OfferFormDetails) =>
+      dispatch(setBuyOfferFormDetails(buyOfferFormDetails)),
+    setSellOfferFormDetails: (sellOfferFormDetails: OfferFormDetails) =>
+      dispatch(setSellOfferFormDetails(sellOfferFormDetails)),
     getMyBuyOffers: () => dispatch(getMyBuyOffers()),
     getMySellOffers: () => dispatch(getMySellOffers()),
     setDashBoardTab: (tabValue: string) => dispatch(setDashBoardTab(tabValue)),

@@ -193,14 +193,40 @@ app.get("/api/getBuyOffersWithFilters", (req, res) => {
     offerOwnerLocation,
   } = req.query;
 
-  const query = {
+  const query = {};
+
+  if (cryptoCurrency !== "") {
+    query.cryptoCurrency = cryptoCurrency;
+  }
+
+  if (minAmount !== "") {
+    query.minAmount = { $gte: Number(minAmount) };
+  }
+
+  if (preferredCurrency !== "") {
+    query.preferredCurrency = preferredCurrency;
+  }
+
+  if (paymentMethod !== "") {
+    query.paymentMethod = paymentMethod;
+  }
+
+  if (offerLocation !== "") {
+    query.offerLocation = offerLocation;
+  }
+
+  if (offerOwnerLocation !== "") {
+    query.offerOwnerLocation = offerOwnerLocation;
+  }
+
+  /* const query = {
     cryptoCurrency: cryptoCurrency,
     minAmount: { $gte: Number(minAmount) },
     paymentMethod: paymentMethod,
     preferredCurrency: preferredCurrency,
     offerLocation: offerLocation,
     offerOwnerLocation: offerOwnerLocation,
-  };
+  }; */
   buyOffers
     .find(query)
     .then((docs) => {
@@ -266,14 +292,40 @@ app.get("/api/getSellOffersWithFilters", (req, res) => {
     offerOwnerLocation,
   } = req.query;
 
-  const query = {
+  const query = {};
+
+  if (cryptoCurrency !== "") {
+    query.cryptoCurrency = cryptoCurrency;
+  }
+
+  if (minAmount !== "") {
+    query.minAmount = { $gte: Number(minAmount) };
+  }
+
+  if (preferredCurrency !== "") {
+    query.preferredCurrency = preferredCurrency;
+  }
+
+  if (paymentMethod !== "") {
+    query.paymentMethod = paymentMethod;
+  }
+
+  if (offerLocation !== "") {
+    query.offerLocation = offerLocation;
+  }
+
+  if (offerOwnerLocation !== "") {
+    query.offerOwnerLocation = offerOwnerLocation;
+  }
+
+  /* const query = {
     cryptoCurrency: cryptoCurrency,
     minAmount: { $gte: Number(minAmount) },
     paymentMethod: paymentMethod,
     preferredCurrency: preferredCurrency,
     offerLocation: offerLocation,
     offerOwnerLocation: offerOwnerLocation,
-  };
+  }; */
   sellOffers
     .find(query)
     .then((docs) => {

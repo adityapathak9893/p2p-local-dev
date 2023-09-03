@@ -77,7 +77,7 @@ export const NavigationBar: React.FC<INavigationBarProps> = (
                   textDecoration: "none",
                 }}
               >
-                p2p_local
+                BITTRADER
               </Typography>
             </Link>
           </div>

@@ -17,7 +17,7 @@ import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
 import PeopleIcon from "@mui/icons-material/People";
 import { Link } from "react-router-dom";
 import { Box, Button } from "@mui/material";
-import { CRYPTOINFO } from "../../models/constants";
+import { FIATCURRENCIES } from "../../models/constants";
 
 interface IListItemsProps {
   offersList: OfferDetails[];
@@ -31,11 +31,11 @@ export const ListItems: React.FC<IListItemsProps> = ({
   return (
     <List sx={{ width: "100%", bgcolor: "background.paper" }}>
       {offersList.map((offer, index) => {
-        const currentCryptoPrice = Number(
-          `${
-            (CRYPTOINFO as any)[offer.cryptoCurrency][offer.preferredCurrency]
-          }`
-        );
+        const currencyDetails = FIATCURRENCIES.filter(
+          (fiatCurrencyDetails) =>
+            fiatCurrencyDetails.key === offer.preferredCurrency
+        )[0];
+        const currentCryptoPrice = Number(currencyDetails.price);
         const offeredPrice =
           offer.offerMargin === 0 || offer.offerMargin === null
             ? currentCryptoPrice

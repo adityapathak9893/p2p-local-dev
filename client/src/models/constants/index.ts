@@ -16,36 +16,61 @@ export const GET_FEEDBACKS_SUBMITTED_BY_ME = "GET_FEEDBACKS_SUBMITTED_BY_ME";
 export const GET_FEEDBACKS_RECEIVED_TO_ME = "GET_FEEDBACKS_RECEIVED_TO_ME";
 export const GET_FEEDBACKS_RECEIVED_BY_SELECTED_USER =
   "GET_FEEDBACKS_RECEIVED_BY_SELECTED_USER";
-
 export const USER_SIGN_UP_SUCCESSFUL = "USER_SIGN_UP_SUCCESSFUL";
 export const USER_SIGN_UP_UNSUCCESSFUL = "USER_SIGN_UP_UNSUCCESSFUL";
+export const SET_TOGGLED_STATE = "SET_TOGGLED_STATE";
+export const SET_BUY_OFFERS_FORM_DETAILS = "SET_BUY_OFFERS_FORM_DETAILS";
+export const SET_SELL_OFFERS_FORM_DETAILS = "SET_SELL_OFFERS_FORM_DETAILS";
+export const SET_TRADE_MODE = "SET_TRADE_MODE";
 
-export const CRYPTOINFO = {
-  Bitcoin: {
-    USD: 26028,
-    EURO: 24063,
-    AUD: 40474,
-    CAD: 35270,
-    HKD: 204076,
-    SGD: 35323,
-    TWD: 831446,
-  },
-  Ethereum: {
-    USD: 1642,
-    EURO: 1519,
-    AUD: 2554,
-    CAD: 2226,
-    HKD: 12881,
-    SGD: 2229,
-    TWD: 52481,
-  },
-  USDT: {
-    USD: 0.995,
-    EURO: 0.9239,
-    AUD: 1.55,
-    CAD: 1.35,
-    HKD: 7.84,
-    SGD: 1.36,
-    TWD: 31.93,
-  },
-};
+//Other consts
+export const FIXED_PRICE = "FIXED PRICE";
+export const MARKET_PRICE = "MARKET_PRICE";
+export const BUY = "BUY";
+export const SELL = "SELL";
+export const CRYPTOCURRENCY = "BITCOIN";
+export const FIATCURRENCIES = [
+  { label: "US DOLLAR", key: "USD", price: 26028, minAmount: 10 },
+  { label: "EURO", key: "EUR", price: 24063, minAmount: 9 },
+  { label: "AUSRALIAN DOLLAR", key: "AUD", price: 40474, minAmount: 15 },
+  { label: "CANADIAN DOLLAR", key: "CAD", price: 35270, minAmount: 13 },
+  { label: "HONG KONG DOLLAR", key: "HKD", price: 204076, minAmount: 78 },
+  { label: "SINGAPORE DOLLAR", key: "SGD", price: 35323, minAmount: 13 },
+  { label: "NEW TAIWAN DOLLAR", key: "TWD", price: 831446, minAmount: 318 },
+];
+export const PAYMENTMETHODS = [
+  "Bank transfers",
+  "Online wallets",
+  "Debit/credit cards",
+  "Gift cards",
+  "Digital currencies",
+  "Cash payments",
+  "Goods and services",
+];
+
+export const COUNTRIES = [
+  "USA",
+  "UK",
+  "GERMANY",
+  "FRANCE",
+  "SWITZERLAND",
+  "FINLAND",
+  "POLAND",
+  "SPAIN",
+  "AUSTRALIA",
+  "CANADA",
+  "HONG KONG",
+  "SINGPORE",
+  "TAIWAN",
+];
+
+export const OFFER_TAGS = [
+  "no verification needed",
+  "verified paypal only",
+  "photo id required",
+  "invoices are accepted",
+  "friends and family",
+  "no receipt needed",
+  "receipt required",
+  "no third parties",
+];

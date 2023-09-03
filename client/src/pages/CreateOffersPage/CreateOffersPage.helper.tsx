@@ -9,6 +9,17 @@ import {
 } from "@mui/material";
 import { DotComponent } from "../../components/DotComponent";
 import { SelectMultipleChips } from "../../components/SelectMultipleChips";
+import {
+  BUY,
+  COUNTRIES,
+  CRYPTOCURRENCY,
+  FIATCURRENCIES,
+  FIXED_PRICE,
+  MARKET_PRICE,
+  OFFER_TAGS,
+  PAYMENTMETHODS,
+  SELL,
+} from "../../models/constants";
 
 export const getPaymentMethodStepForm = (
   cryptoCurrency: string,
@@ -37,9 +48,7 @@ export const getPaymentMethodStepForm = (
           label="Choose your cryptocurrency"
           onChange={handleChangeCryptoCurrency}
         >
-          <MenuItem value="Bitcoin">Bitcoin</MenuItem>
-          <MenuItem value="Ethereum">Ethereum</MenuItem>
-          <MenuItem value="USDT">USDT</MenuItem>
+          <MenuItem value={CRYPTOCURRENCY}>{CRYPTOCURRENCY}</MenuItem>
         </Select>
       </FormControl>
       <FormControl
@@ -57,8 +66,8 @@ export const getPaymentMethodStepForm = (
           label="What would you like to do?"
           onChange={handleChangeBuySellOffer}
         >
-          <MenuItem value="Buy">Buy</MenuItem>
-          <MenuItem value="Sell">Sell</MenuItem>
+          <MenuItem value={BUY}>{BUY}</MenuItem>
+          <MenuItem value={SELL}>{SELL}</MenuItem>
         </Select>
       </FormControl>
       <FormControl
@@ -74,8 +83,9 @@ export const getPaymentMethodStepForm = (
           label="Payment Method"
           onChange={handleChangePaymentMethod}
         >
-          <MenuItem value="Paypal">Paypal</MenuItem>
-          <MenuItem value="Bank">Bank</MenuItem>
+          {PAYMENTMETHODS.map((paymentMethod) => (
+            <MenuItem value={paymentMethod}>{paymentMethod}</MenuItem>
+          ))}
         </Select>
       </FormControl>
       <FormControl
@@ -91,13 +101,11 @@ export const getPaymentMethodStepForm = (
           label="Preferred Currency"
           onChange={handleChangePreferredCurrency}
         >
-          <MenuItem value="USD">USD</MenuItem>
-          <MenuItem value="EURO">EURO</MenuItem>
-          <MenuItem value="AUD">AUD</MenuItem>
-          <MenuItem value="CAD">CAD</MenuItem>
-          <MenuItem value="HKD">HKD</MenuItem>
-          <MenuItem value="SGD">SGD</MenuItem>
-          <MenuItem value="TWD">TWD</MenuItem>
+          {FIATCURRENCIES.map((currencyDetails) => (
+            <MenuItem value={currencyDetails.key}>
+              {currencyDetails.label}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
     </>
@@ -137,8 +145,8 @@ export const getPricingStepForm = (
           label={`Choose ${cryptoCurrency} rate you want to use`}
           onChange={handleCryptoCurrencyRate}
         >
-          <MenuItem value="Market price">Market price</MenuItem>
-          <MenuItem value="Fixed price">Fixed price</MenuItem>
+          <MenuItem value={MARKET_PRICE}>{MARKET_PRICE}</MenuItem>
+          <MenuItem value={FIXED_PRICE}>{FIXED_PRICE}</MenuItem>
         </Select>
       </FormControl>
       <FormControl
@@ -204,7 +212,7 @@ export const getOtherSettingsStepsForm = (
   return (
     <>
       <SelectMultipleChips
-        options={["Verified only", "Bank only", "Paypal only"]}
+        options={OFFER_TAGS}
         label="Offer Tags"
         selectedOption={offersTags}
         setOption={setOffersTags}
@@ -225,8 +233,9 @@ export const getOtherSettingsStepsForm = (
           label="Set your offer's location"
           onChange={handleChangeOfferLocation}
         >
-          <MenuItem value="USA">USA</MenuItem>
-          <MenuItem value="GERMANY">GERMANY</MenuItem>
+          {COUNTRIES.map((country) => (
+            <MenuItem value={country}>{country}</MenuItem>
+          ))}
         </Select>
       </FormControl>
 
@@ -243,8 +252,9 @@ export const getOtherSettingsStepsForm = (
           label="Set your location"
           onChange={handleChangeOfferOwnerLocation}
         >
-          <MenuItem value="USA">USA</MenuItem>
-          <MenuItem value="Germany">Germany</MenuItem>
+          {COUNTRIES.map((country) => (
+            <MenuItem value={country}>{country}</MenuItem>
+          ))}
         </Select>
       </FormControl>
     </>
