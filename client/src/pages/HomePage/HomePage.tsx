@@ -5,6 +5,8 @@ import { BUY } from "../../models/constants";
 import { OfferFormDetails } from "../../models/interfaces";
 import { useNavigate } from "react-router";
 import "./HomePage.scss";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -32,6 +34,24 @@ export const HomePage: React.FC = () => {
 
   return (
     <div id="HomePageContainer">
+      <Box
+        sx={{
+          display: "flex",
+          marginTop: "30px",
+          marginBottom: "50px",
+          flexDirection: "column",
+          width: "100%",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="h2" sx={{ color: "white", marginTop: "20px" }}>
+          Trade Bitcoin on Bittrader
+        </Typography>
+        <Typography variant="h5" sx={{ color: "white", marginTop: "20px" }}>
+          Join over thousands of people just like you on everyone's favorite
+          peer-to-peer platform to buy and sell Bitcoin.
+        </Typography>
+      </Box>
       <div className="buySellContainerWrapper">
         <BuySellOfferForm
           offerFormDetails={offerFormDetails}

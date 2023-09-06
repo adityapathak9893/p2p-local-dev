@@ -18,6 +18,8 @@ import PeopleIcon from "@mui/icons-material/People";
 import { Link } from "react-router-dom";
 import { Box, Button } from "@mui/material";
 import { FIATCURRENCIES } from "../../models/constants";
+import Paper from "@mui/material/Paper";
+import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 
 interface IListItemsProps {
   offersList: OfferDetails[];
@@ -28,8 +30,16 @@ export const ListItems: React.FC<IListItemsProps> = ({
   offersList,
   isBuyOffer,
 }) => {
+  const Item = styled(Paper)(({ theme }) => ({
+    ...theme.typography.body2,
+    textAlign: "center",
+    color: theme.palette.text.secondary,
+    //height: "100%",
+    //lineHeight: "60px",
+  }));
+  const lightTheme = createTheme({ palette: { mode: "light" } });
   return (
-    <List sx={{ width: "100%", bgcolor: "background.paper" }}>
+    <ThemeProvider theme={lightTheme}>
       {offersList.map((offer, index) => {
         const currencyDetails = FIATCURRENCIES.filter(
           (fiatCurrencyDetails) =>
@@ -42,7 +52,7 @@ export const ListItems: React.FC<IListItemsProps> = ({
             : currentCryptoPrice +
               currentCryptoPrice * (offer.offerMargin / 100);
         return (
-          <React.Fragment key={index}>
+          <Item key={index} elevation={6} sx={{marginBottom: "20px"}}>
             <ListItem alignItems="flex-start" sx={{ padding: "16px" }}>
               <ListItemAvatar>
                 <Avatar
@@ -54,9 +64,12 @@ export const ListItems: React.FC<IListItemsProps> = ({
                 primary={
                   <Link
                     to={`/user/${offer.userName}`}
-                    state={{ userEmail: offer.email, userName: offer.userName }}
+                    state={{
+                      userEmail: offer.email,
+                      userName: offer.userName,
+                    }}
                     /* target="_blank"
-                  rel="noopener noreferrer" */
+              rel="noopener noreferrer" */
                     style={{ textDecoration: "none" }}
                   >
                     <Typography
@@ -260,7 +273,7 @@ export const ListItems: React.FC<IListItemsProps> = ({
                         display: "flex",
                         flexDirection: "column",
                         marginLeft: "20px",
-                        flex: 2,
+                        flex: 1.5,
                       }}
                     >
                       <Box
@@ -279,7 +292,7 @@ export const ListItems: React.FC<IListItemsProps> = ({
                             marginRight: "10px",
                           }}
                         >
-                          {`Offered price per ${offer.cryptoCurrency}:`}
+                          {`Offered price/${offer.cryptoCurrency}:`}
                         </Typography>
                         <Typography
                           variant="body1"
@@ -309,7 +322,7 @@ export const ListItems: React.FC<IListItemsProps> = ({
                             marginRight: "10px",
                           }}
                         >
-                          {`Current price per ${offer.cryptoCurrency}:`}
+                          {`Current price/${offer.cryptoCurrency}:`}
                         </Typography>
                         <Typography
                           variant="body1"
@@ -366,14 +379,9 @@ export const ListItems: React.FC<IListItemsProps> = ({
                 }
               />
             </ListItem>
-            <Divider
-              variant="inset"
-              component="li"
-              sx={{ marginLeft: "80px" }}
-            />
-          </React.Fragment>
+          </Item>
         );
       })}
-    </List>
+    </ThemeProvider>
   );
 };

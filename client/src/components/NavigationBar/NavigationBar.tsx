@@ -54,7 +54,7 @@ export const NavigationBar: React.FC<INavigationBarProps> = (
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="relative" sx={{ background: "transparent" }}>
       <Toolbar sx={{ display: "flex" }}>
         <Box
           sx={{

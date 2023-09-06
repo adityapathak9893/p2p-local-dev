@@ -1,9 +1,35 @@
-.signUpPageContainer {
+.signUpFormContainer {
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex: 8;
-    background-color: #f5f5f5;
+    flex: 1 1;
+    margin-top: 10px;
+}
+
+.signUpPageContainer {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+}
+
+.signUpImageContainer {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: flex-end;
+    flex: 1;
+}
+
+.signUpImageWrapper {
+    background-image: url("../../images/sign-up-image.png");
+    background-repeat: no-repeat;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 100%;
+    height: 100%;
+    background-position: center center;
+
 }

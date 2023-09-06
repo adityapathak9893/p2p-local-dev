@@ -18,6 +18,7 @@ import { NavigationBar } from "../NavigationBar";
 import { NotificationPopper } from "../NotificationPopper";
 import "./App.scss";
 import { BackDrop } from "../BackDrop";
+import { WalletPage } from "../../pages/WalletPage";
 
 export const App: React.FC = () => {
   const {
@@ -54,6 +55,7 @@ export const App: React.FC = () => {
                     { label: "Buy", link: "/buy-from" },
                     { label: "Sell", link: "/sell-to" },
                     { label: "DashBoard", link: "/user-dashboard" },
+                    { label: "Wallet", link: "/wallet" },
                     { label: "Create an offer", link: "/createOffers" },
                   ]
                 : [
@@ -125,6 +127,7 @@ export const App: React.FC = () => {
               )
             }
           />
+          <Route path="/wallet" element={<WalletPage />} />
           <Route path="/buy-from" element={<SellOffersPage />} />
           <Route path="/sell-to" element={<BuyOffersPage />} />
           <Route path="/user/:username" element={<UserProfilePage />} />

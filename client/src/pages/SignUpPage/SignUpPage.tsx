@@ -5,7 +5,12 @@ import "./SignUpPage.scss";
 export const SignUpPage: React.FC = () => {
   return (
     <div className="signUpPageContainer">
-      <SignUpForm />
+      <div className="signUpFormContainer">
+        <SignUpForm />
+      </div>
+      <div className="signUpImageContainer">
+        <div className="signUpImageWrapper"></div>
+      </div>
     </div>
   );
 };

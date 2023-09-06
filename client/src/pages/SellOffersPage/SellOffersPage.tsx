@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { BuySellOfferForm } from "../../components/BuySellOfferForm";
 import { ListItems } from "../../components/ListItems";
@@ -76,14 +76,27 @@ export const SellOffersPage: React.FC = () => {
       <Box
         sx={{
           display: "flex",
-          padding: "10px",
+          padding: "0px 20px",
+          flexDirection: "column",
           flex: 3,
         }}
       >
         {!!allSellOfferDetails.length ? (
           <ListItems offersList={allSellOfferDetails} isBuyOffer={false} />
         ) : (
-          "There are currently no sell offers available for your criteria!"
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+            }}
+          >
+            <Typography variant="h5" sx={{ color: "white" }}>
+              There are currently no Sell offers available for the applied
+              filters!
+            </Typography>
+          </Box>
         )}
       </Box>
     </Box>

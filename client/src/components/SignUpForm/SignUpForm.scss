@@ -8,6 +8,7 @@
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(214, 154, 154, 0.1);
     background-color: #fff;
+    opacity: 0.9;
 
     .signup-container h2 {
         font-size: 24px;
@@ -37,7 +38,7 @@
     input[type="text"],
     input[type="email"],
     input[type="password"] {
-        width: 100%;
+        width: -webkit-fill-available;
         padding: 10px 10px;
         border: 1px solid #d1d1d1;
         border-radius: 5px;

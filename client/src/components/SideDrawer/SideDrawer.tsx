@@ -25,15 +25,15 @@ export const SideDrawer: React.FC<SideDrawerProps> = ({
     <Drawer
       anchor="left"
       variant="permanent"
-      style={{ width: "240px", flexShrink: 0 }}
+      style={{ width: "250px", flexShrink: 0 }}
       PaperProps={{
         style: {
-          width: "240px",
+          width: "250px",
           position: "relative",
         },
       }}
     >
-      <List>
+      <List sx={{paddingTop: "0px"}}>
         {listItems.map((item, index) => (
           <ListItemButton
             key={index}

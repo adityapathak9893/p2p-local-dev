@@ -1,6 +1,6 @@
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
-import { Box, CssBaseline } from "@mui/material";
+import { Box, CssBaseline, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { ListItems } from "../../components/ListItems";
 import { SideDrawer } from "../../components/SideDrawer";
@@ -52,7 +52,7 @@ export const UserDashBoardPage: React.FC = () => {
         selectedItem={activeDashBoardTab}
         handleListItemClick={handleListItemClick}
       />
-      <Box component="main" sx={{ flexGrow: 1, p: 1 }}>
+      <Box component="main" sx={{ flexGrow: 1, padding: "0px 20px" }}>
         {activeDashBoardTab === "myBuyOffers" ? (
           !!myAllBuyOffersDetails.length ? (
             <ListItems offersList={myAllBuyOffersDetails} isBuyOffer />
@@ -60,11 +60,15 @@ export const UserDashBoardPage: React.FC = () => {
             <Box
               sx={{
                 display: "flex",
-                padding: "10px",
                 flex: 3,
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
               }}
             >
-              You haven't placed any buy offer yet
+              <Typography variant="h5" sx={{ color: "white" }}>
+                You haven't placed any buy offer yet
+              </Typography>
             </Box>
           )
         ) : activeDashBoardTab === "mySellOffers" ? (
@@ -74,11 +78,15 @@ export const UserDashBoardPage: React.FC = () => {
             <Box
               sx={{
                 display: "flex",
-                padding: "10px",
                 flex: 3,
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
               }}
             >
-              You haven't placed any sell offer yet
+              <Typography variant="h5" sx={{ color: "white" }}>
+                You haven't placed any sell offer yet
+              </Typography>
             </Box>
           )
         ) : (

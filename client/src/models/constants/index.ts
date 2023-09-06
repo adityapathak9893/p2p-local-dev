@@ -25,7 +25,7 @@ export const SET_TRADE_MODE = "SET_TRADE_MODE";
 
 //Other consts
 export const FIXED_PRICE = "FIXED PRICE";
-export const MARKET_PRICE = "MARKET_PRICE";
+export const MARKET_PRICE = "MARKET PRICE";
 export const BUY = "BUY";
 export const SELL = "SELL";
 export const CRYPTOCURRENCY = "BITCOIN";
