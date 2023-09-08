@@ -9,6 +9,7 @@ const UserProfile = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   userName: { type: String, required: true },
+  walletAddress: { type: String, required: true },
   token: { type: String },
 });
 

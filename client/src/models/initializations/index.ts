@@ -11,6 +11,7 @@ export const initializedUserProfileDetails: UserProfileDetails = {
   phone: "",
   email: "",
   userName: "",
+  walletAddress: "",
 };
 
 export const initializedOfferDetails: OfferDetails = {
@@ -42,6 +43,7 @@ export const initializeOfferFormDetails: OfferFormDetails = {
 export const initializedAppState: AppState = {
   isUserLoggedIn: false,
   userProfileDetails: initializedUserProfileDetails,
+  userBalance: null,
   myAllBuyOffersDetails: [],
   allBuyOfferDetails: [],
   myAllSellOffersDetails: [],

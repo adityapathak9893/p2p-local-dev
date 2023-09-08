@@ -1,29 +1,30 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
-  doUserSignUp,
+  doSubmitFeedback,
   doUserSignIn,
-  getSignedInUser,
   doUserSignOut,
-  resetBackendMessage,
-  resetErrorState,
-  placeMyBuyOffer,
-  placeMySellOffer,
+  doUserSignUp,
+  getBuyOffersWithFilters,
+  getFeedbacksReceivedByMe,
+  getFeedbacksSubmittedByMe,
   getMyBuyOffers,
   getMySellOffers,
-  setDashBoardTab,
-  getBuyOffersWithFilters,
   getSellOffersWithFilters,
-  doSubmitFeedback,
-  getFeedbacksSubmittedByMe,
-  getFeedbacksReceivedByMe,
+  getSignedInUser,
+  getUserBalance,
   getUserFeedback,
-  setTradeMode,
+  placeMyBuyOffer,
+  placeMySellOffer,
+  resetBackendMessage,
+  resetErrorState,
+  sendWithdrawalNotification,
   setBuyOfferFormDetails,
+  setDashBoardTab,
   setSellOfferFormDetails,
+  setTradeMode,
 } from "../actions";
-import { AppDispatch, RootState } from "../reducers/store";
-import { useEffect, useRef } from "react";
 import { OfferFormDetails } from "../models/interfaces";
+import { AppDispatch, RootState } from "../reducers/store";
 
 export const useStateSelector = () => ({
   isRequestPending: useSelector((state: RootState) => state.isRequestPending),
@@ -66,13 +67,18 @@ export const useStateSelector = () => ({
   activeDashBoardTab: useSelector(
     (state: RootState) => state.activeDashBoardTab
   ),
+  userBalance: useSelector((state: RootState) => state.userBalance),
 });
 
 export const useActionDispatch = () => {
   const dispatch = useDispatch<AppDispatch>();
   return {
-    doUserSignUp: (phone: string, email: string, password: string) =>
-      dispatch(doUserSignUp({ phone, email, password })),
+    doUserSignUp: (
+      phone: string,
+      email: string,
+      password: string,
+      walletAddress: string
+    ) => dispatch(doUserSignUp({ phone, email, password, walletAddress })),
     doUserSignIn: (email: string, password: string) =>
       dispatch(doUserSignIn({ email, password })),
     getSignedInUser: () => dispatch(getSignedInUser()),
@@ -86,6 +92,20 @@ export const useActionDispatch = () => {
       dispatch(setSellOfferFormDetails(sellOfferFormDetails)),
     getMyBuyOffers: () => dispatch(getMyBuyOffers()),
     getMySellOffers: () => dispatch(getMySellOffers()),
+    getUserBalance: (walletAddress: string) =>
+      dispatch(getUserBalance(walletAddress)),
+    sendWithdrawalNotification: (
+      userName: string,
+      amount: string,
+      walletAddress: string
+    ) =>
+      dispatch(
+        sendWithdrawalNotification({
+          userName,
+          amount,
+          walletAddress,
+        })
+      ),
     setDashBoardTab: (tabValue: string) => dispatch(setDashBoardTab(tabValue)),
     getBuyOffersWithFilters: (
       cryptoCurrency: string,

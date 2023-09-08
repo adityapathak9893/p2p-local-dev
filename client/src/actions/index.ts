@@ -4,6 +4,7 @@ import {
   doUserSignInApiCall,
   doUserSignOutApiCall,
   doUserSignUpApiCall,
+  fetchBitcoinBalanceAPI,
   getBuyOffersWithFiltersApiCall,
   getFeedbacksReceivedByMeApiCall,
   getFeedbacksSubmittedByMeApiCall,
@@ -14,6 +15,7 @@ import {
   getUserFeedbackApiCall,
   placeMyBuyOfferApiCall,
   placeMySellOfferApiCall,
+  sendWithdrawalNotificationAPI,
 } from "../data-services";
 import {
   DO_SUBMIT_FEEDBACK,
@@ -22,6 +24,7 @@ import {
   GET_FEEDBACKS_SUBMITTED_BY_ME,
   GET_FILTERED_BUY_OFFERS,
   GET_FILTERED_SELL_OFFERS,
+  GET_USER_BALANCE,
   GET_USER_BUY_OFFERS,
   GET_USER_PROFILE,
   GET_USER_SELL_OFFERS,
@@ -29,6 +32,7 @@ import {
   PLACE_USER_SELL_OFFER,
   RESET_BACKEND_MESSAGE,
   RESET_ERROR_STATE,
+  SEND_WITHDRAWAL_NOTIFICATION,
   SET_BUY_OFFERS_FORM_DETAILS,
   SET_DASHBOARD_TAB,
   SET_SELL_OFFERS_FORM_DETAILS,
@@ -88,12 +92,22 @@ export const doUserSignUp = createAsyncThunk<
     message: string;
     doesErrorOccur: boolean;
   },
-  { phone: string; email: string; password: string }
+  { phone: string; email: string; password: string; walletAddress: string }
 >(
   USER_SIGN_UP,
-  async (signUpDetails: { phone: string; email: string; password: string }) => {
-    const { phone, email, password } = signUpDetails;
-    const responseData = await doUserSignUpApiCall(phone, email, password);
+  async (signUpDetails: {
+    phone: string;
+    email: string;
+    password: string;
+    walletAddress: string;
+  }) => {
+    const { phone, email, password, walletAddress } = signUpDetails;
+    const responseData = await doUserSignUpApiCall(
+      phone,
+      email,
+      password,
+      walletAddress
+    );
     return {
       message: responseData.message,
       doesErrorOccur: responseData.doesErrorOccur,
@@ -460,3 +474,40 @@ export const getUserFeedback = createAsyncThunk<
   );
   return feedBacksReceivedBySelectedUser;
 });
+
+export const getUserBalance = createAsyncThunk<
+  {
+    userBalance: number | null;
+  },
+  string
+>(GET_USER_BALANCE, async (walletAddress: string) => {
+  const userBalanceDetails = await fetchBitcoinBalanceAPI(walletAddress);
+  return { userBalance: userBalanceDetails };
+});
+
+export const sendWithdrawalNotification = createAsyncThunk<
+  {
+    message: string;
+    doesErrorOccur: boolean;
+  },
+  {
+    userName: string;
+    amount: string;
+    walletAddress: string;
+  }
+>(
+  SEND_WITHDRAWAL_NOTIFICATION,
+  async (reqDetails: {
+    userName: string;
+    amount: string;
+    walletAddress: string;
+  }) => {
+    const { userName, amount, walletAddress } = reqDetails;
+    const submissionDetails = await sendWithdrawalNotificationAPI(
+      userName,
+      amount,
+      walletAddress
+    );
+    return submissionDetails;
+  }
+);

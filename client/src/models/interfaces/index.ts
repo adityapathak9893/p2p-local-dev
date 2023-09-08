@@ -1,6 +1,7 @@
 export interface AppState {
   isUserLoggedIn: boolean;
   userProfileDetails: UserProfileDetails;
+  userBalance: number | null;
   myAllBuyOffersDetails: OfferDetails[];
   allBuyOfferDetails: OfferDetails[];
   myAllSellOffersDetails: OfferDetails[];
@@ -22,6 +23,7 @@ export interface UserProfileDetails {
   phone: string;
   email: string;
   userName: string;
+  walletAddress: string;
 }
 
 export interface OfferDetails {

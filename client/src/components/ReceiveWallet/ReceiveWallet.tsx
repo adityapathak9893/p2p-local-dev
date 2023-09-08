@@ -1,13 +1,33 @@
-import React from "react";
+import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import CallReceivedOutlinedIcon from "@mui/icons-material/CallReceivedOutlined";
-import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
+import copy from "clipboard-copy";
 import QRCode from "qrcode.react";
+import React, { useEffect, useRef, useState } from "react";
+import { useActionDispatch, useStateSelector } from "../../hooks";
+import { NotificationPopper } from "../NotificationPopper";
 
 export const ReceiveWallet: React.FC = () => {
+  const CopyButtonRef = useRef<string | null>(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const { getUserBalance } = useActionDispatch();
+  const { userProfileDetails } = useStateSelector();
+
+  useEffect(() => {
+    getUserBalance(userProfileDetails.walletAddress);
+  }, []);
+
+  const handleCopyClick = async () => {
+    try {
+      if (CopyButtonRef.current) {
+        await copy(CopyButtonRef.current);
+        setSnackbarOpen(true);
+      }
+    } catch (err) {
+      alert("Failed to copy text to clipboard.");
+    }
+  };
   return (
     <Box
       sx={{
@@ -44,7 +64,7 @@ export const ReceiveWallet: React.FC = () => {
           }}
         >
           <Typography sx={{ marginRight: "10px" }} variant="h5">
-            Your Bitcoin wallet address
+            Your Bittrader wallet address
           </Typography>
         </Box>
 
@@ -70,7 +90,7 @@ export const ReceiveWallet: React.FC = () => {
               padding: "10px",
             }}
           >
-            <QRCode value="fgkjfdlkjg654d6f54654654654654fgdfgdfg6" size={80} />
+            <QRCode value={userProfileDetails.walletAddress} size={80} />
           </Box>
           <Box
             sx={{
@@ -82,8 +102,12 @@ export const ReceiveWallet: React.FC = () => {
             <Typography variant="subtitle2" display="block" gutterBottom>
               Use this address to deposit Bitcoin (BTC):
             </Typography>
-            <Typography variant="caption" gutterBottom>
-              fgkjfdlkjg654d6f54654654654654fgdfgdfg6
+            <Typography
+              variant="caption"
+              gutterBottom
+              ref={(el) => (CopyButtonRef.current = el?.textContent || null)}
+            >
+              {userProfileDetails.walletAddress}
             </Typography>
           </Box>
         </Box>
@@ -96,11 +120,18 @@ export const ReceiveWallet: React.FC = () => {
             justifyContent: "center",
           }}
         >
-          <Button variant="contained" endIcon={<ContentCopyOutlinedIcon />}>
+          <Button
+            variant="contained"
+            endIcon={<ContentCopyOutlinedIcon />}
+            onClick={handleCopyClick}
+          >
             Copy Address
           </Button>
         </Box>
       </Box>
+      {snackbarOpen && (
+        <NotificationPopper message="Copied!" doesErrorOccur={false} />
+      )}
     </Box>
   );
 };

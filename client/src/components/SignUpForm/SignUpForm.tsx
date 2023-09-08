@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useActionDispatch, useStateSelector } from "../../hooks";
+import { useActionDispatch } from "../../hooks";
 import "./SignUpForm.scss";
 
 export const SignUpForm: React.FC = () => {
   const [countryCode, setCountryCode] = useState("");
   const [phone, setPhone] = useState("");
+  const [walletAddress, setWalletAddress] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -13,6 +14,7 @@ export const SignUpForm: React.FC = () => {
   const { doUserSignUp } = useActionDispatch();
   const resetForm = () => {
     setPhone("");
+    setWalletAddress("");
     setEmail("");
     setPassword("");
     setCountryCode("");
@@ -23,6 +25,17 @@ export const SignUpForm: React.FC = () => {
     const newPhone = e.target.value;
     setPhone(newPhone);
     validateForm({ ...errors, phone: validatePhone(newPhone) });
+  };
+
+  const handleWalletAddressFieldChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newWalletAddress = e.target.value;
+    setWalletAddress(newWalletAddress);
+    validateForm({
+      ...errors,
+      walletAddress: validateWalletAddress(newWalletAddress),
+    });
   };
 
   const handleCountryCodeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -55,7 +68,7 @@ export const SignUpForm: React.FC = () => {
     e.preventDefault();
     if (isFormValid) {
       // Perform signup logic here
-      doUserSignUp(phone, email, password).then(() => {
+      doUserSignUp(phone, email, password, walletAddress).then(() => {
         resetForm();
       });
     }
@@ -76,6 +89,13 @@ export const SignUpForm: React.FC = () => {
     return "";
   };
 
+  const validateWalletAddress = (walletAdress: string) => {
+    if (!walletAdress) {
+      return "Walllet address is required";
+    }
+    return "";
+  };
+
   const validateEmail = (email: string) => {
     // Implement email validation logic here
     return email ? "" : "Email is required";
@@ -92,6 +112,7 @@ export const SignUpForm: React.FC = () => {
       email: "",
       password: "",
       countryCode: "",
+      walletAddress: "",
     });
   }, []);
 
@@ -101,6 +122,7 @@ export const SignUpForm: React.FC = () => {
       email &&
       password &&
       countryCode &&
+      walletAddress &&
       Object.values(errors).every((error) => error === "");
     setIsFormValid(validity === "" ? false : validity);
   }, [phone, email, password, countryCode, errors]);
@@ -148,6 +170,20 @@ export const SignUpForm: React.FC = () => {
             <span className="error-message">{errors.email}</span>
           )}
         </div>
+
+        <div className="form-group">
+          <label>Wallet Address: </label>
+          <input
+            type="text"
+            value={walletAddress}
+            onChange={handleWalletAddressFieldChange}
+            className={errors.walletAddress ? "error" : ""}
+          />
+          {errors.walletAddress && (
+            <span className="error-message">{errors.walletAddress}</span>
+          )}
+        </div>
+
         <div className="form-group">
           <label>Password:</label>
           <input

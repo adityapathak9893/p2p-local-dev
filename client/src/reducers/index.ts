@@ -11,11 +11,13 @@ import {
   getMySellOffers,
   getSellOffersWithFilters,
   getSignedInUser,
+  getUserBalance,
   getUserFeedback,
   placeMyBuyOffer,
   placeMySellOffer,
   resetBackendMessage,
   resetErrorState,
+  sendWithdrawalNotification,
   setBuyOfferFormDetails,
   setDashBoardTab,
   setSellOfferFormDetails,
@@ -186,6 +188,7 @@ const AppReducer = createReducer(initializedAppState, (app) => {
         messageFromBackend: payload.message,
         doesErrorOccur: payload.doesErrorOccur,
         activeDashBoardTab: "",
+        userBalance: null,
       })
     )
     .addCase(
@@ -478,7 +481,6 @@ const AppReducer = createReducer(initializedAppState, (app) => {
         doesErrorOccur: payload.doesErrorOccur,
       })
     )
-
     .addCase(
       getUserFeedback.pending,
       (state: AppState): AppState => ({
@@ -509,6 +511,66 @@ const AppReducer = createReducer(initializedAppState, (app) => {
         isRequestPending: false,
         feedBacksReceivedBySelectedUser:
           payload.feedBacksReceivedBySelectedUser,
+        messageFromBackend: payload.message,
+        doesErrorOccur: payload.doesErrorOccur,
+      })
+    )
+    .addCase(
+      getUserBalance.pending,
+      (state: AppState): AppState => ({
+        ...state,
+        isRequestPending: true,
+      })
+    )
+    .addCase(
+      getUserBalance.rejected,
+      (state: AppState): AppState => ({
+        ...state,
+        isRequestPending: false,
+      })
+    )
+    .addCase(
+      getUserBalance.fulfilled,
+      (
+        state: AppState,
+        {
+          payload,
+        }: PayloadAction<{
+          userBalance: number | null;
+        }>
+      ): AppState => ({
+        ...state,
+        isRequestPending: false,
+        userBalance: payload.userBalance,
+      })
+    )
+    .addCase(
+      sendWithdrawalNotification.pending,
+      (state: AppState): AppState => ({
+        ...state,
+        isRequestPending: true,
+      })
+    )
+    .addCase(
+      sendWithdrawalNotification.rejected,
+      (state: AppState): AppState => ({
+        ...state,
+        isRequestPending: false,
+      })
+    )
+    .addCase(
+      sendWithdrawalNotification.fulfilled,
+      (
+        state: AppState,
+        {
+          payload,
+        }: PayloadAction<{
+          message: string;
+          doesErrorOccur: boolean;
+        }>
+      ): AppState => ({
+        ...state,
+        isRequestPending: false,
         messageFromBackend: payload.message,
         doesErrorOccur: payload.doesErrorOccur,
       })

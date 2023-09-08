@@ -11,7 +11,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { Link, useNavigate } from "react-router-dom";
 import "./NavigationBar.scss";
-import { useActionDispatch } from "../../hooks";
+import { useActionDispatch, useStateSelector } from "../../hooks";
 
 const settings = ["Logout"];
 
@@ -36,6 +36,7 @@ export const NavigationBar: React.FC<INavigationBarProps> = (
   );
 
   const { doUserSignOut } = useActionDispatch();
+  const { userBalance } = useStateSelector();
   const navigate = useNavigate();
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -102,7 +103,37 @@ export const NavigationBar: React.FC<INavigationBarProps> = (
             ))
           ) : (
             <>
-              <Tooltip title="Open settings">
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  width: "200px",
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography variant="subtitle2" gutterBottom>
+                    Current Wallet Balance:
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography variant="body2" gutterBottom>
+                    {`${userBalance} BTC`}
+                  </Typography>
+                </Box>
+              </Box>
+              <Tooltip title="Log-out">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar
                     alt={props.loggedInUserName ?? ""}

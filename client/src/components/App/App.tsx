@@ -28,7 +28,7 @@ export const App: React.FC = () => {
     doesErrorOccur,
     userProfileDetails,
   } = useStateSelector();
-  const { getSignedInUser } = useActionDispatch();
+  const { getSignedInUser, getUserBalance } = useActionDispatch();
   const logoutChannel = new BroadcastChannel("user-logout");
 
   logoutChannel.onmessage = (event) => {
@@ -39,8 +39,12 @@ export const App: React.FC = () => {
   };
 
   useEffect(() => {
-    getSignedInUser();
-  }, [isUserLoggedIn]);
+    getSignedInUser().then(() => {
+      if (isUserLoggedIn) {
+        getUserBalance(userProfileDetails.walletAddress);
+      }
+    });
+  }, [isUserLoggedIn, userProfileDetails.walletAddress]);
 
   return (
     <div id="AppContainer">
@@ -127,7 +131,16 @@ export const App: React.FC = () => {
               )
             }
           />
-          <Route path="/wallet" element={<WalletPage />} />
+          <Route
+            path="/wallet"
+            element={
+              !isUserLoggedIn ? (
+                <Navigate replace to={"/signin"} />
+              ) : (
+                <WalletPage />
+              )
+            }
+          />
           <Route path="/buy-from" element={<SellOffersPage />} />
           <Route path="/sell-to" element={<BuyOffersPage />} />
           <Route path="/user/:username" element={<UserProfilePage />} />

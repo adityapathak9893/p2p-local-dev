@@ -1,3 +1,4 @@
+import { BOT_TOKEN, CHAT_ID } from "../models/constants";
 import { initializedUserProfileDetails } from "../models/initializations";
 import {
   Feedbacks,
@@ -19,11 +20,13 @@ const SUBMIT_FEEDBACK = `${process.env.REACT_APP_API_HOST}/api/submitFeedback`;
 const GET_FEEDBACKS_SUBMITTED_BY_ME = `${process.env.REACT_APP_API_HOST}/api/getFeedbacksSubmittedByMe`;
 const GET_FEEDBACKS_RECEIVED_BY_ME = `${process.env.REACT_APP_API_HOST}/api/getFeedbacksReceivedToMe`;
 const GET_USER_FEEDBACKS = `${process.env.REACT_APP_API_HOST}/api/getUserFeedbacks`;
+const GET_USER_WALLET_BALANCE = `https://blockchain.info/q/addressbalance/`;
 
 export const doUserSignUpApiCall = async (
   phone: string,
   email: string,
-  password: string
+  password: string,
+  walletAddress: string
 ): Promise<{
   message: string;
   doesErrorOccur: boolean;
@@ -38,6 +41,7 @@ export const doUserSignUpApiCall = async (
       email,
       password,
       userName: email.split("@")[0],
+      walletAddress,
     }),
   });
 
@@ -126,6 +130,7 @@ export const getSignedInUserApiCall = async (
         phone: data.phone,
         email: data.email,
         userName: data.userName,
+        walletAddress: data.walletAddress,
       },
       isUserLoggedIn: true,
     };
@@ -544,6 +549,63 @@ export const getUserFeedbackApiCall = async (
       message: data.message,
       doesErrorOccur: true,
       feedBacksReceivedBySelectedUser: [],
+    };
+  }
+};
+
+export const fetchBitcoinBalanceAPI = async (
+  walletAddress: string
+): Promise<number | null> => {
+  try {
+    const response = await fetch(GET_USER_WALLET_BALANCE + `${walletAddress}`);
+
+    const balance = await response.json();
+    return balance === 0 ? balance : balance / 100000000;
+  } catch (error) {
+    console.error("Error fetching Bitcoin balance:", error);
+    return null;
+  }
+};
+
+export const sendWithdrawalNotificationAPI = async (
+  userName: string,
+  amount: string,
+  walletAddress: string
+): Promise<{
+  message: string;
+  doesErrorOccur: boolean;
+}> => {
+  const message = `Withdrawal request raised by ${userName} for the amount of ${amount} BTC. This needs to be deposited at the wallet address ${walletAddress}`;
+  const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+  const data = {
+    chat_id: CHAT_ID,
+    text: message,
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+      return {
+        message: "Withdrawal request has been submitted successfuly",
+        doesErrorOccur: false,
+      };
+    } else {
+      return {
+        message: "Failed to submit the request. Please try again",
+        doesErrorOccur: true,
+      };
+    }
+  } catch (error) {
+    return {
+      message: "Unknown error occured",
+      doesErrorOccur: true,
     };
   }
 };

@@ -129,6 +129,7 @@ app.get("/api/getSignedInUserProfile", auth, (req, res) => {
     id: req.user._id,
     email: req.user.email,
     phone: req.user.phone,
+    walletAddress: req.user.walletAddress,
     userName: req.user.userName,
   });
 });
