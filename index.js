@@ -13,6 +13,7 @@ const userProfile = Model.userProfile;
 const buyOffers = Model.buyOffers;
 const sellOffers = Model.sellOffers;
 const feedbacks = Model.feedbacks;
+const userTradeInformations = Model.userTradeInformations;
 
 const allowedOrigins = [
   "https://gold-careful-drill.cyclic.app",
@@ -102,6 +103,8 @@ app.post("/api/signin", function (req, res) {
               message: "password doesn't match",
             });
 
+          user.isOnline = true;
+
           user.generateToken((err, user) => {
             if (err) return res.status(400).send(err);
             res
@@ -131,18 +134,42 @@ app.get("/api/getSignedInUserProfile", auth, (req, res) => {
     phone: req.user.phone,
     walletAddress: req.user.walletAddress,
     userName: req.user.userName,
+    userBio: req.user.userBio,
+    isPhoneVerified: req.user.isPhoneVerified,
+    isEmailVerified: req.user.isEmailVerified,
+    location: req.user.location,
+    languages: req.user.languages,
+    preferredCurrency: req.user.preferredCurrency,
+    joined: req.user.joined,
+    isOnline: req.user.isOnline,
   });
 });
 
 //logout user
 app.get("/api/signout", auth, function (req, res) {
-  req.user.deleteToken(req.token, (err, user) => {
-    if (err) return res.status(400).send(err);
-    res.status(200).json({
-      success: true,
-      message: "signed-out successfully",
+  // Set isOnline to false for the currently logged-in user
+  req.user.isOnline = false;
+
+  // Save the updated user object
+  req.user
+    .save()
+    .then(() => {
+      // Delete the token
+      req.user.deleteToken(req.token, (deleteErr) => {
+        if (deleteErr) {
+          return res.status(400).send(deleteErr);
+        }
+        res.status(200).json({
+          success: true,
+          message: "signed-out successfully",
+        });
+      });
+    })
+    .catch((err) => {
+      if (err) {
+        return res.status(400).send(err);
+      }
     });
-  });
 });
 
 app.post("/api/placeMyBuyOffer", auth, (req, res) => {
@@ -150,6 +177,7 @@ app.post("/api/placeMyBuyOffer", auth, (req, res) => {
     ...req.body,
     email: req.user.email,
     userName: req.user.userName,
+    offerOwnerLocation: req.user.location,
   });
   newBuyOffer
     .save()
@@ -157,6 +185,29 @@ app.post("/api/placeMyBuyOffer", auth, (req, res) => {
       res.status(200).json({
         success: true,
         buyOffer: doc,
+      });
+    })
+    .catch((err) => {
+      if (err) {
+        return res.status(400).json({ success: false });
+      }
+    });
+});
+
+// place sell offer
+app.post("/api/placeMySellOffer", auth, (req, res) => {
+  const newSellOffer = new sellOffers({
+    ...req.body,
+    email: req.user.email,
+    userName: req.user.userName,
+    offerOwnerLocation: req.user.location,
+  });
+  newSellOffer
+    .save()
+    .then((doc) => {
+      res.status(200).json({
+        success: true,
+        sellOffer: doc,
       });
     })
     .catch((err) => {
@@ -220,14 +271,6 @@ app.get("/api/getBuyOffersWithFilters", (req, res) => {
     query.offerOwnerLocation = offerOwnerLocation;
   }
 
-  /* const query = {
-    cryptoCurrency: cryptoCurrency,
-    minAmount: { $gte: Number(minAmount) },
-    paymentMethod: paymentMethod,
-    preferredCurrency: preferredCurrency,
-    offerLocation: offerLocation,
-    offerOwnerLocation: offerOwnerLocation,
-  }; */
   buyOffers
     .find(query)
     .then((docs) => {
@@ -239,28 +282,6 @@ app.get("/api/getBuyOffersWithFilters", (req, res) => {
     .catch((err) => {
       if (err) {
         return res.status(400).json({ success: false, message: err.message });
-      }
-    });
-});
-
-// place sell offer
-app.post("/api/placeMySellOffer", auth, (req, res) => {
-  const newSellOffer = new sellOffers({
-    ...req.body,
-    email: req.user.email,
-    userName: req.user.userName,
-  });
-  newSellOffer
-    .save()
-    .then((doc) => {
-      res.status(200).json({
-        success: true,
-        sellOffer: doc,
-      });
-    })
-    .catch((err) => {
-      if (err) {
-        return res.status(400).json({ success: false });
       }
     });
 });
@@ -319,14 +340,6 @@ app.get("/api/getSellOffersWithFilters", (req, res) => {
     query.offerOwnerLocation = offerOwnerLocation;
   }
 
-  /* const query = {
-    cryptoCurrency: cryptoCurrency,
-    minAmount: { $gte: Number(minAmount) },
-    paymentMethod: paymentMethod,
-    preferredCurrency: preferredCurrency,
-    offerLocation: offerLocation,
-    offerOwnerLocation: offerOwnerLocation,
-  }; */
   sellOffers
     .find(query)
     .then((docs) => {
@@ -347,6 +360,8 @@ app.post("/api/submitFeedback", auth, (req, res) => {
   const newFeedbackSubmit = new feedbacks({
     ...req.body,
     givenBy_userName: req.user.userName,
+    givenBy_userName_location: req.user.location,
+    isFeedBackPositive: Number(req.body.rating) >= 3 ? true : false,
   });
   newFeedbackSubmit
     .save()
@@ -384,7 +399,7 @@ app.get("/api/getFeedbacksSubmittedByMe", auth, (req, res) => {
 // get all submitted feedbacks given by the signed-in user
 app.get("/api/getFeedbacksReceivedToMe", auth, (req, res) => {
   feedbacks
-    .find({ userName: req.user.userName })
+    .find({ email: req.user.email })
     .then((docs) => {
       res.status(200).json({
         success: true,
@@ -398,15 +413,61 @@ app.get("/api/getFeedbacksReceivedToMe", auth, (req, res) => {
     });
 });
 
-//get the feedbacks given to the specific user
-app.get("/api/getUserFeedbacks", (req, res) => {
-  const userName = req.query.selectedUserName;
-  feedbacks
-    .find({ userName: userName })
+//get the details given to the specific user
+app.get("/api/getSelectedUserDetails", (req, res) => {
+  const userEmail = req.query.selectedUserEmail;
+
+  userProfile
+    .aggregate([
+      {
+        $match: { email: userEmail },
+      },
+      {
+        $lookup: {
+          from: "userTradeInformations",
+          localField: "email",
+          foreignField: "email",
+          as: "userTradeInformations",
+        },
+      },
+      {
+        $lookup: {
+          from: "feedbacks",
+          localField: "email",
+          foreignField: "email",
+          as: "feedbacks",
+        },
+      },
+      {
+        $lookup: {
+          from: "buyoffers",
+          localField: "email",
+          foreignField: "email",
+          as: "buyOffers",
+        },
+      },
+      {
+        $lookup: {
+          from: "selloffers",
+          localField: "email",
+          foreignField: "email",
+          as: "sellOffers",
+        },
+      },
+      {
+        $project: {
+          password: 0, // Exclude the password field
+          token: 0, // Exclude the password field
+          _id: 0, // Exclude the _id field
+          __v: 0, // Exclude the __v field
+          walletAddress: 0, // Exclude the walletAddress field
+        },
+      },
+    ])
     .then((docs) => {
       res.status(200).json({
         success: true,
-        feedbacks: docs,
+        userDetails: docs[0], // Assuming there's only one matching user
       });
     })
     .catch((err) => {

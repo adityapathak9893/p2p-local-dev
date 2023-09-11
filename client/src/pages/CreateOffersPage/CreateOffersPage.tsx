@@ -17,8 +17,10 @@ import {
   steps,
 } from "./CreateOffersPage.utils";
 import { BUY } from "../../models/constants";
+import { useNavigate } from "react-router";
 
 export const CreateOffersPage: React.FC = () => {
+  const navigate = useNavigate();
   const { placeMyBuyOffer, placeMySellOffer, setDashBoardTab } =
     useActionDispatch();
 
@@ -39,7 +41,7 @@ export const CreateOffersPage: React.FC = () => {
   /* local states for 3rd step*/
   const [offersTags, setOffersTags] = React.useState<string[]>([]);
   const [offerLocation, setOfferLocation] = React.useState("");
-  const [offerOwnerLocation, setOfferOwnerLocation] = React.useState("");
+  const [offerTimeLimit, setOfferTimeLimit] = React.useState("");
 
   /* handles for Next/previous step */
 
@@ -56,8 +58,11 @@ export const CreateOffersPage: React.FC = () => {
           offerMargin,
           offersTags,
           offerLocation,
-          offerOwnerLocation
-        );
+          offerTimeLimit
+        ).then(() => {
+          setDashBoardTab("myBuyOffers");
+          navigate("/user-dashboard");
+        });
       } else {
         placeMySellOffer(
           cryptoCurrency,
@@ -69,8 +74,11 @@ export const CreateOffersPage: React.FC = () => {
           offerMargin,
           offersTags,
           offerLocation,
-          offerOwnerLocation
-        );
+          offerTimeLimit
+        ).then(() => {
+          setDashBoardTab("mySellOffers");
+          navigate("/user-dashboard");
+        });
       }
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -127,8 +135,8 @@ export const CreateOffersPage: React.FC = () => {
     setOfferLocation(event.target.value);
   };
 
-  const handleChangeOfferOwnerLocation = (event: SelectChangeEvent) => {
-    setOfferOwnerLocation(event.target.value);
+  const handleChangeOfferTimeLimit = (event: SelectChangeEvent) => {
+    setOfferTimeLimit(event.target.value);
   };
 
   const stepsContent: StepsContent = {
@@ -173,16 +181,16 @@ export const CreateOffersPage: React.FC = () => {
         offersTags,
         setOffersTags,
         offerLocation,
-        offerOwnerLocation,
+        offerTimeLimit,
         handleChangeOfferLocation,
-        handleChangeOfferOwnerLocation
+        handleChangeOfferTimeLimit
       ),
       getStepsSummaryWithPoints(step3Summary, [
         `Your preferred offer tags are ${offersTags.map(
           (offerTag) => `"${offerTag}"`
         )}`,
         `Your offer location is ${offerLocation}`,
-        `Your location is ${offerOwnerLocation}`,
+        `Your location is ${offerTimeLimit}`,
       ]),
     ],
   };

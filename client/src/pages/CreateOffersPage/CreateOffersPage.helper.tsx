@@ -205,9 +205,9 @@ export const getOtherSettingsStepsForm = (
   offersTags: string[],
   setOffersTags: React.Dispatch<React.SetStateAction<string[]>>,
   offerLocation: string,
-  offerOwnerLocation: string,
+  offerTimeLimit: string,
   handleChangeOfferLocation: (event: SelectChangeEvent) => void,
-  handleChangeOfferOwnerLocation: (event: SelectChangeEvent) => void
+  handleChangeOfferTimeLimit: (event: SelectChangeEvent) => void
 ): JSX.Element => {
   return (
     <>
@@ -244,17 +244,20 @@ export const getOtherSettingsStepsForm = (
         margin="normal"
         size="medium"
       >
-        <InputLabel id="demo-select-small-label">Set your location</InputLabel>
+        <InputLabel id="demo-select-small-label">
+          Set trade time limit (Mins)
+        </InputLabel>
         <Select
           labelId="demo-select-small-label"
           id="demo-select-small"
-          value={offerOwnerLocation}
-          label="Set your location"
-          onChange={handleChangeOfferOwnerLocation}
+          value={offerTimeLimit}
+          label="Set trade time limit (Mins)"
+          onChange={handleChangeOfferTimeLimit}
         >
-          {COUNTRIES.map((country) => (
-            <MenuItem value={country}>{country}</MenuItem>
-          ))}
+          <MenuItem value="10">10 Minutes</MenuItem>
+          <MenuItem value="20">20 Minutes</MenuItem>
+          <MenuItem value="30">30 Minutes</MenuItem>
+          <MenuItem value="60">60 Minutes</MenuItem>
         </Select>
       </FormControl>
     </>

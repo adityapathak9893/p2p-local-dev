@@ -4,6 +4,7 @@ import {
   UserProfileDetails,
   OfferDetails,
   OfferFormDetails,
+  UserTradeInformation,
 } from "../interfaces";
 
 export const initializedUserProfileDetails: UserProfileDetails = {
@@ -12,6 +13,14 @@ export const initializedUserProfileDetails: UserProfileDetails = {
   email: "",
   userName: "",
   walletAddress: "",
+  userBio: "",
+  isPhoneVerified: false,
+  isEmailVerified: false,
+  location: "",
+  languages: "",
+  preferredCurrency: "",
+  joined: "",
+  isOnline: false,
 };
 
 export const initializedOfferDetails: OfferDetails = {
@@ -26,6 +35,7 @@ export const initializedOfferDetails: OfferDetails = {
   offerMargin: null,
   offersTags: [],
   offerLocation: "",
+  offerTimeLimit: "",
   offerOwnerLocation: "",
 };
 
@@ -40,9 +50,21 @@ export const initializeOfferFormDetails: OfferFormDetails = {
   isFormValid: false,
 };
 
+export const initializedUserTradeInformation: UserTradeInformation = {
+  email: "",
+  userName: "",
+  tradePartners: 0,
+  trades: 0,
+  tradeVolume: 0,
+  TrustedBy: 0,
+  BlockedBy: 0,
+  HasBlocked: 0,
+};
+
 export const initializedAppState: AppState = {
   isUserLoggedIn: false,
   userProfileDetails: initializedUserProfileDetails,
+  loggedInUserTradeInformation: initializedUserTradeInformation,
   userBalance: null,
   myAllBuyOffersDetails: [],
   allBuyOfferDetails: [],
@@ -50,7 +72,7 @@ export const initializedAppState: AppState = {
   allSellOfferDetails: [],
   mySubmittedfeedBacks: [],
   myReceivedfeedBacks: [],
-  feedBacksReceivedBySelectedUser: [],
+  selectedUserDetails: null,
   doesErrorOccur: false,
   isRequestPending: false,
   messageFromBackend: "",

@@ -9,10 +9,10 @@ import {
   getFeedbacksSubmittedByMe,
   getMyBuyOffers,
   getMySellOffers,
+  getSelectedUserDetails,
   getSellOffersWithFilters,
   getSignedInUser,
   getUserBalance,
-  getUserFeedback,
   placeMyBuyOffer,
   placeMySellOffer,
   resetBackendMessage,
@@ -28,6 +28,7 @@ import {
   AppState,
   Feedbacks,
   OfferDetails,
+  SelectedUserDetails,
   UserProfileDetails,
 } from "../models/interfaces";
 
@@ -482,21 +483,21 @@ const AppReducer = createReducer(initializedAppState, (app) => {
       })
     )
     .addCase(
-      getUserFeedback.pending,
+      getSelectedUserDetails.pending,
       (state: AppState): AppState => ({
         ...state,
         isRequestPending: true,
       })
     )
     .addCase(
-      getUserFeedback.rejected,
+      getSelectedUserDetails.rejected,
       (state: AppState): AppState => ({
         ...state,
         isRequestPending: false,
       })
     )
     .addCase(
-      getUserFeedback.fulfilled,
+      getSelectedUserDetails.fulfilled,
       (
         state: AppState,
         {
@@ -504,13 +505,12 @@ const AppReducer = createReducer(initializedAppState, (app) => {
         }: PayloadAction<{
           message: string;
           doesErrorOccur: boolean;
-          feedBacksReceivedBySelectedUser: Feedbacks[];
+          selectedUserDetails: SelectedUserDetails | null;
         }>
       ): AppState => ({
         ...state,
         isRequestPending: false,
-        feedBacksReceivedBySelectedUser:
-          payload.feedBacksReceivedBySelectedUser,
+        selectedUserDetails: payload.selectedUserDetails,
         messageFromBackend: payload.message,
         doesErrorOccur: payload.doesErrorOccur,
       })

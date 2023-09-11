@@ -10,8 +10,12 @@ import { isJSDocFunctionType } from "typescript";
 export const BuyOffersPage: React.FC = () => {
   const { setSellOfferFormDetails, setTradeMode, getBuyOffersWithFilters } =
     useActionDispatch();
-  const { sellOfferFormDetails, tradeMode, allBuyOfferDetails } =
-    useStateSelector();
+  const {
+    sellOfferFormDetails,
+    tradeMode,
+    allBuyOfferDetails,
+    isUserLoggedIn,
+  } = useStateSelector();
 
   const {
     cryptoCurrency,
@@ -83,7 +87,11 @@ export const BuyOffersPage: React.FC = () => {
         }}
       >
         {!!allBuyOfferDetails.length ? (
-          <ListItems offersList={allBuyOfferDetails} isBuyOffer={false} />
+          <ListItems
+            offersList={allBuyOfferDetails}
+            isBuyOffer={false}
+            isButtonDisabled={!isUserLoggedIn}
+          />
         ) : (
           <Box
             sx={{

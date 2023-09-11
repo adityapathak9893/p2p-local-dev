@@ -3,6 +3,7 @@ import { initializedUserProfileDetails } from "../models/initializations";
 import {
   Feedbacks,
   OfferDetails,
+  SelectedUserDetails,
   UserProfileDetails,
 } from "../models/interfaces";
 
@@ -19,14 +20,13 @@ const GET_SELL_OFFERS_FILTERS_API = `${process.env.REACT_APP_API_HOST}/api/getSe
 const SUBMIT_FEEDBACK = `${process.env.REACT_APP_API_HOST}/api/submitFeedback`;
 const GET_FEEDBACKS_SUBMITTED_BY_ME = `${process.env.REACT_APP_API_HOST}/api/getFeedbacksSubmittedByMe`;
 const GET_FEEDBACKS_RECEIVED_BY_ME = `${process.env.REACT_APP_API_HOST}/api/getFeedbacksReceivedToMe`;
-const GET_USER_FEEDBACKS = `${process.env.REACT_APP_API_HOST}/api/getUserFeedbacks`;
+const GET_SELECTED_USER_DETAILS = `${process.env.REACT_APP_API_HOST}/api/getSelectedUserDetails`;
 const GET_USER_WALLET_BALANCE = `https://blockchain.info/q/addressbalance/`;
 
 export const doUserSignUpApiCall = async (
   phone: string,
   email: string,
-  password: string,
-  walletAddress: string
+  password: string
 ): Promise<{
   message: string;
   doesErrorOccur: boolean;
@@ -41,7 +41,6 @@ export const doUserSignUpApiCall = async (
       email,
       password,
       userName: email.split("@")[0],
-      walletAddress,
     }),
   });
 
@@ -131,6 +130,14 @@ export const getSignedInUserApiCall = async (
         email: data.email,
         userName: data.userName,
         walletAddress: data.walletAddress,
+        userBio: data.userBio,
+        isPhoneVerified: data.isPhoneVerified,
+        isEmailVerified: data.isEmailVerified,
+        location: data.location,
+        languages: data.languages,
+        preferredCurrency: data.preferredCurrency,
+        joined: data.joined,
+        isOnline: data.isOnline,
       },
       isUserLoggedIn: true,
     };
@@ -196,7 +203,7 @@ export const placeMyBuyOfferApiCall = async (
   offerMargin: number,
   offersTags: string[],
   offerLocation: string,
-  offerOwnerLocation: string
+  offerTimeLimit: string
 ): Promise<{
   isUserLoggedIn: boolean;
   message: string;
@@ -218,7 +225,7 @@ export const placeMyBuyOfferApiCall = async (
       offerMargin,
       offersTags,
       offerLocation,
-      offerOwnerLocation,
+      offerTimeLimit,
     }),
   });
 
@@ -250,7 +257,7 @@ export const placeMySellOfferApiCall = async (
   offerMargin: number,
   offersTags: string[],
   offerLocation: string,
-  offerOwnerLocation: string
+  offerTimeLimit: string
 ): Promise<{
   isUserLoggedIn: boolean;
   message: string;
@@ -272,7 +279,7 @@ export const placeMySellOfferApiCall = async (
       offerMargin,
       offersTags,
       offerLocation,
-      offerOwnerLocation,
+      offerTimeLimit,
     }),
   });
 
@@ -435,6 +442,7 @@ export const getSellOffersWithFiltersApiCall = async (
 };
 
 export const doSubmitFeedbackApiCall = async (
+  email: string,
   userName: string,
   message: string,
   rating: number
@@ -446,6 +454,7 @@ export const doSubmitFeedbackApiCall = async (
     },
     credentials: "include",
     body: JSON.stringify({
+      email,
       userName,
       message,
       rating,
@@ -519,15 +528,15 @@ export const getFeedbacksReceivedByMeApiCall = async (): Promise<{
   }
 };
 
-export const getUserFeedbackApiCall = async (
-  selectedUserName: string
+export const getSelectedUserDetailsApiCall = async (
+  selectedUserEmail: string
 ): Promise<{
   message: string;
   doesErrorOccur: boolean;
-  feedBacksReceivedBySelectedUser: Feedbacks[];
+  selectedUserDetails: SelectedUserDetails | null;
 }> => {
   const reponse = await fetch(
-    GET_USER_FEEDBACKS + `?selectedUserName=${selectedUserName}`,
+    GET_SELECTED_USER_DETAILS + `?selectedUserEmail=${selectedUserEmail}`,
     {
       method: "GET",
       headers: {
@@ -542,13 +551,13 @@ export const getUserFeedbackApiCall = async (
     return {
       message: "",
       doesErrorOccur: false,
-      feedBacksReceivedBySelectedUser: data.feedbacks,
+      selectedUserDetails: data.userDetails,
     };
   } else {
     return {
       message: data.message,
       doesErrorOccur: true,
-      feedBacksReceivedBySelectedUser: [],
+      selectedUserDetails: null,
     };
   }
 };

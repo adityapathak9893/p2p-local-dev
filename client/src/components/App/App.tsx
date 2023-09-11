@@ -19,6 +19,7 @@ import { NotificationPopper } from "../NotificationPopper";
 import "./App.scss";
 import { BackDrop } from "../BackDrop";
 import { WalletPage } from "../../pages/WalletPage";
+import { BuySellPage } from "../../pages/BuySellPage";
 
 export const App: React.FC = () => {
   const {
@@ -141,9 +142,19 @@ export const App: React.FC = () => {
               )
             }
           />
+          <Route
+            path="/BuySell"
+            element={
+              !isUserLoggedIn ? (
+                <Navigate replace to={"/signin"} />
+              ) : (
+                <BuySellPage />
+              )
+            }
+          />
           <Route path="/buy-from" element={<SellOffersPage />} />
           <Route path="/sell-to" element={<BuyOffersPage />} />
-          <Route path="/user/:username" element={<UserProfilePage />} />
+          <Route path="/user/:userEmail" element={<UserProfilePage />} />
         </Routes>
       </Router>
     </div>

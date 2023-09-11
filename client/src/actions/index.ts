@@ -12,18 +12,18 @@ import {
   getMySellOffersApiCall,
   getSellOffersWithFiltersApiCall,
   getSignedInUserApiCall,
-  getUserFeedbackApiCall,
   placeMyBuyOfferApiCall,
   placeMySellOfferApiCall,
   sendWithdrawalNotificationAPI,
+  getSelectedUserDetailsApiCall,
 } from "../data-services";
 import {
   DO_SUBMIT_FEEDBACK,
-  GET_FEEDBACKS_RECEIVED_BY_SELECTED_USER,
   GET_FEEDBACKS_RECEIVED_TO_ME,
   GET_FEEDBACKS_SUBMITTED_BY_ME,
   GET_FILTERED_BUY_OFFERS,
   GET_FILTERED_SELL_OFFERS,
+  GET_SELECTED_USER_DETAILS,
   GET_USER_BALANCE,
   GET_USER_BUY_OFFERS,
   GET_USER_PROFILE,
@@ -36,7 +36,6 @@ import {
   SET_BUY_OFFERS_FORM_DETAILS,
   SET_DASHBOARD_TAB,
   SET_SELL_OFFERS_FORM_DETAILS,
-  SET_TOGGLED_STATE,
   SET_TRADE_MODE,
   USER_SIGN_IN,
   USER_SIGN_OUT,
@@ -47,6 +46,7 @@ import {
   OfferDetails,
   UserProfileDetails,
   OfferFormDetails,
+  SelectedUserDetails,
 } from "../models/interfaces";
 import { initializedUserProfileDetails } from "../models/initializations";
 import { RootState } from "../reducers/store";
@@ -92,22 +92,12 @@ export const doUserSignUp = createAsyncThunk<
     message: string;
     doesErrorOccur: boolean;
   },
-  { phone: string; email: string; password: string; walletAddress: string }
+  { phone: string; email: string; password: string }
 >(
   USER_SIGN_UP,
-  async (signUpDetails: {
-    phone: string;
-    email: string;
-    password: string;
-    walletAddress: string;
-  }) => {
-    const { phone, email, password, walletAddress } = signUpDetails;
-    const responseData = await doUserSignUpApiCall(
-      phone,
-      email,
-      password,
-      walletAddress
-    );
+  async (signUpDetails: { phone: string; email: string; password: string }) => {
+    const { phone, email, password } = signUpDetails;
+    const responseData = await doUserSignUpApiCall(phone, email, password);
     return {
       message: responseData.message,
       doesErrorOccur: responseData.doesErrorOccur,
@@ -210,7 +200,7 @@ export const placeMyBuyOffer = createAsyncThunk<
     offerMargin: number;
     offersTags: string[];
     offerLocation: string;
-    offerOwnerLocation: string;
+    offerTimeLimit: string;
   }
 >(
   PLACE_USER_BUY_OFFER,
@@ -224,7 +214,7 @@ export const placeMyBuyOffer = createAsyncThunk<
     offerMargin: number;
     offersTags: string[];
     offerLocation: string;
-    offerOwnerLocation: string;
+    offerTimeLimit: string;
   }) => {
     const {
       cryptoCurrency,
@@ -236,7 +226,7 @@ export const placeMyBuyOffer = createAsyncThunk<
       offerMargin,
       offersTags,
       offerLocation,
-      offerOwnerLocation,
+      offerTimeLimit,
     } = buyOffer;
     const myBuyOfferInfo = await placeMyBuyOfferApiCall(
       cryptoCurrency,
@@ -248,7 +238,7 @@ export const placeMyBuyOffer = createAsyncThunk<
       offerMargin,
       offersTags,
       offerLocation,
-      offerOwnerLocation
+      offerTimeLimit
     );
     return myBuyOfferInfo;
   }
@@ -270,7 +260,7 @@ export const placeMySellOffer = createAsyncThunk<
     offerMargin: number;
     offersTags: string[];
     offerLocation: string;
-    offerOwnerLocation: string;
+    offerTimeLimit: string;
   }
 >(
   PLACE_USER_SELL_OFFER,
@@ -284,7 +274,7 @@ export const placeMySellOffer = createAsyncThunk<
     offerMargin: number;
     offersTags: string[];
     offerLocation: string;
-    offerOwnerLocation: string;
+    offerTimeLimit: string;
   }) => {
     const {
       cryptoCurrency,
@@ -296,7 +286,7 @@ export const placeMySellOffer = createAsyncThunk<
       offerMargin,
       offersTags,
       offerLocation,
-      offerOwnerLocation,
+      offerTimeLimit,
     } = sellOffer;
     const mySellOfferInfo = await placeMySellOfferApiCall(
       cryptoCurrency,
@@ -308,7 +298,7 @@ export const placeMySellOffer = createAsyncThunk<
       offerMargin,
       offersTags,
       offerLocation,
-      offerOwnerLocation
+      offerTimeLimit
     );
     return mySellOfferInfo;
   }
@@ -423,6 +413,7 @@ export const getSellOffersWithFilters = createAsyncThunk<
 export const doSubmitFeedback = createAsyncThunk<
   { message: string; doesErrorOccur: boolean },
   {
+    email: string;
     userName: string;
     message: string;
     rating: number;
@@ -430,11 +421,13 @@ export const doSubmitFeedback = createAsyncThunk<
 >(
   DO_SUBMIT_FEEDBACK,
   async (dataToBeSubmitted: {
+    email: string;
     userName: string;
     message: string;
     rating: number;
   }) => {
     const submitFeedbackInfo = await doSubmitFeedbackApiCall(
+      dataToBeSubmitted.email,
       dataToBeSubmitted.userName,
       dataToBeSubmitted.message,
       dataToBeSubmitted.rating
@@ -461,18 +454,18 @@ export const getFeedbacksReceivedByMe = createAsyncThunk<{
   return feedBacksReceivedByMe;
 });
 
-export const getUserFeedback = createAsyncThunk<
+export const getSelectedUserDetails = createAsyncThunk<
   {
     message: string;
     doesErrorOccur: boolean;
-    feedBacksReceivedBySelectedUser: Feedbacks[];
+    selectedUserDetails: SelectedUserDetails | null;
   },
   string
->(GET_FEEDBACKS_RECEIVED_BY_SELECTED_USER, async (selectedUserName: string) => {
-  const feedBacksReceivedBySelectedUser = await getUserFeedbackApiCall(
-    selectedUserName
+>(GET_SELECTED_USER_DETAILS, async (selectedUserEmail: string) => {
+  const selectedUserDetails = await getSelectedUserDetailsApiCall(
+    selectedUserEmail
   );
-  return feedBacksReceivedBySelectedUser;
+  return selectedUserDetails;
 });
 
 export const getUserBalance = createAsyncThunk<

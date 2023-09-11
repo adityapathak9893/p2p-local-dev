@@ -5,6 +5,7 @@ import React, { useEffect } from "react";
 import { ListItems } from "../../components/ListItems";
 import { SideDrawer } from "../../components/SideDrawer";
 import { useActionDispatch, useStateSelector } from "../../hooks";
+import { FeedBackList } from "../../components/FeedBackList";
 
 const listItems = [
   {
@@ -25,10 +26,18 @@ const listItems = [
 ];
 
 export const UserDashBoardPage: React.FC = () => {
-  const { getMyBuyOffers, getMySellOffers, setDashBoardTab } =
-    useActionDispatch();
-  const { myAllBuyOffersDetails, myAllSellOffersDetails, activeDashBoardTab } =
-    useStateSelector();
+  const {
+    getMyBuyOffers,
+    getMySellOffers,
+    setDashBoardTab,
+    getFeedbacksReceivedByMe,
+  } = useActionDispatch();
+  const {
+    myAllBuyOffersDetails,
+    myAllSellOffersDetails,
+    activeDashBoardTab,
+    myReceivedfeedBacks,
+  } = useStateSelector();
 
   const handleListItemClick = (key: string) => {
     setDashBoardTab(key);
@@ -37,6 +46,9 @@ export const UserDashBoardPage: React.FC = () => {
     }
     if (key === "mySellOffers") {
       getMySellOffers();
+    }
+    if (key === "receivedFeedbacks") {
+      getFeedbacksReceivedByMe();
     }
   };
 
@@ -55,7 +67,11 @@ export const UserDashBoardPage: React.FC = () => {
       <Box component="main" sx={{ flexGrow: 1, padding: "0px 20px" }}>
         {activeDashBoardTab === "myBuyOffers" ? (
           !!myAllBuyOffersDetails.length ? (
-            <ListItems offersList={myAllBuyOffersDetails} isBuyOffer />
+            <ListItems
+              offersList={myAllBuyOffersDetails}
+              isBuyOffer
+              isButtonDisabled={true}
+            />
           ) : (
             <Box
               sx={{
@@ -73,7 +89,11 @@ export const UserDashBoardPage: React.FC = () => {
           )
         ) : activeDashBoardTab === "mySellOffers" ? (
           !!myAllSellOffersDetails.length ? (
-            <ListItems offersList={myAllSellOffersDetails} isBuyOffer={false} />
+            <ListItems
+              offersList={myAllSellOffersDetails}
+              isBuyOffer={false}
+              isButtonDisabled={true}
+            />
           ) : (
             <Box
               sx={{
@@ -90,9 +110,24 @@ export const UserDashBoardPage: React.FC = () => {
             </Box>
           )
         ) : (
-          activeDashBoardTab === "receivedFeedbacks" && (
-            <h1>This is in progress</h1>
-          )
+          activeDashBoardTab === "receivedFeedbacks" &&
+          (!!myReceivedfeedBacks.length ? (
+            <FeedBackList feedbackList={myReceivedfeedBacks} />
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                flex: 3,
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+              }}
+            >
+              <Typography variant="h5" sx={{ color: "white" }}>
+                You haven't placed any sell offer yet
+              </Typography>
+            </Box>
+          ))
         )}
       </Box>
     </Box>

@@ -12,7 +12,7 @@ import {
   getSellOffersWithFilters,
   getSignedInUser,
   getUserBalance,
-  getUserFeedback,
+  getSelectedUserDetails,
   placeMyBuyOffer,
   placeMySellOffer,
   resetBackendMessage,
@@ -50,8 +50,8 @@ export const useStateSelector = () => ({
   myReceivedfeedBacks: useSelector(
     (state: RootState) => state.myReceivedfeedBacks
   ),
-  feedBacksReceivedBySelectedUser: useSelector(
-    (state: RootState) => state.feedBacksReceivedBySelectedUser
+  selectedUserDetails: useSelector(
+    (state: RootState) => state.selectedUserDetails
   ),
   messageFromBackend: useSelector(
     (state: RootState) => state.messageFromBackend
@@ -73,12 +73,8 @@ export const useStateSelector = () => ({
 export const useActionDispatch = () => {
   const dispatch = useDispatch<AppDispatch>();
   return {
-    doUserSignUp: (
-      phone: string,
-      email: string,
-      password: string,
-      walletAddress: string
-    ) => dispatch(doUserSignUp({ phone, email, password, walletAddress })),
+    doUserSignUp: (phone: string, email: string, password: string) =>
+      dispatch(doUserSignUp({ phone, email, password })),
     doUserSignIn: (email: string, password: string) =>
       dispatch(doUserSignIn({ email, password })),
     getSignedInUser: () => dispatch(getSignedInUser()),
@@ -143,9 +139,15 @@ export const useActionDispatch = () => {
           offerOwnerLocation,
         })
       ),
-    doSubmitFeedback: (userName: string, message: string, rating: number) =>
+    doSubmitFeedback: (
+      email: string,
+      userName: string,
+      message: string,
+      rating: number
+    ) =>
       dispatch(
         doSubmitFeedback({
+          email,
           userName,
           message,
           rating,
@@ -153,8 +155,8 @@ export const useActionDispatch = () => {
       ),
     getFeedbacksSubmittedByMe: () => dispatch(getFeedbacksSubmittedByMe()),
     getFeedbacksReceivedByMe: () => dispatch(getFeedbacksReceivedByMe()),
-    getUserFeedback: (selectedUserName: string) =>
-      dispatch(getUserFeedback(selectedUserName)),
+    getSelectedUserDetails: (selectedUserEmail: string) =>
+      dispatch(getSelectedUserDetails(selectedUserEmail)),
     placeMyBuyOffer: (
       cryptoCurrency: string,
       paymentMethod: string,
@@ -165,7 +167,7 @@ export const useActionDispatch = () => {
       offerMargin: number,
       offersTags: string[],
       offerLocation: string,
-      offerOwnerLocation: string
+      offerTimeLimit: string
     ) =>
       dispatch(
         placeMyBuyOffer({
@@ -178,7 +180,7 @@ export const useActionDispatch = () => {
           offerMargin,
           offersTags,
           offerLocation,
-          offerOwnerLocation,
+          offerTimeLimit,
         })
       ),
     placeMySellOffer: (
@@ -191,7 +193,7 @@ export const useActionDispatch = () => {
       offerMargin: number,
       offersTags: string[],
       offerLocation: string,
-      offerOwnerLocation: string
+      offerTimeLimit: string
     ) =>
       dispatch(
         placeMySellOffer({
@@ -204,7 +206,7 @@ export const useActionDispatch = () => {
           offerMargin,
           offersTags,
           offerLocation,
-          offerOwnerLocation,
+          offerTimeLimit,
         })
       ),
   };

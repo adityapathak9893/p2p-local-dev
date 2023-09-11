@@ -9,8 +9,12 @@ import { BUY } from "../../models/constants";
 export const SellOffersPage: React.FC = () => {
   const { setBuyOfferFormDetails, setTradeMode, getSellOffersWithFilters } =
     useActionDispatch();
-  const { buyOfferFormDetails, tradeMode, allSellOfferDetails } =
-    useStateSelector();
+  const {
+    buyOfferFormDetails,
+    tradeMode,
+    allSellOfferDetails,
+    isUserLoggedIn,
+  } = useStateSelector();
 
   const {
     cryptoCurrency,
@@ -82,7 +86,11 @@ export const SellOffersPage: React.FC = () => {
         }}
       >
         {!!allSellOfferDetails.length ? (
-          <ListItems offersList={allSellOfferDetails} isBuyOffer={false} />
+          <ListItems
+            offersList={allSellOfferDetails}
+            isBuyOffer={false}
+            isButtonDisabled={!isUserLoggedIn}
+          />
         ) : (
           <Box
             sx={{

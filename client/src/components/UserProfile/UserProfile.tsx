@@ -1,93 +1,135 @@
+import ThumbDownAltOutlinedIcon from "@mui/icons-material/ThumbDownAltOutlined";
+import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+import { Avatar, Box, Paper, Typography } from "@mui/material";
 import React from "react";
-import {
-  Avatar,
-  Typography,
-  Box,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Divider,
-  Paper,
-} from "@mui/material";
-import { Feedbacks } from "../../models/interfaces";
+import { SelectedUserDetails } from "../../models/interfaces";
 
 interface IUserProfileProps {
-  userName: string;
-  userEmail: string;
-  feedbacks: Feedbacks[];
+  selectedUserDetails: SelectedUserDetails | null;
 }
 
 export const UserProfile: React.FC<IUserProfileProps> = ({
-  userName,
-  userEmail,
-  feedbacks,
+  selectedUserDetails,
 }) => {
   return (
-    <Paper elevation={3} sx={{ p: 4, textAlign: "center" }}>
-      <Avatar
-        alt={userName}
-        src={`/static/images/avatar/${userName}.jpg`}
-        sx={{ width: 100, height: 100, margin: "0 auto", mb: 2 }}
-      />
-      <Typography variant="h4">{userName}</Typography>
-      <Typography variant="body1" color="textSecondary">
-        {userEmail}
-      </Typography>
-
-      <Box mt={4}>
-        <Typography variant="h5">Feedbacks Received:</Typography>
-        <List sx={{ width: "100%", maxWidth: 600, margin: "0 auto", mt: 2 }}>
-          {feedbacks.map((feedback, index) => (
-            <React.Fragment key={index}>
-              <ListItem alignItems="flex-start">
-                <ListItemAvatar>
-                  <Avatar
-                    alt={feedback.givenBy_userName}
-                    src={`/static/images/avatar/${feedback.givenBy_userName}.jpg`}
-                  />
-                </ListItemAvatar>
-                <ListItemText
-                  primary={
-                    <>
-                      <Typography
-                        variant="subtitle2"
-                        color="textSecondary"
-                        sx={{ marginRight: 1 }}
-                      >
-                        Rated by:
-                      </Typography>
-                      {feedback.givenBy_userName}
-                    </>
-                  }
-                  secondary={
-                    <>
-                      <Typography
-                        variant="body2"
-                        color="textSecondary"
-                        sx={{ marginRight: 1 }}
-                      >
-                        Rating:
-                      </Typography>
-                      {feedback.rating}
-                      <Typography
-                        variant="body2"
-                        color="textSecondary"
-                        sx={{ marginRight: 1 }}
-                      >
-                        message:
-                      </Typography>
-                      {feedback.message}
-                    </>
-                  }
-                  sx={{ wordBreak: "break-word" }}
-                />
-              </ListItem>
-              <Divider variant="inset" component="li" />
-            </React.Fragment>
-          ))}
-        </List>
+    <Box
+      sx={{
+        display: "flex",
+        width: "100%",
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          paddingRight: "20px",
+        }}
+      >
+        <Avatar
+          alt={selectedUserDetails?.userName}
+          src={`/static/images/avatar/${selectedUserDetails?.userName}.jpg`}
+          sx={{ width: 200, height: 200, margin: "0 auto", mb: 2 }}
+        />
       </Box>
-    </Paper>
+      <Box sx={{ display: "flex", flexDirection: "column" }}>
+        <Typography variant="h3" gutterBottom>
+          {selectedUserDetails?.userName}
+        </Typography>
+        <Typography variant="subtitle1" gutterBottom>
+          {selectedUserDetails?.userBio}
+        </Typography>
+        <Box sx={{ display: "flex", marginBottom: "10px" }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              marginRight: "10px",
+            }}
+          >
+            {selectedUserDetails?.isOnline ? (
+              <VisibilityOutlinedIcon sx={{ color: "#3e9f4d" }} />
+            ) : (
+              <VisibilityOffOutlinedIcon sx={{ color: "#ffab00" }} />
+            )}
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+            }}
+          >
+            <Typography
+              variant="subtitle2"
+              gutterBottom
+              sx={{ color: "#626262" }}
+            >
+              {selectedUserDetails?.isOnline ? "Online" : "Offline"}
+            </Typography>
+          </Box>
+        </Box>
+        <Box sx={{ display: "flex" }}>
+          <Paper
+            sx={{
+              backgroundColor: "#f3fcf3",
+              padding: "10px",
+              marginRight: "20px",
+              width: "150px",
+            }}
+          >
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography
+                variant="subtitle2"
+                sx={{ color: "#3e9f4d" }}
+                gutterBottom
+              >
+                {
+                  selectedUserDetails?.feedbacks.filter(
+                    (feedback) => feedback.isFeedBackPositive === true
+                  ).length
+                }
+              </Typography>
+              <Typography>
+                <ThumbUpAltOutlinedIcon sx={{ color: "#3e9f4d" }} />
+              </Typography>
+            </Box>
+            <Box sx={{ display: "flex" }}>
+              <Typography variant="body2" gutterBottom>
+                Positive feedback
+              </Typography>
+            </Box>
+          </Paper>
+          <Paper
+            sx={{ backgroundColor: "#fff9fa", padding: "10px", width: "150px" }}
+          >
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography
+                variant="subtitle2"
+                sx={{ color: "#e3394d" }}
+                gutterBottom
+              >
+                {
+                  selectedUserDetails?.feedbacks.filter(
+                    (feedback) => feedback.isFeedBackPositive === false
+                  ).length
+                }
+              </Typography>
+              <Typography>
+                <ThumbDownAltOutlinedIcon sx={{ color: "#e3394d" }} />
+              </Typography>
+            </Box>
+            <Box sx={{ display: "flex" }}>
+              <Typography variant="body2" gutterBottom>
+                Negative feedback
+              </Typography>
+            </Box>
+          </Paper>
+        </Box>
+      </Box>
+    </Box>
   );
 };

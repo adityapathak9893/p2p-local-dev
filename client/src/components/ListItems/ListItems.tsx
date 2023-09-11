@@ -1,46 +1,59 @@
-import * as React from "react";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import Divider from "@mui/material/Divider";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Avatar from "@mui/material/Avatar";
-import Typography from "@mui/material/Typography";
-import { OfferDetails } from "../../models/interfaces";
-import Chip from "@mui/material/Chip";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import PersonPinOutlinedIcon from "@mui/icons-material/PersonPinOutlined";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
-import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
-import PeopleIcon from "@mui/icons-material/People";
-import { Link } from "react-router-dom";
+import PersonPinOutlinedIcon from "@mui/icons-material/PersonPinOutlined";
 import { Box, Button } from "@mui/material";
-import { FIATCURRENCIES } from "../../models/constants";
+import Avatar from "@mui/material/Avatar";
+import Chip from "@mui/material/Chip";
+import Divider from "@mui/material/Divider";
+import ListItem from "@mui/material/ListItem";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ListItemText from "@mui/material/ListItemText";
 import Paper from "@mui/material/Paper";
-import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
+import * as React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FIATCURRENCIES } from "../../models/constants";
+import { OfferDetails } from "../../models/interfaces";
 
-interface IListItemsProps {
+export interface IListItemsProps {
   offersList: OfferDetails[];
   isBuyOffer: boolean;
+  isButtonDisabled?: boolean;
 }
 
 export const ListItems: React.FC<IListItemsProps> = ({
   offersList,
   isBuyOffer,
+  isButtonDisabled = false,
 }) => {
+  const navigate = useNavigate();
   const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
     textAlign: "center",
     color: theme.palette.text.secondary,
-    //height: "100%",
-    //lineHeight: "60px",
   }));
   const lightTheme = createTheme({ palette: { mode: "light" } });
+  const itemsToShow = 20; // Number of items to show initially
+  const [visibleItems, setVisibleItems] = React.useState(
+    offersList.slice(0, itemsToShow)
+  );
+  const handleBuySellClick = (email: string, userName: string) => {
+    navigate(
+      `/BuySell?email=${email}&userName=${userName}&isBuyOffer=${isBuyOffer}`
+    );
+  };
+  const handleLoadMore = () => {
+    // Calculate the next set of visible items
+    const nextVisibleItems = offersList.slice(
+      0,
+      visibleItems.length + itemsToShow
+    );
+    setVisibleItems(nextVisibleItems);
+  };
   return (
     <ThemeProvider theme={lightTheme}>
-      {offersList.map((offer, index) => {
+      {visibleItems.map((offer, index) => {
         const currencyDetails = FIATCURRENCIES.filter(
           (fiatCurrencyDetails) =>
             fiatCurrencyDetails.key === offer.preferredCurrency
@@ -52,7 +65,7 @@ export const ListItems: React.FC<IListItemsProps> = ({
             : currentCryptoPrice +
               currentCryptoPrice * (offer.offerMargin / 100);
         return (
-          <Item key={index} elevation={6} sx={{marginBottom: "20px"}}>
+          <Item key={index} elevation={6} sx={{ marginBottom: "20px" }}>
             <ListItem alignItems="flex-start" sx={{ padding: "16px" }}>
               <ListItemAvatar>
                 <Avatar
@@ -63,13 +76,7 @@ export const ListItems: React.FC<IListItemsProps> = ({
               <ListItemText
                 primary={
                   <Link
-                    to={`/user/${offer.userName}`}
-                    state={{
-                      userEmail: offer.email,
-                      userName: offer.userName,
-                    }}
-                    /* target="_blank"
-              rel="noopener noreferrer" */
+                    to={`/user/${offer.email}`}
                     style={{ textDecoration: "none" }}
                   >
                     <Typography
@@ -366,7 +373,13 @@ export const ListItems: React.FC<IListItemsProps> = ({
                               borderRadius: "10px",
                             }}
                           >
-                            <Button color="primary">
+                            <Button
+                              color="primary"
+                              disabled={isButtonDisabled}
+                              onClick={() =>
+                                handleBuySellClick(offer.email, offer.userName)
+                              }
+                            >
                               {isBuyOffer
                                 ? `Buy ${offer.cryptoCurrency}`
                                 : `Sell ${offer.cryptoCurrency}`}
@@ -382,6 +395,17 @@ export const ListItems: React.FC<IListItemsProps> = ({
           </Item>
         );
       })}
+      {offersList.length > visibleItems.length && (
+        <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
+          <Button
+            variant="outlined"
+            sx={{ backgroundColor: "#0288d1", color: "white" }}
+            onClick={handleLoadMore}
+          >
+            Load More
+          </Button>
+        </Box>
+      )}
     </ThemeProvider>
   );
 };
