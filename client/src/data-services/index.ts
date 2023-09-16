@@ -202,7 +202,6 @@ export const placeMyBuyOfferApiCall = async (
   maxAmount: number,
   offerMargin: number,
   offersTags: string[],
-  offerLocation: string,
   offerTimeLimit: string
 ): Promise<{
   isUserLoggedIn: boolean;
@@ -224,7 +223,6 @@ export const placeMyBuyOfferApiCall = async (
       maxAmount,
       offerMargin,
       offersTags,
-      offerLocation,
       offerTimeLimit,
     }),
   });
@@ -256,7 +254,6 @@ export const placeMySellOfferApiCall = async (
   maxAmount: number,
   offerMargin: number,
   offersTags: string[],
-  offerLocation: string,
   offerTimeLimit: string
 ): Promise<{
   isUserLoggedIn: boolean;
@@ -278,7 +275,6 @@ export const placeMySellOfferApiCall = async (
       maxAmount,
       offerMargin,
       offersTags,
-      offerLocation,
       offerTimeLimit,
     }),
   });
@@ -366,8 +362,8 @@ export const getBuyOffersWithFiltersApiCall = async (
   minAmount: number,
   preferredCurrency: string,
   paymentMethod: string,
-  offerLocation: string,
-  offerOwnerLocation: string
+  location: string,
+  page: number
 ): Promise<{
   message: string;
   doesErrorOccur: boolean;
@@ -375,7 +371,7 @@ export const getBuyOffersWithFiltersApiCall = async (
 }> => {
   const reponse = await fetch(
     GET_BUY_OFFERS_FILTERS_API +
-      `?cryptoCurrency=${cryptoCurrency}&minAmount=${minAmount}&preferredCurrency=${preferredCurrency}&paymentMethod=${paymentMethod}&offerLocation=${offerLocation}&offerOwnerLocation=${offerOwnerLocation}`,
+      `?cryptoCurrency=${cryptoCurrency}&minAmount=${minAmount}&preferredCurrency=${preferredCurrency}&paymentMethod=${paymentMethod}&location=${location}&page=${page}`,
     {
       method: "GET",
       headers: {
@@ -406,8 +402,8 @@ export const getSellOffersWithFiltersApiCall = async (
   minAmount: number,
   preferredCurrency: string,
   paymentMethod: string,
-  offerLocation: string,
-  offerOwnerLocation: string
+  location: string,
+  page: number
 ): Promise<{
   message: string;
   doesErrorOccur: boolean;
@@ -415,7 +411,7 @@ export const getSellOffersWithFiltersApiCall = async (
 }> => {
   const reponse = await fetch(
     GET_SELL_OFFERS_FILTERS_API +
-      `?cryptoCurrency=${cryptoCurrency}&minAmount=${minAmount}&preferredCurrency=${preferredCurrency}&paymentMethod=${paymentMethod}&offerLocation=${offerLocation}&offerOwnerLocation=${offerOwnerLocation}`,
+      `?cryptoCurrency=${cryptoCurrency}&minAmount=${minAmount}&preferredCurrency=${preferredCurrency}&paymentMethod=${paymentMethod}&location=${location}&page=${page}`,
     {
       method: "GET",
       headers: {

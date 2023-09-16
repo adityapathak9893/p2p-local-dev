@@ -16,10 +16,11 @@ import { UserDashBoardPage } from "../../pages/UserDashBoardPage";
 import { UserProfilePage } from "../../pages/UserProfilePage";
 import { NavigationBar } from "../NavigationBar";
 import { NotificationPopper } from "../NotificationPopper";
-import "./App.scss";
 import { BackDrop } from "../BackDrop";
 import { WalletPage } from "../../pages/WalletPage";
 import { BuySellPage } from "../../pages/BuySellPage";
+import { MyProfilePage } from "../../pages/MyProfilePage";
+import "./App.scss";
 
 export const App: React.FC = () => {
   const {
@@ -29,7 +30,8 @@ export const App: React.FC = () => {
     doesErrorOccur,
     userProfileDetails,
   } = useStateSelector();
-  const { getSignedInUser, getUserBalance } = useActionDispatch();
+  const { getSignedInUser, getUserBalance, doUserSignOut } =
+    useActionDispatch();
   const logoutChannel = new BroadcastChannel("user-logout");
 
   logoutChannel.onmessage = (event) => {
@@ -149,6 +151,16 @@ export const App: React.FC = () => {
                 <Navigate replace to={"/signin"} />
               ) : (
                 <BuySellPage />
+              )
+            }
+          />
+          <Route
+            path="/MyProfile"
+            element={
+              !isUserLoggedIn ? (
+                <Navigate replace to={"/signin"} />
+              ) : (
+                <MyProfilePage />
               )
             }
           />

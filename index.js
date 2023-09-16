@@ -177,7 +177,7 @@ app.post("/api/placeMyBuyOffer", auth, (req, res) => {
     ...req.body,
     email: req.user.email,
     userName: req.user.userName,
-    offerOwnerLocation: req.user.location,
+    location: req.user.location,
   });
   newBuyOffer
     .save()
@@ -200,7 +200,7 @@ app.post("/api/placeMySellOffer", auth, (req, res) => {
     ...req.body,
     email: req.user.email,
     userName: req.user.userName,
-    offerOwnerLocation: req.user.location,
+    location: req.user.location,
   });
   newSellOffer
     .save()
@@ -241,9 +241,13 @@ app.get("/api/getBuyOffersWithFilters", (req, res) => {
     minAmount,
     preferredCurrency,
     paymentMethod,
-    offerLocation,
-    offerOwnerLocation,
+    location,
+    page,
   } = req.query;
+
+  // Calculate the number of records to skip based on the page number
+  const recordsPerPage = 20;
+  const skip = (page - 1) * recordsPerPage;
 
   const query = {};
 
@@ -263,16 +267,14 @@ app.get("/api/getBuyOffersWithFilters", (req, res) => {
     query.paymentMethod = paymentMethod;
   }
 
-  if (offerLocation !== "") {
-    query.offerLocation = offerLocation;
-  }
-
-  if (offerOwnerLocation !== "") {
-    query.offerOwnerLocation = offerOwnerLocation;
+  if (location !== "") {
+    query.location = location;
   }
 
   buyOffers
     .find(query)
+    .skip(skip) // Skip the records based on the page
+    .limit(recordsPerPage) // Limit the number of records per page
     .then((docs) => {
       res.status(200).json({
         success: true,
@@ -310,9 +312,13 @@ app.get("/api/getSellOffersWithFilters", (req, res) => {
     minAmount,
     preferredCurrency,
     paymentMethod,
-    offerLocation,
-    offerOwnerLocation,
+    location,
+    page,
   } = req.query;
+
+  // Calculate the number of records to skip based on the page number
+  const recordsPerPage = 20;
+  const skip = (page - 1) * recordsPerPage;
 
   const query = {};
 
@@ -332,16 +338,14 @@ app.get("/api/getSellOffersWithFilters", (req, res) => {
     query.paymentMethod = paymentMethod;
   }
 
-  if (offerLocation !== "") {
-    query.offerLocation = offerLocation;
-  }
-
-  if (offerOwnerLocation !== "") {
-    query.offerOwnerLocation = offerOwnerLocation;
+  if (location !== "") {
+    query.location = location;
   }
 
   sellOffers
     .find(query)
+    .skip(skip) // Skip the records based on the page
+    .limit(recordsPerPage) // Limit the number of records per page
     .then((docs) => {
       res.status(200).json({
         success: true,
@@ -359,6 +363,7 @@ app.get("/api/getSellOffersWithFilters", (req, res) => {
 app.post("/api/submitFeedback", auth, (req, res) => {
   const newFeedbackSubmit = new feedbacks({
     ...req.body,
+    givenBy_userEmail: req.user.email,
     givenBy_userName: req.user.userName,
     givenBy_userName_location: req.user.location,
     isFeedBackPositive: Number(req.body.rating) >= 3 ? true : false,

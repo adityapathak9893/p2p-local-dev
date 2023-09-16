@@ -204,9 +204,7 @@ export const getPricingStepForm = (
 export const getOtherSettingsStepsForm = (
   offersTags: string[],
   setOffersTags: React.Dispatch<React.SetStateAction<string[]>>,
-  offerLocation: string,
   offerTimeLimit: string,
-  handleChangeOfferLocation: (event: SelectChangeEvent) => void,
   handleChangeOfferTimeLimit: (event: SelectChangeEvent) => void
 ): JSX.Element => {
   return (
@@ -217,28 +215,6 @@ export const getOtherSettingsStepsForm = (
         selectedOption={offersTags}
         setOption={setOffersTags}
       />
-
-      <FormControl
-        sx={{ m: 1, minWidth: 120, width: "50%" }}
-        margin="normal"
-        size="medium"
-      >
-        <InputLabel id="demo-select-small-label">
-          Set your offer's location
-        </InputLabel>
-        <Select
-          labelId="demo-select-small-label"
-          id="demo-select-small"
-          value={offerLocation}
-          label="Set your offer's location"
-          onChange={handleChangeOfferLocation}
-        >
-          {COUNTRIES.map((country) => (
-            <MenuItem value={country}>{country}</MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-
       <FormControl
         sx={{ m: 1, minWidth: 120, width: "50%" }}
         margin="normal"

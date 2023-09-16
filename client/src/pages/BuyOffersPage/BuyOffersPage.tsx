@@ -1,13 +1,13 @@
-import { Box, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import { Box, Button, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { BuySellOfferForm } from "../../components/BuySellOfferForm";
 import { ListItems } from "../../components/ListItems";
 import { useActionDispatch, useStateSelector } from "../../hooks";
 import { OfferFormDetails } from "../../models/interfaces";
 import { SELL } from "../../models/constants";
-import { isJSDocFunctionType } from "typescript";
 
 export const BuyOffersPage: React.FC = () => {
+  const [currentPage, setCurrentPage] = useState(1);
   const { setSellOfferFormDetails, setTradeMode, getBuyOffersWithFilters } =
     useActionDispatch();
   const {
@@ -22,36 +22,49 @@ export const BuyOffersPage: React.FC = () => {
     paymentMethod,
     preferredCurrency,
     money,
-    offerLocation,
-    offerOwnerLocation,
+    location,
     isFormValid,
   } = sellOfferFormDetails;
 
   useEffect(() => {
+    // Fetch data for the initial page (page 1)
+    fetchData(currentPage);
+  }, [currentPage]); // Fetch data whenever the page number changes
+
+  const fetchData = (page: number) => {
+    //setTradeMode to SELL
     setTradeMode(SELL);
+    // Make an API request with the updated page parameter
     getBuyOffersWithFilters(
       cryptoCurrency,
       Number(money),
       preferredCurrency,
       paymentMethod,
-      offerLocation,
-      offerOwnerLocation
+      location,
+      page // Pass the current page number
     );
-  }, []);
+  };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isFormValid) {
+      // Reset the current page to 1 before fetching data
+      setCurrentPage(1);
       getBuyOffersWithFilters(
         cryptoCurrency,
         Number(money),
         preferredCurrency,
         paymentMethod,
-        offerLocation,
-        offerOwnerLocation
+        location,
+        currentPage
       );
     }
   };
+
+  const handleLoadMoreClick = () => {
+    setCurrentPage(currentPage + 1);
+  };
+
   return (
     <Box
       sx={{
@@ -87,11 +100,14 @@ export const BuyOffersPage: React.FC = () => {
         }}
       >
         {!!allBuyOfferDetails.length ? (
-          <ListItems
-            offersList={allBuyOfferDetails}
-            isBuyOffer={false}
-            isButtonDisabled={!isUserLoggedIn}
-          />
+          <>
+            <ListItems
+              offersList={allBuyOfferDetails}
+              isBuyOffer={false}
+              isButtonDisabled={!isUserLoggedIn}
+            />
+            <Button onClick={handleLoadMoreClick}>Load More</Button>
+          </>
         ) : (
           <Box
             sx={{

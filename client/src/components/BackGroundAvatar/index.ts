@@ -1,0 +1,1 @@
+export { BackGroundAvatar } from "./BackGroundAvatar";

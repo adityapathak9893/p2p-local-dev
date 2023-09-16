@@ -1,8 +1,7 @@
+import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
-import PersonPinOutlinedIcon from "@mui/icons-material/PersonPinOutlined";
-import { Box, Button } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
+import { Box, Button, Tooltip } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
@@ -15,6 +14,7 @@ import * as React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FIATCURRENCIES } from "../../models/constants";
 import { OfferDetails } from "../../models/interfaces";
+import { BackGroundAvatar } from "../BackGroundAvatar";
 
 export interface IListItemsProps {
   offersList: OfferDetails[];
@@ -34,26 +34,14 @@ export const ListItems: React.FC<IListItemsProps> = ({
     color: theme.palette.text.secondary,
   }));
   const lightTheme = createTheme({ palette: { mode: "light" } });
-  const itemsToShow = 20; // Number of items to show initially
-  const [visibleItems, setVisibleItems] = React.useState(
-    offersList.slice(0, itemsToShow)
-  );
   const handleBuySellClick = (email: string, userName: string) => {
     navigate(
       `/BuySell?email=${email}&userName=${userName}&isBuyOffer=${isBuyOffer}`
     );
   };
-  const handleLoadMore = () => {
-    // Calculate the next set of visible items
-    const nextVisibleItems = offersList.slice(
-      0,
-      visibleItems.length + itemsToShow
-    );
-    setVisibleItems(nextVisibleItems);
-  };
   return (
     <ThemeProvider theme={lightTheme}>
-      {visibleItems.map((offer, index) => {
+      {offersList.map((offer, index) => {
         const currencyDetails = FIATCURRENCIES.filter(
           (fiatCurrencyDetails) =>
             fiatCurrencyDetails.key === offer.preferredCurrency
@@ -68,10 +56,13 @@ export const ListItems: React.FC<IListItemsProps> = ({
           <Item key={index} elevation={6} sx={{ marginBottom: "20px" }}>
             <ListItem alignItems="flex-start" sx={{ padding: "16px" }}>
               <ListItemAvatar>
-                <Avatar
-                  alt={offer.userName}
-                  src={`/static/images/avatar/1.jpg`}
-                />
+                <Tooltip title={offer.userName}>
+                  <BackGroundAvatar
+                    userName={offer.userName}
+                    width={50}
+                    height={50}
+                  />
+                </Tooltip>
               </ListItemAvatar>
               <ListItemText
                 primary={
@@ -120,8 +111,8 @@ export const ListItems: React.FC<IListItemsProps> = ({
                           alignItems="center"
                           sx={{ marginRight: "10px" }}
                         >
-                          <PersonPinOutlinedIcon sx={{ marginRight: 0.5 }} />
-                          Owner's location:
+                          <AccessTimeOutlinedIcon sx={{ marginRight: 0.5 }} />
+                          Time limit:
                         </Typography>
                         <Typography
                           variant="body2"
@@ -129,7 +120,7 @@ export const ListItems: React.FC<IListItemsProps> = ({
                           display="flex"
                           alignItems="center"
                         >
-                          {offer.offerOwnerLocation}
+                          {`Within ${offer.offerTimeLimit} mins`}
                         </Typography>
                       </Box>
                       <Box
@@ -146,7 +137,7 @@ export const ListItems: React.FC<IListItemsProps> = ({
                           sx={{ marginRight: "10px" }}
                         >
                           <LocationOnIcon sx={{ marginRight: 0.5 }} />
-                          Offer location:
+                          Location:
                         </Typography>
                         <Typography
                           variant="body2"
@@ -154,7 +145,7 @@ export const ListItems: React.FC<IListItemsProps> = ({
                           display="flex"
                           alignItems="center"
                         >
-                          {offer.offerLocation}
+                          {offer.location}
                         </Typography>
                       </Box>
                       <Box
@@ -395,17 +386,6 @@ export const ListItems: React.FC<IListItemsProps> = ({
           </Item>
         );
       })}
-      {offersList.length > visibleItems.length && (
-        <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
-          <Button
-            variant="outlined"
-            sx={{ backgroundColor: "#0288d1", color: "white" }}
-            onClick={handleLoadMore}
-          >
-            Load More
-          </Button>
-        </Box>
-      )}
     </ThemeProvider>
   );
 };

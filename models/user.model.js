@@ -33,9 +33,9 @@ const UserTradeInformations = new mongoose.Schema({
   tradePartners: { type: Number, default: 0 },
   trades: { type: Number, default: 0 },
   tradeVolume: { type: Number, default: 0 },
-  TrustedBy: { type: Number, default: 0 },
-  BlockedBy: { type: Number, default: 0 },
-  HasBlocked: { type: Number, default: 0 },
+  trustedBy: { type: Number, default: 0 },
+  blockedBy: { type: Number, default: 0 },
+  hasBlocked: { type: Number, default: 0 },
 });
 
 const BuyOffers = new mongoose.Schema({
@@ -52,9 +52,8 @@ const BuyOffers = new mongoose.Schema({
   maxAmount: { type: Number, required: true },
   offerMargin: { type: Number, required: true },
   offersTags: { type: [String], required: true },
-  offerLocation: { type: String, required: true },
+  location: { type: String, required: true },
   offerTimeLimit: { type: String, required: true },
-  offerOwnerLocation: { type: String, required: true },
 });
 
 const SellOffers = new mongoose.Schema({
@@ -71,9 +70,8 @@ const SellOffers = new mongoose.Schema({
   maxAmount: { type: Number, required: true },
   offerMargin: { type: Number, required: true },
   offersTags: { type: [String] },
-  offerLocation: { type: String, required: true },
+  location: { type: String, required: true },
   offerTimeLimit: { type: String, required: true },
-  offerOwnerLocation: { type: String, required: true },
 });
 
 const Feedbacks = new mongoose.Schema({

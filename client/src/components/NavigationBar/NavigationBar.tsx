@@ -1,19 +1,17 @@
-import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import Toolbar from "@mui/material/Toolbar";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import * as React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./NavigationBar.scss";
 import { useActionDispatch, useStateSelector } from "../../hooks";
-
-const settings = ["Logout"];
+import { BackGroundAvatar } from "../BackGroundAvatar";
+import "./NavigationBar.scss";
 
 interface INavigationBarProps {
   otherPages?: {
@@ -54,6 +52,27 @@ export const NavigationBar: React.FC<INavigationBarProps> = (
     });
   };
 
+  const handleMyProfile = () => {
+    navigate("/MyProfile");
+  };
+
+  const settings = [
+    {
+      key: "logout",
+      label: "logout",
+      handler: () => {
+        handleLogout();
+      },
+    },
+    {
+      key: "myProfile",
+      label: "My Profile",
+      handler: () => {
+        handleMyProfile();
+      },
+    },
+  ];
+
   return (
     <AppBar position="relative" sx={{ background: "transparent" }}>
       <Toolbar sx={{ display: "flex" }}>
@@ -78,7 +97,7 @@ export const NavigationBar: React.FC<INavigationBarProps> = (
                   textDecoration: "none",
                 }}
               >
-                BITTRADER
+                LOCALBITWOLF
               </Typography>
             </Link>
           </div>
@@ -107,6 +126,7 @@ export const NavigationBar: React.FC<INavigationBarProps> = (
                 sx={{
                   display: "flex",
                   flexDirection: "column",
+                  justifyContent: "center",
                   width: "200px",
                 }}
               >
@@ -133,11 +153,12 @@ export const NavigationBar: React.FC<INavigationBarProps> = (
                   </Typography>
                 </Box>
               </Box>
-              <Tooltip title="Log-out">
+              <Tooltip title={props.loggedInUserName ?? ""}>
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar
-                    alt={props.loggedInUserName ?? ""}
-                    src="/static/images/avatar/2.jpg"
+                  <BackGroundAvatar
+                    userName={props.loggedInUserName ?? ""}
+                    width={50}
+                    height={50}
                   />
                 </IconButton>
               </Tooltip>
@@ -158,9 +179,9 @@ export const NavigationBar: React.FC<INavigationBarProps> = (
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center" onClick={handleLogout}>
-                      {setting}
+                  <MenuItem key={setting.key} onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center" onClick={setting.handler}>
+                      {setting.label}
                     </Typography>
                   </MenuItem>
                 ))}

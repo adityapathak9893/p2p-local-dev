@@ -1,10 +1,11 @@
 import ThumbDownAltOutlinedIcon from "@mui/icons-material/ThumbDownAltOutlined";
 import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
-import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
-import { Avatar, Box, Paper, Typography } from "@mui/material";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import { Box, Paper, Tooltip, Typography } from "@mui/material";
 import React from "react";
 import { SelectedUserDetails } from "../../models/interfaces";
+import { BackGroundAvatar } from "../BackGroundAvatar";
 
 interface IUserProfileProps {
   selectedUserDetails: SelectedUserDetails | null;
@@ -28,11 +29,15 @@ export const UserProfile: React.FC<IUserProfileProps> = ({
           paddingRight: "20px",
         }}
       >
-        <Avatar
-          alt={selectedUserDetails?.userName}
-          src={`/static/images/avatar/${selectedUserDetails?.userName}.jpg`}
-          sx={{ width: 200, height: 200, margin: "0 auto", mb: 2 }}
-        />
+        <Tooltip
+          title={!!selectedUserDetails ? selectedUserDetails.userName : ""}
+        >
+          <BackGroundAvatar
+            userName={!!selectedUserDetails ? selectedUserDetails.userName : ""}
+            width={200}
+            height={200}
+          />
+        </Tooltip>
       </Box>
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         <Typography variant="h3" gutterBottom>

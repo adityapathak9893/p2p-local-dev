@@ -1,10 +1,8 @@
-import { Feedbacks } from "../../models/interfaces";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
+import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
+import GradeOutlinedIcon from "@mui/icons-material/GradeOutlined";
 import PersonPinOutlinedIcon from "@mui/icons-material/PersonPinOutlined";
-import { Box, Button } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
-import Chip from "@mui/material/Chip";
+import ReviewsOutlinedIcon from "@mui/icons-material/ReviewsOutlined";
+import { Box, Tooltip } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
@@ -14,12 +12,9 @@ import Typography from "@mui/material/Typography";
 import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 import * as React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FIATCURRENCIES } from "../../models/constants";
-import { OfferDetails } from "../../models/interfaces";
-import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
-import GradeOutlinedIcon from "@mui/icons-material/GradeOutlined";
-import ReviewsOutlinedIcon from "@mui/icons-material/ReviewsOutlined";
 import { getFormattedDate } from "../../helpers";
+import { Feedbacks } from "../../models/interfaces";
+import { BackGroundAvatar } from "../BackGroundAvatar";
 
 export interface IFeedBackListProps {
   feedbackList: Feedbacks[];
@@ -49,10 +44,13 @@ export const FeedBackList: React.FC<IFeedBackListProps> = ({
           <Item key={index} elevation={6} sx={{ marginBottom: "20px" }}>
             <ListItem alignItems="flex-start" sx={{ padding: "16px" }}>
               <ListItemAvatar>
-                <Avatar
-                  alt={feedback.givenBy_userName}
-                  src={`/static/images/avatar/1.jpg`}
-                />
+                <Tooltip title={feedback.givenBy_userName}>
+                  <BackGroundAvatar
+                    userName={feedback.givenBy_userName}
+                    width={50}
+                    height={50}
+                  />
+                </Tooltip>
               </ListItemAvatar>
               <ListItemText
                 primary={

@@ -35,8 +35,7 @@ export const BuySellOfferForm: React.FC<IBuySellOfferForm> = ({
     paymentMethod,
     preferredCurrency,
     money,
-    offerLocation,
-    offerOwnerLocation,
+    location,
     errors,
     isFormValid,
   } = offerFormDetails;
@@ -79,20 +78,11 @@ export const BuySellOfferForm: React.FC<IBuySellOfferForm> = ({
     });
   };
 
-  const handleOfferLocationChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const newOfferLocation = e.target.value;
-    setOfferForm({ ...offerFormDetails, offerLocation: newOfferLocation });
-  };
-
-  const handleOfferOwnerLocationChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const newOfferOwnerLocation = e.target.value;
+  const handleLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newLocation = e.target.value;
     setOfferForm({
       ...offerFormDetails,
-      offerOwnerLocation: newOfferOwnerLocation,
+      location: newLocation,
     });
   };
 
@@ -108,33 +98,19 @@ export const BuySellOfferForm: React.FC<IBuySellOfferForm> = ({
         paymentMethod: "",
         preferredCurrency: "",
         money: "",
-        offerLocation: "",
-        offerOwnerLocation: "",
+        location: "",
       },
     });
   }, []);
 
   useEffect(() => {
     const validity =
-      cryptoCurrency &&
-      /* paymentMethod &&
-      money &&
-      offerLocation &&
-      offerOwnerLocation && */
-      Object.values(errors).every((error) => error === "");
+      cryptoCurrency && Object.values(errors).every((error) => error === "");
     setOfferForm({
       ...offerFormDetails,
       isFormValid: validity === "" ? false : validity,
     });
-  }, [
-    cryptoCurrency,
-    paymentMethod,
-    money,
-    offerLocation,
-    offerOwnerLocation,
-    errors,
-    tradeMode,
-  ]);
+  }, [cryptoCurrency, paymentMethod, money, location, errors, tradeMode]);
 
   return (
     <div className="buySell-container">
@@ -240,12 +216,12 @@ export const BuySellOfferForm: React.FC<IBuySellOfferForm> = ({
         {isHomePageActive && (
           <>
             <div className="buySell-form-group">
-              <label>Offer location</label>
+              <label>Location</label>
               <select
-                value={offerLocation}
-                onChange={handleOfferLocationChange}
+                value={location}
+                onChange={handleLocationChange}
                 className={
-                  errors.offerLocation ? "buySell-error" : "buySell-selectField"
+                  errors.location ? "buySell-error" : "buySell-selectField"
                 }
               >
                 <option value="">Select location</option>
@@ -253,32 +229,8 @@ export const BuySellOfferForm: React.FC<IBuySellOfferForm> = ({
                   <option value={country}>{country}</option>
                 ))}
               </select>
-              {errors.offerLocation && (
-                <span className="buySell-error-message">
-                  {errors.offerLocation}
-                </span>
-              )}
-            </div>
-            <div className="buySell-form-group">
-              <label>Offer Owner location</label>
-              <select
-                value={offerOwnerLocation}
-                onChange={handleOfferOwnerLocationChange}
-                className={
-                  errors.offerOwnerLocation
-                    ? "buySell-error"
-                    : "buySell-selectField"
-                }
-              >
-                <option value="">Select location</option>
-                {COUNTRIES.map((country) => (
-                  <option value={country}>{country}</option>
-                ))}
-              </select>
-              {errors.offerOwnerLocation && (
-                <span className="buySell-error-message">
-                  {errors.offerOwnerLocation}
-                </span>
+              {errors.location && (
+                <span className="buySell-error-message">{errors.location}</span>
               )}
             </div>
           </>

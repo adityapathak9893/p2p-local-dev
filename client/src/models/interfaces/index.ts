@@ -46,9 +46,8 @@ export interface OfferDetails {
   maxAmount: number | null;
   offerMargin: number | null;
   offersTags: string[];
-  offerLocation: string;
+  location: string;
   offerTimeLimit: string;
-  offerOwnerLocation: string;
 }
 
 export interface Feedbacks {
@@ -107,8 +106,7 @@ export interface OfferFormDetails {
   paymentMethod: string;
   preferredCurrency: string;
   money: string;
-  offerLocation: string;
-  offerOwnerLocation: string;
+  location: string;
   errors: { [key: string]: string };
   isFormValid: boolean;
 }

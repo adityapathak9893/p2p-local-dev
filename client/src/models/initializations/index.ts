@@ -34,9 +34,8 @@ export const initializedOfferDetails: OfferDetails = {
   maxAmount: null,
   offerMargin: null,
   offersTags: [],
-  offerLocation: "",
+  location: "",
   offerTimeLimit: "",
-  offerOwnerLocation: "",
 };
 
 export const initializeOfferFormDetails: OfferFormDetails = {
@@ -44,8 +43,7 @@ export const initializeOfferFormDetails: OfferFormDetails = {
   paymentMethod: "",
   preferredCurrency: "",
   money: "",
-  offerLocation: "",
-  offerOwnerLocation: "",
+  location: "",
   errors: {},
   isFormValid: false,
 };

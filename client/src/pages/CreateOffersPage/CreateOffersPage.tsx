@@ -40,7 +40,6 @@ export const CreateOffersPage: React.FC = () => {
 
   /* local states for 3rd step*/
   const [offersTags, setOffersTags] = React.useState<string[]>([]);
-  const [offerLocation, setOfferLocation] = React.useState("");
   const [offerTimeLimit, setOfferTimeLimit] = React.useState("");
 
   /* handles for Next/previous step */
@@ -57,7 +56,6 @@ export const CreateOffersPage: React.FC = () => {
           maxOfferTradeLimit,
           offerMargin,
           offersTags,
-          offerLocation,
           offerTimeLimit
         ).then(() => {
           setDashBoardTab("myBuyOffers");
@@ -73,7 +71,6 @@ export const CreateOffersPage: React.FC = () => {
           maxOfferTradeLimit,
           offerMargin,
           offersTags,
-          offerLocation,
           offerTimeLimit
         ).then(() => {
           setDashBoardTab("mySellOffers");
@@ -131,10 +128,6 @@ export const CreateOffersPage: React.FC = () => {
 
   //handles for 3rd step
 
-  const handleChangeOfferLocation = (event: SelectChangeEvent) => {
-    setOfferLocation(event.target.value);
-  };
-
   const handleChangeOfferTimeLimit = (event: SelectChangeEvent) => {
     setOfferTimeLimit(event.target.value);
   };
@@ -180,17 +173,14 @@ export const CreateOffersPage: React.FC = () => {
       getOtherSettingsStepsForm(
         offersTags,
         setOffersTags,
-        offerLocation,
         offerTimeLimit,
-        handleChangeOfferLocation,
         handleChangeOfferTimeLimit
       ),
       getStepsSummaryWithPoints(step3Summary, [
         `Your preferred offer tags are ${offersTags.map(
           (offerTag) => `"${offerTag}"`
         )}`,
-        `Your offer location is ${offerLocation}`,
-        `Your location is ${offerTimeLimit}`,
+        `Your offer time limit is ${offerTimeLimit}`,
       ]),
     ],
   };

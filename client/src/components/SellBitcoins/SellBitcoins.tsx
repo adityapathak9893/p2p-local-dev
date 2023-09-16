@@ -6,16 +6,19 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useActionDispatch, useStateSelector } from "../../hooks";
 import React, { useState } from "react";
-import { message } from "antd";
 
 interface ISellBitcoinsProps {
   email: string;
   userName: string;
+  showFeedbackForm: boolean;
+  handleFeedBackFormVisibility: () => void;
 }
 
 export const SellBitcoins: React.FC<ISellBitcoinsProps> = ({
   email,
   userName,
+  showFeedbackForm,
+  handleFeedBackFormVisibility,
 }) => {
   const { doSubmitFeedback } = useActionDispatch();
   const { selectedUserDetails, isUserLoggedIn } = useStateSelector();
@@ -47,200 +50,197 @@ export const SellBitcoins: React.FC<ISellBitcoinsProps> = ({
           display: "flex",
           //width: "100%",
           alignItems: "center",
-          justifyContent: "space-between",
+          justifyContent: "center",
           padding: "0px 20px 0px 20px",
         }}
       >
-        <Paper
-          elevation={3}
-          sx={{
-            backgroundColor: "#fff",
-            //width: "550px",
-            height: "250px",
-          }}
-        >
-          <Box
+        {showFeedbackForm ? (
+          <Paper
+            elevation={3}
             sx={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              padding: "10px",
-            }}
-          >
-            <Typography variant="h5" gutterBottom>
-              How much do you want to sell?
-            </Typography>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              padding: "10px",
-              justifyContent: "center",
-              alignItems: "center",
+              backgroundColor: "#fff",
+              //width: "550px",
+              height: "250px",
             }}
           >
             <Box
               sx={{
+                //width: "100%",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
                 padding: "10px",
               }}
             >
-              <Typography sx={{ marginBottom: "20px" }}>
-                <TextField
-                  label="I will get"
-                  id="outlined-start-adornment"
-                  sx={{ m: 1, width: "25ch" }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">USD</InputAdornment>
-                    ),
-                  }}
-                />
+              <Typography variant="h6" gutterBottom>
+                Would like to provide feedback?
               </Typography>
             </Box>
             <Box
               sx={{
                 display: "flex",
+                padding: "10px",
                 justifyContent: "center",
                 alignItems: "center",
-                padding: "10px",
               }}
             >
-              <Typography sx={{ marginBottom: "20px" }}>
-                <TextField
-                  label="And send"
-                  id="outlined-start-adornment"
-                  sx={{ m: 1, width: "25ch" }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">BTC</InputAdornment>
-                    ),
-                  }}
-                />
-              </Typography>
-            </Box>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="button" display="block" gutterBottom>
-              <Button
-                variant="contained"
-                size="large"
-                //onClick={handleWithdrawalRequest}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: "10px",
+                }}
               >
-                Sell Now
-              </Button>
-            </Typography>
-          </Box>
-        </Paper>
-        <Divider
-          orientation="vertical"
-          variant="middle"
-          sx={{ background: "white", width: "1px" }}
-          flexItem
-        />
-        <Paper
-          elevation={3}
-          sx={{
-            backgroundColor: "#fff",
-            //width: "550px",
-            height: "250px",
-          }}
-        >
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              padding: "10px",
-            }}
-          >
-            <Typography variant="h5" gutterBottom>
-              Would like to provide feedback?
-            </Typography>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              padding: "10px",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+                <Typography sx={{ marginBottom: "20px" }}>
+                  <Select
+                    value={rating}
+                    onChange={(e) => {
+                      setRating(Number(e.target.value));
+                    }}
+                    displayEmpty
+                    inputProps={{ "aria-label": "Select a rating" }}
+                  >
+                    <MenuItem value="" disabled>
+                      Select a rating
+                    </MenuItem>
+                    <MenuItem value={1}>1</MenuItem>
+                    <MenuItem value={2}>2</MenuItem>
+                    <MenuItem value={3}>3</MenuItem>
+                    <MenuItem value={4}>4</MenuItem>
+                    <MenuItem value={5}>5</MenuItem>
+                  </Select>
+                </Typography>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: "10px",
+                }}
+              >
+                <Typography sx={{ marginBottom: "20px" }}>
+                  <TextField
+                    label="Message"
+                    id="outlined-start-adornment"
+                    sx={{ m: 1, width: "25ch" }}
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                  />
+                </Typography>
+              </Box>
+            </Box>
             <Box
               sx={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                padding: "10px",
               }}
             >
-              <Typography sx={{ marginBottom: "20px" }}>
-                <Select
-                  value={rating}
-                  onChange={(e) => {
-                    setRating(Number(e.target.value));
-                  }}
-                  displayEmpty
-                  inputProps={{ "aria-label": "Select a rating" }}
+              <Typography variant="button" display="block" gutterBottom>
+                <Button
+                  variant="contained"
+                  size="large"
+                  onClick={handleSubmitFeedback}
                 >
-                  <MenuItem value="" disabled>
-                    Select a rating
-                  </MenuItem>
-                  <MenuItem value={1}>1</MenuItem>
-                  <MenuItem value={2}>2</MenuItem>
-                  <MenuItem value={3}>3</MenuItem>
-                  <MenuItem value={4}>4</MenuItem>
-                  <MenuItem value={5}>5</MenuItem>
-                </Select>
+                  Submit Feedback
+                </Button>
               </Typography>
             </Box>
+          </Paper>
+        ) : (
+          <Paper
+            elevation={3}
+            sx={{
+              backgroundColor: "#fff",
+              //width: "550px",
+              height: "250px",
+            }}
+          >
             <Box
               sx={{
+                width: "100%",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
                 padding: "10px",
               }}
             >
-              <Typography sx={{ marginBottom: "20px" }}>
-                <TextField
-                  label="Message"
-                  id="outlined-start-adornment"
-                  sx={{ m: 1, width: "25ch" }}
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                />
+              <Typography variant="h5" gutterBottom>
+                How much do you want to sell?
               </Typography>
             </Box>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="button" display="block" gutterBottom>
-              <Button
-                variant="contained"
-                size="large"
-                onClick={handleSubmitFeedback}
+            <Box
+              sx={{
+                display: "flex",
+                padding: "10px",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: "10px",
+                }}
               >
-                Submit Feedback
-              </Button>
-            </Typography>
-          </Box>
-        </Paper>
+                <Typography sx={{ marginBottom: "20px" }}>
+                  <TextField
+                    label="I will get"
+                    id="outlined-start-adornment"
+                    sx={{ m: 1, width: "25ch" }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">USD</InputAdornment>
+                      ),
+                    }}
+                  />
+                </Typography>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: "10px",
+                }}
+              >
+                <Typography sx={{ marginBottom: "20px" }}>
+                  <TextField
+                    label="And send"
+                    id="outlined-start-adornment"
+                    sx={{ m: 1, width: "25ch" }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">BTC</InputAdornment>
+                      ),
+                    }}
+                  />
+                </Typography>
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="button" display="block" gutterBottom>
+                <Button
+                  variant="contained"
+                  size="large"
+                  onClick={handleFeedBackFormVisibility}
+                >
+                  Sell Now
+                </Button>
+              </Typography>
+            </Box>
+          </Paper>
+        )}
       </Box>
     </>
   );

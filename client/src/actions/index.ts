@@ -199,7 +199,6 @@ export const placeMyBuyOffer = createAsyncThunk<
     maxAmount: number;
     offerMargin: number;
     offersTags: string[];
-    offerLocation: string;
     offerTimeLimit: string;
   }
 >(
@@ -213,7 +212,6 @@ export const placeMyBuyOffer = createAsyncThunk<
     maxAmount: number;
     offerMargin: number;
     offersTags: string[];
-    offerLocation: string;
     offerTimeLimit: string;
   }) => {
     const {
@@ -225,7 +223,6 @@ export const placeMyBuyOffer = createAsyncThunk<
       maxAmount,
       offerMargin,
       offersTags,
-      offerLocation,
       offerTimeLimit,
     } = buyOffer;
     const myBuyOfferInfo = await placeMyBuyOfferApiCall(
@@ -237,7 +234,6 @@ export const placeMyBuyOffer = createAsyncThunk<
       maxAmount,
       offerMargin,
       offersTags,
-      offerLocation,
       offerTimeLimit
     );
     return myBuyOfferInfo;
@@ -259,7 +255,6 @@ export const placeMySellOffer = createAsyncThunk<
     maxAmount: number;
     offerMargin: number;
     offersTags: string[];
-    offerLocation: string;
     offerTimeLimit: string;
   }
 >(
@@ -273,7 +268,6 @@ export const placeMySellOffer = createAsyncThunk<
     maxAmount: number;
     offerMargin: number;
     offersTags: string[];
-    offerLocation: string;
     offerTimeLimit: string;
   }) => {
     const {
@@ -285,7 +279,6 @@ export const placeMySellOffer = createAsyncThunk<
       maxAmount,
       offerMargin,
       offersTags,
-      offerLocation,
       offerTimeLimit,
     } = sellOffer;
     const mySellOfferInfo = await placeMySellOfferApiCall(
@@ -297,7 +290,6 @@ export const placeMySellOffer = createAsyncThunk<
       maxAmount,
       offerMargin,
       offersTags,
-      offerLocation,
       offerTimeLimit
     );
     return mySellOfferInfo;
@@ -333,8 +325,8 @@ export const getBuyOffersWithFilters = createAsyncThunk<
     minAmount: number;
     preferredCurrency: string;
     paymentMethod: string;
-    offerLocation: string;
-    offerOwnerLocation: string;
+    location: string;
+    page: number;
   }
 >(
   GET_FILTERED_BUY_OFFERS,
@@ -343,24 +335,24 @@ export const getBuyOffersWithFilters = createAsyncThunk<
     minAmount: number;
     preferredCurrency: string;
     paymentMethod: string;
-    offerLocation: string;
-    offerOwnerLocation: string;
+    location: string;
+    page: number;
   }) => {
     const {
       cryptoCurrency,
       minAmount,
       preferredCurrency,
       paymentMethod,
-      offerLocation,
-      offerOwnerLocation,
+      location,
+      page,
     } = formDetails;
     const allBuyOffersDetails = await getBuyOffersWithFiltersApiCall(
       cryptoCurrency,
       minAmount,
       preferredCurrency,
       paymentMethod,
-      offerLocation,
-      offerOwnerLocation
+      location,
+      page
     );
     return allBuyOffersDetails;
   }
@@ -377,8 +369,8 @@ export const getSellOffersWithFilters = createAsyncThunk<
     minAmount: number;
     preferredCurrency: string;
     paymentMethod: string;
-    offerLocation: string;
-    offerOwnerLocation: string;
+    location: string;
+    page: number;
   }
 >(
   GET_FILTERED_SELL_OFFERS,
@@ -387,24 +379,24 @@ export const getSellOffersWithFilters = createAsyncThunk<
     minAmount: number;
     preferredCurrency: string;
     paymentMethod: string;
-    offerLocation: string;
-    offerOwnerLocation: string;
+    location: string;
+    page: number;
   }) => {
     const {
       cryptoCurrency,
       minAmount,
       preferredCurrency,
       paymentMethod,
-      offerLocation,
-      offerOwnerLocation,
+      location,
+      page,
     } = formDetails;
     const allSellOffersDetails = await getSellOffersWithFiltersApiCall(
       cryptoCurrency,
       minAmount,
       preferredCurrency,
       paymentMethod,
-      offerLocation,
-      offerOwnerLocation
+      location,
+      page
     );
     return allSellOffersDetails;
   }

@@ -108,8 +108,8 @@ export const useActionDispatch = () => {
       minAmount: number,
       preferredCurrency: string,
       paymentMethod: string,
-      offerLocation: string,
-      offerOwnerLocation: string
+      location: string,
+      page: number
     ) =>
       dispatch(
         getBuyOffersWithFilters({
@@ -117,8 +117,8 @@ export const useActionDispatch = () => {
           minAmount,
           preferredCurrency,
           paymentMethod,
-          offerLocation,
-          offerOwnerLocation,
+          location,
+          page,
         })
       ),
     getSellOffersWithFilters: (
@@ -126,8 +126,8 @@ export const useActionDispatch = () => {
       minAmount: number,
       preferredCurrency: string,
       paymentMethod: string,
-      offerLocation: string,
-      offerOwnerLocation: string
+      location: string,
+      page: number
     ) =>
       dispatch(
         getSellOffersWithFilters({
@@ -135,8 +135,8 @@ export const useActionDispatch = () => {
           minAmount,
           preferredCurrency,
           paymentMethod,
-          offerLocation,
-          offerOwnerLocation,
+          location,
+          page,
         })
       ),
     doSubmitFeedback: (
@@ -166,7 +166,6 @@ export const useActionDispatch = () => {
       maxAmount: number,
       offerMargin: number,
       offersTags: string[],
-      offerLocation: string,
       offerTimeLimit: string
     ) =>
       dispatch(
@@ -179,7 +178,6 @@ export const useActionDispatch = () => {
           maxAmount,
           offerMargin,
           offersTags,
-          offerLocation,
           offerTimeLimit,
         })
       ),
@@ -192,7 +190,6 @@ export const useActionDispatch = () => {
       maxAmount: number,
       offerMargin: number,
       offersTags: string[],
-      offerLocation: string,
       offerTimeLimit: string
     ) =>
       dispatch(
@@ -205,7 +202,6 @@ export const useActionDispatch = () => {
           maxAmount,
           offerMargin,
           offersTags,
-          offerLocation,
           offerTimeLimit,
         })
       ),
