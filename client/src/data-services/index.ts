@@ -232,7 +232,7 @@ export const placeMyBuyOfferApiCall = async (
   if (data.success) {
     return {
       message:
-        "You have successfully palced your buy offer. You can see it on my offers tab under user dashboard",
+        "You have successfully placed your buy offer. You can see it on my offers tab under user dashboard",
       doesErrorOccur: false,
       isUserLoggedIn: true,
     };
@@ -284,7 +284,7 @@ export const placeMySellOfferApiCall = async (
   if (data.success) {
     return {
       message:
-        "You have successfully palced your sell offer. You can see it on my offers tab under user dashboard",
+        "You have successfully placed your sell offer. You can see it on my offers tab under user dashboard",
       doesErrorOccur: false,
       isUserLoggedIn: true,
     };

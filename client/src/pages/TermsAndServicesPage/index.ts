@@ -1,0 +1,1 @@
+export { TermsAndServicesPage } from "./TermsAndServicesPage";

@@ -32,7 +32,7 @@ export const CRYPTOCURRENCY = "BITCOIN";
 export const FIATCURRENCIES = [
   { label: "US DOLLAR", key: "USD", price: 26028, minAmount: 10 },
   { label: "EURO", key: "EUR", price: 24063, minAmount: 9 },
-  { label: "AUSRALIAN DOLLAR", key: "AUD", price: 40474, minAmount: 15 },
+  { label: "AUSTRALIAN DOLLAR", key: "AUD", price: 40474, minAmount: 15 },
   { label: "CANADIAN DOLLAR", key: "CAD", price: 35270, minAmount: 13 },
   { label: "HONG KONG DOLLAR", key: "HKD", price: 204076, minAmount: 78 },
   { label: "SINGAPORE DOLLAR", key: "SGD", price: 35323, minAmount: 13 },

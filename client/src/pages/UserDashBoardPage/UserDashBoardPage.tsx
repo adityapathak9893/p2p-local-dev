@@ -83,7 +83,7 @@ export const UserDashBoardPage: React.FC = () => {
               }}
             >
               <Typography variant="h5" sx={{ color: "white" }}>
-                You haven't placed any buy offer yet
+                You haven't placed any buy offers yet
               </Typography>
             </Box>
           )
@@ -105,7 +105,7 @@ export const UserDashBoardPage: React.FC = () => {
               }}
             >
               <Typography variant="h5" sx={{ color: "white" }}>
-                You haven't placed any sell offer yet
+                You haven't placed any sell offers yet
               </Typography>
             </Box>
           )
@@ -124,7 +124,7 @@ export const UserDashBoardPage: React.FC = () => {
               }}
             >
               <Typography variant="h5" sx={{ color: "white" }}>
-                You haven't placed any sell offer yet
+                You haven't received any feedback yet
               </Typography>
             </Box>
           ))

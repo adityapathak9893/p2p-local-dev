@@ -59,7 +59,7 @@ export const NavigationBar: React.FC<INavigationBarProps> = (
   const settings = [
     {
       key: "logout",
-      label: "logout",
+      label: "Logout",
       handler: () => {
         handleLogout();
       },
@@ -97,7 +97,7 @@ export const NavigationBar: React.FC<INavigationBarProps> = (
                   textDecoration: "none",
                 }}
               >
-                LOCALBITWOLF
+                LOCALBITTRADES
               </Typography>
             </Link>
           </div>

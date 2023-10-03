@@ -21,6 +21,9 @@ import { WalletPage } from "../../pages/WalletPage";
 import { BuySellPage } from "../../pages/BuySellPage";
 import { MyProfilePage } from "../../pages/MyProfilePage";
 import "./App.scss";
+import { TermsAndServicesPage } from "../../pages/TermsAndServicesPage";
+import { AboutUsPage } from "../../pages/AboutUsPage";
+import { ContactUsPage } from "../../pages/ContactUsPage";
 
 export const App: React.FC = () => {
   const {
@@ -68,6 +71,8 @@ export const App: React.FC = () => {
                 : [
                     { label: "Buy", link: "/buy-from" },
                     { label: "Sell", link: "/sell-to" },
+                    { label: "About Us", link: "/AboutUs" },
+                    { label: "Contact Us", link: "/ContactUs" },
                   ]
             }
             signInSignUpPages={[
@@ -167,6 +172,9 @@ export const App: React.FC = () => {
           <Route path="/buy-from" element={<SellOffersPage />} />
           <Route path="/sell-to" element={<BuyOffersPage />} />
           <Route path="/user/:userEmail" element={<UserProfilePage />} />
+          <Route path="/TermsAndServices" element={<TermsAndServicesPage />} />
+          <Route path="/AboutUs" element={<AboutUsPage />} />
+          <Route path="/ContactUs" element={<ContactUsPage />} />
         </Routes>
       </Router>
     </div>

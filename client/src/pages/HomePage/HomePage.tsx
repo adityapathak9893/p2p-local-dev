@@ -45,7 +45,7 @@ export const HomePage: React.FC = () => {
         }}
       >
         <Typography variant="h2" sx={{ color: "white", marginTop: "20px" }}>
-          Trade Bitcoin on Bittrader
+          Trade Bitcoin on LocalBitTrades
         </Typography>
         <Typography variant="h5" sx={{ color: "white", marginTop: "20px" }}>
           Join over thousands of people just like you on everyone's favorite

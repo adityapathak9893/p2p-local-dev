@@ -16,6 +16,8 @@ const feedbacks = Model.feedbacks;
 const userTradeInformations = Model.userTradeInformations;
 
 const allowedOrigins = [
+  "https://www.localbittrades.com",
+  "https://localbittrades.com",
   "https://gold-careful-drill.cyclic.app",
   "http://localhost:3000",
 ];

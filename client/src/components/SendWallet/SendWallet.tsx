@@ -105,9 +105,15 @@ export const SendWallet: React.FC = () => {
             justifyContent: "center",
           }}
         >
-          <Typography variant="caption" display="block" gutterBottom>
-            Admins will deposit requested amount to the wallet address mentioned
-            by you.
+          <Typography
+            sx={{
+              marginRight: "10px",
+            }}
+            variant="caption"
+            display="block"
+            gutterBottom
+          >
+            Withdrawals are processed manually
           </Typography>
           <Typography variant="button" display="block" gutterBottom>
             <Button

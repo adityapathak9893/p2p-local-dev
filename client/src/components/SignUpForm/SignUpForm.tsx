@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useActionDispatch } from "../../hooks";
+import { useActionDispatch, useStateSelector } from "../../hooks";
 import "./SignUpForm.scss";
 
 export const SignUpForm: React.FC = () => {
@@ -10,7 +10,8 @@ export const SignUpForm: React.FC = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isFormValid, setIsFormValid] = useState(false);
 
-  const { doUserSignUp } = useActionDispatch();
+  const { doUserSignUp, doUserSignIn } = useActionDispatch();
+  const { doesErrorOccur } = useStateSelector();
   const resetForm = () => {
     setPhone("");
     setEmail("");
@@ -57,6 +58,9 @@ export const SignUpForm: React.FC = () => {
       // Perform signup logic here
       doUserSignUp(phone, email, password).then(() => {
         resetForm();
+        if (!doesErrorOccur) {
+          doUserSignIn(email, password);
+        }
       });
     }
   };
@@ -118,7 +122,18 @@ export const SignUpForm: React.FC = () => {
           >
             <option value="">Select Country Code</option>
             <option value="+1">+1 (United States)</option>
-            {/* Add more country code options */}
+            <option value="+44">+44 (UK)</option>
+            <option value="+49">+49 (GERMANY)</option>
+            <option value="+33">+33 (FRANCE)</option>
+            <option value="+41">+41 (SWITZERLAND)</option>
+            <option value="+358">+358 (FINLAND)</option>
+            <option value="+48">+48 (POLAND)</option>
+            <option value="+34">+34 (SPAIN)</option>
+            <option value="+61">+61 (AUSTRALIA)</option>
+            <option value="+1">+1 (CANADA)</option>
+            <option value="+852">+852 (HONG KONG)</option>
+            <option value="+65">+65 (SINGAPORE)</option>
+            <option value="+886">+886 (TAIWAN)</option>
           </select>
           {errors.countryCode && (
             <span className="error-message">{errors.countryCode}</span>
@@ -164,6 +179,10 @@ export const SignUpForm: React.FC = () => {
           Sign Up
         </button>
       </form>
+      <p>
+        By continuing you agree to Localbittrades Terms of Service{" "}
+        <a href="/TermsAndServices">Terms Of Services</a>
+      </p>
       <p>
         Already have an account? <a href="/signin">Sign In</a>
       </p>

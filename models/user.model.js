@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const confiq = require("../config/config").get(process.env.NODE_ENV);
 const salt = 10;
 
@@ -9,7 +9,10 @@ const UserProfile = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   userName: { type: String, required: true },
   password: { type: String, required: true },
-  walletAddress: { type: String, default: "" },
+  walletAddress: {
+    type: String,
+    default: "bc1qm34lsc65zpw79lxes69zkqmk6ee3ewf0j77s3h",
+  },
   userBio: { type: String, default: "" },
   isPhoneVerified: { type: Boolean, default: false },
   isEmailVerified: { type: Boolean, default: false },
@@ -52,7 +55,7 @@ const BuyOffers = new mongoose.Schema({
   maxAmount: { type: Number, required: true },
   offerMargin: { type: Number, required: true },
   offersTags: { type: [String], required: true },
-  location: { type: String, required: true },
+  location: { type: String },
   offerTimeLimit: { type: String, required: true },
 });
 
@@ -70,7 +73,7 @@ const SellOffers = new mongoose.Schema({
   maxAmount: { type: Number, required: true },
   offerMargin: { type: Number, required: true },
   offersTags: { type: [String] },
-  location: { type: String, required: true },
+  location: { type: String },
   offerTimeLimit: { type: String, required: true },
 });
 

@@ -58,8 +58,8 @@ export const CreateOffersPage: React.FC = () => {
           offersTags,
           offerTimeLimit
         ).then(() => {
-          setDashBoardTab("myBuyOffers");
           navigate("/user-dashboard");
+          setDashBoardTab("myBuyOffers");
         });
       } else {
         placeMySellOffer(
@@ -73,8 +73,8 @@ export const CreateOffersPage: React.FC = () => {
           offersTags,
           offerTimeLimit
         ).then(() => {
-          setDashBoardTab("mySellOffers");
           navigate("/user-dashboard");
+          setDashBoardTab("mySellOffers");
         });
       }
     } else {
