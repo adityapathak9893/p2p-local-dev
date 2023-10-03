@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useActionDispatch, useStateSelector } from "../../hooks";
 import "./SignUpForm.scss";
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router";
 
 export const SignUpForm: React.FC = () => {
   const [countryCode, setCountryCode] = useState("");
@@ -9,6 +11,7 @@ export const SignUpForm: React.FC = () => {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isFormValid, setIsFormValid] = useState(false);
+  const navigate = useNavigate();
 
   const { doUserSignUp, doUserSignIn } = useActionDispatch();
   const { doesErrorOccur } = useStateSelector();
@@ -184,7 +187,10 @@ export const SignUpForm: React.FC = () => {
         <a href="/TermsAndServices">Terms Of Services</a>
       </p>
       <p>
-        Already have an account? <a href="/signin">Sign In</a>
+        Already have an account?{" "}
+        <Button variant="text" onClick={() => navigate("/signin")}>
+          Sign In
+        </Button>
       </p>
     </div>
   );

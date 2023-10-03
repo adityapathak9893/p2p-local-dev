@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import "./SignInForm.scss";
 import { useActionDispatch, useStateSelector } from "../../hooks";
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router";
 
 export const SignInForm: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isFormValid, setIsFormValid] = useState(false);
+  const navigate = useNavigate();
 
   const { doUserSignIn } = useActionDispatch();
 
@@ -96,7 +99,10 @@ export const SignInForm: React.FC = () => {
         </button>
       </form>
       <p>
-        Already have an account? <a href="/signup">Sign Up</a>
+        Already have an account?{" "}
+        <Button variant="text" onClick={() => navigate("/signup")}>
+          Sign Up
+        </Button>
       </p>
     </div>
   );
